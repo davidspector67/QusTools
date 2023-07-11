@@ -200,4 +200,11 @@ int main(int argc, char* argv[]) {
         free(partA);
         return 0;
     }
+    else if (!strcmp(argv[4], "partB")) {
+        int* partB = calloc(num_clumps, sizeof(int));
+        get_partB(num_clumps, fn, offset_bytes, partB);
+        free(partB);
+        return 0;
+    }
+    return 0;
 }
