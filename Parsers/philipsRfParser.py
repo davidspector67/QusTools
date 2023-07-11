@@ -3,6 +3,8 @@ import os
 from datetime import datetime
 import warnings
 from scipy.io import savemat
+import platform
+system = platform.system()
 
 
 class Parsed_result:
@@ -675,8 +677,12 @@ def parseRF(filepath, readOffset, readSize):
         numClumps = int(np.floor(readSize/32)) # 256 bit clumps
         fn = str('"'+filepath+'"') # for command line input
 
-        os.system("Parsers/philips_rf_parser {0} {1} {2} partA".format(fn, numClumps, (totalHeaderSize+readOffset)))
-        os.system("Parsers/philips_rf_parser {0} {1} {2} partB".format(fn, numClumps, (totalHeaderSize+readOffset)))
+        if system == 'Windows':
+            os.system("Parsers\philips_rf_parser.exe {0} {1} {2} partA".format(fn, numClumps, (totalHeaderSize+readOffset)))
+            os.system("Parsers\philips_rf_parser.exe {0} {1} {2} partB".format(fn, numClumps, (totalHeaderSize+readOffset)))
+        else:
+            os.system("Parsers/philips_rf_parser {0} {1} {2} partA".format(fn, numClumps, (totalHeaderSize+readOffset)))
+            os.system("Parsers/philips_rf_parser {0} {1} {2} partB".format(fn, numClumps, (totalHeaderSize+readOffset)))
 
         partA = np.fromfile(".partA_data", dtype=np.int32)
         partA = np.reshape(partA, (12, numClumps), order='F')
