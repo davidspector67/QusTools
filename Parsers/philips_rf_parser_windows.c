@@ -199,3 +199,5 @@ int main(int argc, char* argv[]) {
         get_partA(num_clumps, fn, offset_bytes, partA);
         free(partA);
         return 0;
+    }
+}
