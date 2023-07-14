@@ -17,7 +17,7 @@ class RfAnalysisGUI(QWidget, Ui_rfAnalysis):
         super().__init__()
         self.setupUi(self)
         global roisLeft, roisRight, roisTop, roisBottom, mbf, ss, si, minMBF, minSS, minSI, \
-        maxMBF, maxSS, maxSI, curDisp, cmap, tempROISelected, selectedROI, indMBF, indSI, indSS
+        maxMBF, maxSS, maxSI, curDisp, cmap, tempROISelected, selectedROI, indMBF, indSI, indSS, rfd
         roisLeft = []
         roisRight = []
         roisTop = []
@@ -38,6 +38,7 @@ class RfAnalysisGUI(QWidget, Ui_rfAnalysis):
         indMBF = None
         indSI = None
         indSS = None
+        rfd = False
 
         self.splineX = splineX
         self.splineY = splineY
@@ -125,10 +126,15 @@ class RfAnalysisGUI(QWidget, Ui_rfAnalysis):
         self.phantomPathInput.setHidden(False)
         self.imagePathInput.setText(imageName)
         self.phantomPathInput.setText(phantomName)
+        global rfd
+        rfd = (self.imagePathInput.text()[-4:] == '.rfd')
 
     def cleanStructs(self): # Discard windows outside of scan-converted ultrasound image
         splineList = [self.roiWindowSplinesStruct.top, self.roiWindowSplinesStruct.bottom, self.roiWindowSplinesStruct.left, self.roiWindowSplinesStruct.right]
-        splineListPreSC = [self.roiWindowSplinesStructPreSC.top, self.roiWindowSplinesStructPreSC.bottom, self.roiWindowSplinesStructPreSC.left, self.roiWindowSplinesStructPreSC.right]
+        if not rfd:
+            splineListPreSC = [self.roiWindowSplinesStructPreSC.top, self.roiWindowSplinesStructPreSC.bottom, self.roiWindowSplinesStructPreSC.left, self.roiWindowSplinesStructPreSC.right]
+        else: 
+            splineListPreSC = splineList
         numWindows = len(splineList[0])
         bottom = None
         left = None
@@ -145,10 +151,15 @@ class RfAnalysisGUI(QWidget, Ui_rfAnalysis):
         self.roiWindowSplinesStruct.bottom = splineList[1]
         self.roiWindowSplinesStruct.left = splineList[2]
         self.roiWindowSplinesStruct.right = splineList[3]
-        self.roiWindowSplinesStructPreSC.top = splineListPreSC[0]
-        self.roiWindowSplinesStructPreSC.bottom = splineListPreSC[1]
-        self.roiWindowSplinesStructPreSC.left = splineListPreSC[2]
-        self.roiWindowSplinesStructPreSC.right = splineListPreSC[3]
+        
+        if not rfd:
+            self.roiWindowSplinesStructPreSC.top = splineListPreSC[0]
+            self.roiWindowSplinesStructPreSC.bottom = splineListPreSC[1]
+            self.roiWindowSplinesStructPreSC.left = splineListPreSC[2]
+            self.roiWindowSplinesStructPreSC.right = splineListPreSC[3]
+        else:
+            self.roiWindowSplinesStructPreSC = self.roiWindowSplinesStruct
+
 
     def inBounds(self, vals1, vals2, axes, bottom, left, right):
         if (len(vals2) != len(axes)):
@@ -223,8 +234,15 @@ class RfAnalysisGUI(QWidget, Ui_rfAnalysis):
 
     def computeROIWindows(self): 
         # Compute ROI windows
-        # self.roiWindowSplinesStruct, self.roiWindowSplinesStructPreSC = roiWindowsGenerator(finalSplineX, finalSplineY, self.imgDataStruct['scBmode'].size[0], self.imgDataStruct['scBmode'].size[1], self.axialWinSize, self.lateralWinSize, self.imgInfoStruct['axialRes'], self.imgInfoStruct['lateralRes'], self.axialOverlap, self.lateralOverlap, self.threshold, np.asarray(self.imgDataStruct['scRF']['xmap']), np.asarray(self.imgDataStruct['scRF']['ymap']))
-        self.roiWindowSplinesStruct, self.roiWindowSplinesStructPreSC = roiWindowsGenerator(self.splineX, self.splineY, self.imgDataStruct.scBmode.shape[0], self.imgDataStruct.scBmode.shape[1], self.axialWinSize, self.lateralWinSize, self.imgInfoStruct.axialRes, self.imgInfoStruct.lateralRes, self.axialOverlap, self.lateralOverlap, self.threshold, self.imgDataStruct.scRF.xmap, self.imgDataStruct.scRF.ymap)
+        # self.roiWindowSplinesStruct, self.roiWindowSplinesStructPreSC = roiWindowsGenerator(finalSplineX, finalSplineY, self.imgDataStruct['scBmode'].size[0], self.imgDataStruct['scBmode'].size[1], self.axialWinSize, self.lateralWinSize, self.imgInfoStruct['axialRes'], self.imgInfoStruct['lateralRes'], self.axialOverlap, self.lateralOverlap, self.threshold, np.asarray(self.imgDataStruct['scRF']['xmap']), np.asarray(self.imgDataStruct['scRF']['ymap']))'
+        if not rfd:
+            self.roiWindowSplinesStruct, self.roiWindowSplinesStructPreSC = roiWindowsGenerator(self.splineX, self.splineY, self.imgDataStruct.scBmode.shape[0], self.imgDataStruct.scBmode.shape[1], self.axialWinSize, self.lateralWinSize, self.imgInfoStruct.axialRes, self.imgInfoStruct.lateralRes, self.axialOverlap, self.lateralOverlap, self.threshold, self.imgDataStruct.scRF.xmap, self.imgDataStruct.scRF.ymap)
+        else:
+            xScale = self.cvIm.width/self.imgDataStruct.bMode.shape[1] 
+            yScale = self.cvIm.height/self.imgDataStruct.bMode.shape[0]
+            x = self.splineX/xScale
+            y = self.splineY/yScale
+            self.roiWindowSplinesStruct = roiWindowsGenerator(x, y, self.imgDataStruct.bMode.shape[0], self.imgDataStruct.bMode.shape[1], self.axialWinSize, self.lateralWinSize, self.imgInfoStruct.axialRes, self.imgInfoStruct.lateralRes, self.axialOverlap, self.lateralOverlap, self.threshold)
         self.cleanStructs()
         self.ax.plot(self.splineX, self.splineY, color = "cyan", linewidth=0.75) # re-plot drawn ROI
 
@@ -235,11 +253,19 @@ class RfAnalysisGUI(QWidget, Ui_rfAnalysis):
             # Prepare ROI window coordinate arrays for graphing
             # Global variables important for matplotlib functions
 
-            for i in range(len(self.roiWindowSplinesStruct.left)):
-                roisLeft.append(self.roiWindowSplinesStruct.left[i])
-                roisRight.append(self.roiWindowSplinesStruct.right[i])
-                roisTop.append(self.roiWindowSplinesStruct.top[i])
-                roisBottom.append(self.roiWindowSplinesStruct.bottom[i])
+            if not rfd:
+                roisLeft = self.roiWindowSplinesStruct.left 
+                roisRight = self.roiWindowSplinesStruct.right
+                roisTop = self.roiWindowSplinesStruct.top
+                roisBottom = self.roiWindowSplinesStruct.bottom
+            else:
+                xScale = self.cvIm.width/self.imgDataStruct.bMode.shape[1]
+                yScale = self.cvIm.height/self.imgDataStruct.bMode.shape[0]
+                for i in range(len(self.roiWindowSplinesStruct.left)):
+                    roisLeft.append(self.roiWindowSplinesStruct.left[i]*xScale)#4.2969)
+                    roisRight.append(self.roiWindowSplinesStruct.right[i]*xScale)#4.2969)
+                    roisTop.append(self.roiWindowSplinesStruct.top[i]*yScale)#/2.79)
+                    roisBottom.append(self.roiWindowSplinesStruct.bottom[i]*yScale)#/2.79)
             self.computeWindowSpec()
 
             # Populate parameters in av. spectral parameter textbox

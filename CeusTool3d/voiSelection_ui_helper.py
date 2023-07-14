@@ -151,6 +151,12 @@ class VoiSelectionGUI(Ui_constructVoi, QWidget):
         self.ticX = np.array([[TIC[i,0],i] for i in range(len(TIC[:,0]))])
         self.ticY = TIC[:,1]
         self.ticAnalysisGui.ax.clear()
+        self.ticAnalysisGui.ticX = []
+        self.ticAnalysisGui.ticY = []
+        self.ticAnalysisGui.removedPointsX = []
+        self.ticAnalysisGui.removedPointsY = []
+        self.ticAnalysisGui.selectedPoints = []
+        self.ticAnalysisGui.t0Index = -1
         self.ticAnalysisGui.graph(self.ticX, self.ticY)
 
 
@@ -560,13 +566,13 @@ class VoiSelectionGUI(Ui_constructVoi, QWidget):
             for i in range(len(x)):
                 if self.painted == "ax":
                     if len(newROI) == 0 or newROI[-1] != (int(x[i]), int(y[i]), self.newZVal):
-                        newROI.append([int(x[i]), int(y[i]), self.newZVal])
+                        newROI.append((int(x[i]), int(y[i]), self.newZVal))
                 elif self.painted == "sag":
                     if len(newROI) == 0 or newROI[-1] != (self.newXVal, int(y[i]), int (x[i])):
-                        newROI.append([self.newXVal, int(y[i]), int(x[i])])
+                        newROI.append((self.newXVal, int(y[i]), int(x[i])))
                 elif self.painted == "cor":
                     if len(newROI) == 0 or newROI[-1] != (int(x[i]), self.newYVal, int(y[i])):
-                        newROI.append([int(x[i]), self.newYVal, int(y[i])])
+                        newROI.append((int(x[i]), self.newYVal, int(y[i])))
             self.pointsPlotted.append(newROI)
             for i in range(len(self.pointsPlotted)):
                 for j in range(len(self.pointsPlotted[i])):
@@ -581,7 +587,7 @@ class VoiSelectionGUI(Ui_constructVoi, QWidget):
             self.curROIDrawn = True
             self.redrawRoiButton.setHidden(False)
             self.closeRoiButton.setHidden(True)
-            if len(self.pointsPlotted) >= 3 and ((self.planesDrawn[0]!=self.planesDrawn[1]) and (self.planesDrawn[1]!=self.planesDrawn[2]) and (self.planesDrawn[2]!=self.planesDrawn[0])):
+            if (len(self.planesDrawn) == 1) or (len(self.planesDrawn) >= 3 and ((self.planesDrawn[0]!=self.planesDrawn[1]) and (self.planesDrawn[1]!=self.planesDrawn[2]) and (self.planesDrawn[2]!=self.planesDrawn[0]))):
                 self.interpolateVoiButton.clicked.connect(self.voi3dInterpolation)
 
     def undoLastPoint(self):
@@ -609,6 +615,13 @@ class VoiSelectionGUI(Ui_constructVoi, QWidget):
 
     def moveToTic(self):
         self.computeTic()
+        self.ticAnalysisGui.deSelectLastPointButton.setHidden(True)
+        self.ticAnalysisGui.removeSelectedPointsButton.setHidden(True)
+        self.ticAnalysisGui.restoreLastPointsButton.setHidden(True)
+        self.ticAnalysisGui.acceptTicButton.setHidden(True)
+        self.ticAnalysisGui.acceptT0Button.setHidden(True)
+        self.ticAnalysisGui.t0Slider.setHidden(True)
+        self.ticAnalysisGui.selectT0Button.setHidden(False)
         self.ticAnalysisGui.show()
         self.ticAnalysisGui.lastGui = self
         self.ticAnalysisGui.ceusResultsGui = self
@@ -641,7 +654,13 @@ class VoiSelectionGUI(Ui_constructVoi, QWidget):
             self.update()
 
     def voi3dInterpolation(self):
-        points = calculateSpline3D(list(chain.from_iterable(self.pointsPlotted)))
+        if len(self.planesDrawn) >= 3:
+            points = calculateSpline3D(list(chain.from_iterable(self.pointsPlotted)))
+        else:
+            points = set()
+            for group in np.array(self.pointsPlotted):
+                for point in group:
+                    points.add(tuple(point))
 
         self.pointsPlotted = []
         self.maskCoverImg.fill(0)

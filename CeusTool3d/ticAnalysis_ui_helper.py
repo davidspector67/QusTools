@@ -37,7 +37,9 @@ class TicAnalysisGUI(Ui_ticEditor, QWidget):
         self.removedPointsY = []
         self.ceusResultsGui = None
         self.lastGui = None
+        self.prevLine = None
         self.backButton.clicked.connect(self.backToLastScreen)
+        self.acceptT0Button.clicked.connect(self.acceptT0)
 
     def backToLastScreen(self):
         self.lastGui.ticDisplay.setHidden(True)
@@ -74,6 +76,7 @@ class TicAnalysisGUI(Ui_ticEditor, QWidget):
 "	border: 1px solid black;\n"
 "}")
 
+        self.lastGui.curAlpha = 255
         self.lastGui.show()
         self.hide()
         
@@ -87,10 +90,11 @@ class TicAnalysisGUI(Ui_ticEditor, QWidget):
         self.t0Slider.setMaximum(int(max(self.ticX[:,0])))
         self.t0Slider.valueChanged.connect(self.t0ScrollValueChanged)
         self.t0Slider.setValue(0)
+        if self.prevLine != None:
+            self.prevLine.remove()
+            self.t0Index = -1
         self.prevLine = self.ax.axvline(x = self.t0Slider.value(), color = 'green', label = 'axvline - full height')
         self.canvas.draw()
-
-        self.acceptT0Button.clicked.connect(self.acceptT0)
 
     def graph(self,x,y):
         global ticX, ticY

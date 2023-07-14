@@ -2,7 +2,8 @@ from UtcTool2d.roiSelection_ui import *
 from UtcTool2d.editImageDisplay_ui_helper import *
 from UtcTool2d.analysisParamsSelection_ui_helper import *
 from UtcTool2d.rfAnalysis_ui_helper import *
-from Parsers.philipsMatParser import getImage
+import Parsers.philipsMatParser as matParser
+import Parsers.siemensRfdParser as rfdParser
 from Parsers.philipsRfParser import main_parser_stanford
 
 import pydicom
@@ -148,7 +149,7 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
 
         if dataFileName[-4:] == ".mat" and phantFileName[-4:] == ".mat": # Display Philips image and assign relevant default analysis params
             self.frame = 0
-            imArray, self.imgDataStruct, self.imgInfoStruct, self.refDataStruct, self.refInfoStruct = getImage(dataFileName, dataFileLocation, phantFileName, phantFileLocation, self.frame)
+            imArray, self.imgDataStruct, self.imgInfoStruct, self.refDataStruct, self.refInfoStruct = matParser.getImage(dataFileName, dataFileLocation, phantFileName, phantFileLocation, self.frame)
             self.arHeight = imArray.shape[0]
             self.arWidth = imArray.shape[1]
             self.imData = np.array(imArray).reshape(self.arHeight, self.arWidth)
@@ -176,6 +177,37 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
             self.endDepthVal = 0.16
             self.clipFactorVal = 95
             self.samplingFreqVal = 20
+
+        if dataFileName[-4:] == ".rfd" and phantFileName[-4:] == ".rfd": # Display Philips image and assign relevant default analysis params
+            self.frame = 51
+            imArray, self.imgDataStruct, self.imgInfoStruct, self.refDataStruct, self.refInfoStruct = rfdParser.getImage(dataFileName, dataFileLocation, phantFileName, phantFileLocation)
+            self.arHeight = imArray.shape[0]
+            self.arWidth = imArray.shape[1]
+            self.imData = np.array(imArray).reshape(self.arHeight, self.arWidth)
+            self.imData = np.flipud(self.imData) #flipud
+            self.imData = np.require(self.imData,np.uint8,'C')
+            self.bytesLine = self.imData.strides[0]
+            self.qIm = QImage(self.imData, self.arWidth, self.arHeight, self.bytesLine, QImage.Format_Grayscale8).scaled(721, 501)
+
+            self.qIm.mirrored().save(os.path.join("imROIs", "bModeImRaw.png")) # Save as .png file
+
+            self.pixSizeAx = self.imgDataStruct.bMode.shape[0] #were both scBmode
+            self.pixSizeLat = self.imgDataStruct.bMode.shape[1]
+
+            self.editImageDisplayGUI.contrastVal.setValue(4)
+            self.editImageDisplayGUI.brightnessVal.setValue(0.75)
+            self.editImageDisplayGUI.sharpnessVal.setValue(3)
+
+            self.axOverlapVal = 50
+            self.latOverlapVal = 50
+            self.startDepthVal = 0.04
+            self.endDepthVal = 0.16
+            self.clipFactorVal = 95
+            self.minFreqVal = 7
+            self.maxFreqVal = 17
+            self.axWinSizeVal = 3.5#1480/40000000*5000 # must be at least 10 times wavelength
+            self.latWinSizeVal = 3.5#self.axialWinSize * 6 # must be at least 10 times wavelength
+            self.samplingFreqVal = 40
 
         if imageFilePath.endswith(".dcm"):
             ds = pydicom.dcmread(imageFilePath)

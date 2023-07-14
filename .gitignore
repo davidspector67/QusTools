@@ -72,5 +72,10 @@ venv/
 # RF parser files
 philips_rf_parser.o
 philips_rf_parser
+philips_rf_parser.exe
+philips_rf_parser_windows.o
 .partA_data
 .partB_data
+
+# Protected Siemens Parser
+siemensRfdParser.py
