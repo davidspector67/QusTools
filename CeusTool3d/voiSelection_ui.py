@@ -247,15 +247,6 @@ class Ui_constructVoi(object):
 "}")
         self.curSliceTotal.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
         self.curSliceTotal.setTextInteractionFlags(Qt.NoTextInteraction)
-        self.curSliceSpinBox = QSpinBox(constructVoi)
-        self.curSliceSpinBox.setObjectName(u"curSliceSpinBox")
-        self.curSliceSpinBox.setGeometry(QRect(640, 430, 48, 24))
-        font = QFont()
-        font.setPointSize(13)
-        self.curSliceSpinBox.setFont(font)
-        self.curSliceSpinBox.setStyleSheet(u"QSpinBox{\n"
-"	background-color: white,\n"
-"}")
         self.voiAlphaLabel = QLabel(constructVoi)
         self.voiAlphaLabel.setObjectName(u"voiAlphaLabel")
         self.voiAlphaLabel.setGeometry(QRect(380, 475, 361, 51))
@@ -271,6 +262,8 @@ class Ui_constructVoi(object):
         self.voiAlphaSpinBox = QSpinBox(constructVoi)
         self.voiAlphaSpinBox.setObjectName(u"voiAlphaSpinBox")
         self.voiAlphaSpinBox.setGeometry(QRect(640, 525, 48, 24))
+        font = QFont()
+        font.setPointSize(13)
         self.voiAlphaSpinBox.setFont(font)
         self.voiAlphaSpinBox.setStyleSheet(u"QSpinBox{\n"
 "	background-color: white,\n"
@@ -627,6 +620,24 @@ class Ui_constructVoi(object):
 "	border-radius: 15px;\n"
 "}")
         self.restartVoiButton.setCheckable(False)
+        self.curSliceSpinBox = QDoubleSpinBox(constructVoi)
+        self.curSliceSpinBox.setObjectName(u"curSliceSpinBox")
+        self.curSliceSpinBox.setGeometry(QRect(630, 430, 68, 24))
+        self.curSliceSpinBox.setStyleSheet(u"QDoubleSpinBox {\n"
+"	background: white;\n"
+"}")
+        self.voiAdviceLabel = QLabel(constructVoi)
+        self.voiAdviceLabel.setObjectName(u"voiAdviceLabel")
+        self.voiAdviceLabel.setGeometry(QRect(380, 500, 361, 51))
+        self.voiAdviceLabel.setStyleSheet(u"QLabel {\n"
+"	font-size: 20px;\n"
+"	color: rgb(255, 255, 255);\n"
+"	background-color: rgba(255, 255, 255, 0);\n"
+"}")
+        self.voiAdviceLabel.setTextFormat(Qt.AutoText)
+        self.voiAdviceLabel.setScaledContents(False)
+        self.voiAdviceLabel.setAlignment(Qt.AlignCenter)
+        self.voiAdviceLabel.setWordWrap(True)
 
         self.retranslateUi(constructVoi)
 
@@ -653,7 +664,7 @@ class Ui_constructVoi(object):
         self.coronalFrameNum.setText(QCoreApplication.translate("constructVoi", u"0", None))
         self.coronalOfLabel.setText(QCoreApplication.translate("constructVoi", u"of", None))
         self.coronalTotalFrames.setText(QCoreApplication.translate("constructVoi", u"0", None))
-        self.curSliceLabel.setText(QCoreApplication.translate("constructVoi", u"Current Slice:", None))
+        self.curSliceLabel.setText(QCoreApplication.translate("constructVoi", u"Current Slice (in seconds):", None))
         self.curSliceOfLabel.setText(QCoreApplication.translate("constructVoi", u"of", None))
         self.curSliceTotal.setText(QCoreApplication.translate("constructVoi", u"0", None))
         self.voiAlphaLabel.setText(QCoreApplication.translate("constructVoi", u"VOI Alpha:", None))
@@ -695,5 +706,6 @@ class Ui_constructVoi(object):
         self.tmppvLabel.setText(QCoreApplication.translate("constructVoi", u"TMPPV:", None))
         self.backButton.setText(QCoreApplication.translate("constructVoi", u"Back", None))
         self.restartVoiButton.setText(QCoreApplication.translate("constructVoi", u"Restart VOI", None))
+        self.voiAdviceLabel.setText(QCoreApplication.translate("constructVoi", u"For best results, draw 1 ROI in each plane before interpolating", None))
     # retranslateUi
 

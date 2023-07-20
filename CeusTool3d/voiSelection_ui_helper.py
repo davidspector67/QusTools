@@ -57,7 +57,7 @@ class VoiSelectionGUI(Ui_constructVoi, QWidget):
         self.voiAlphaStatus.setValue(255)
         self.voiAlphaSpinBox.setValue(255)
 
-        self.curSlice = 0
+        self.curSliceIndex= 0
         self.curAlpha = 255
         self.curPointsPlottedX = []
         self.curPointsPlottedY = []
@@ -117,12 +117,12 @@ class VoiSelectionGUI(Ui_constructVoi, QWidget):
         self.voiAlphaTotal.setHidden(True)
         self.restartVoiButton.setHidden(True)
         self.continueButton.setHidden(True)
-        self.interpolateVoiButton.clicked.disconnect()
 
         self.drawRoiButton.setHidden(False)
         self.undoLastPtButton.setHidden(False)
         self.redrawRoiButton.setHidden(False)
         self.interpolateVoiButton.setHidden(False)
+        self.voiAdviceLabel.setHidden(False)
         
         self.changeAxialSlices()
         self.changeSagSlices()
@@ -130,7 +130,6 @@ class VoiSelectionGUI(Ui_constructVoi, QWidget):
         self.update()
         
     def computeTic(self):
-        self.header = self.nibImg.header['pixdim'] # [dims, voxel dims (3 vals), timeconst, 0, 0, 0]
         times = [i*self.header[4] for i in range(1, self.OGData4dImg.shape[3]+1)]
         self.voxelScale = self.header[1]*self.header[2]*self.header[3] #/1000/1000/1000 # mm^3
         self.pointsPlotted = [*set(self.pointsPlotted)]
@@ -178,6 +177,21 @@ class VoiSelectionGUI(Ui_constructVoi, QWidget):
             self.sliceSliderChanged = True
             self.sliceValueChanged()
 
+    def findSliceFromTime(self, inputtedTime):
+        i = 0
+        while i < len(self.sliceArray):
+            if inputtedTime < self.sliceArray[i]:
+                break
+            i += 1
+        if i == len(self.sliceArray):
+            i -= 1
+        elif i > 0:
+            if (self.sliceArray[i] - inputtedTime) > (self.sliceArray[i-1] - inputtedTime):
+                i -= 1
+        if i < 0:
+            i = 0
+        return i
+
     def sliceValueChanged(self):
         if self.sliceSpinBoxChanged and self.sliceSliderChanged:
             self.sliceSpinBoxChanged = False
@@ -185,12 +199,12 @@ class VoiSelectionGUI(Ui_constructVoi, QWidget):
             print("Error tracking slices")
             return
         if self.sliceSpinBoxChanged:
-            self.curSlice = int(self.curSliceSpinBox.value())
-            self.curSliceSlider.setValue(self.curSlice)
+            self.curSliceIndex = self.findSliceFromTime(self.curSliceSpinBox.value())
+            self.curSliceSlider.setValue(self.curSliceIndex)
             self.sliceSpinBoxChanged = False
         if self.sliceSliderChanged:
-            self.curSlice = int(self.curSliceSlider.value())
-            self.curSliceSpinBox.setValue(self.curSlice)
+            self.curSliceIndex= int(self.curSliceSlider.value())
+            self.curSliceSpinBox.setValue(self.sliceArray[self.curSliceIndex])
             self.sliceSliderChanged = False
         self.changeAxialSlices()
         self.changeSagSlices()
@@ -217,19 +231,20 @@ class VoiSelectionGUI(Ui_constructVoi, QWidget):
         self.x, self.y, self.z, self.numSlices = self.data4dImg.shape
         self.maskCoverImg = np.zeros([self.x, self.y, self.z,4])
         self.curSliceSlider.setMaximum(self.numSlices-1)
-        self.curSliceSpinBox.setMaximum(self.numSlices-1)
-        self.curSliceTotal.setText(str(self.numSlices-1))
 
-        self.curSliceSpinBox.setValue(self.curSlice)
-        self.curSliceSlider.setValue(self.curSlice)
+        self.header = self.nibImg.header['pixdim'] # [dims, voxel dims (3 vals), timeconst, 0, 0, 0]
+        self.sliceArray = np.round([i*self.header[4] for i in range(1, self.OGData4dImg.shape[3]+1)], decimals=2)
+        self.curSliceSpinBox.setMaximum(self.sliceArray[-1])
+        self.curSliceTotal.setText(str(self.sliceArray[-1]))
+
+        self.curSliceSpinBox.setValue(self.sliceArray[self.curSliceIndex])
+        self.curSliceSlider.setValue(self.curSliceIndex)
         self.curSliceSlider.valueChanged.connect(self.curSliceSliderValueChanged)
         self.curSliceSpinBox.valueChanged.connect(self.curSliceSpinBoxValueChanged)
 
         self.x -= 1
         self.y -= 1
         self.z -= 1
-
-        self.sliceArray = np.array(list(range(self.numSlices)))
 
         self.axialTotalFrames.setText(str(self.z+1))
         self.sagittalTotalFrames.setText(str(self.x+1))
@@ -277,18 +292,18 @@ class VoiSelectionGUI(Ui_constructVoi, QWidget):
         self.drawRoiButton.setCheckable(True)
 
         #getting initial image data for axial, sag, coronal slices
-        self.data2dAx = self.data4dImg[:,:,0, self.curSlice] #2D data for axial
+        self.data2dAx = self.data4dImg[:,:,0, self.curSliceIndex] #2D data for axial
         self.data2dAx = np.flipud(self.data2dAx) #flipud
         self.data2dAx = np.rot90(self.data2dAx,3) #rotate ccw 270
         self.data2dAx = np.require(self.data2dAx,np.uint8, 'C')
 
-        self.data2dSag = self.data4dImg[0,:,:, self.curSlice] #2D data for sagittal
+        self.data2dSag = self.data4dImg[0,:,:, self.curSliceIndex] #2D data for sagittal
         self.data2dSag = np.flipud(self.data2dSag) #flipud
         self.data2dSag = np.rot90(self.data2dSag,2) #rotate ccw 180
         self.data2dSag = np.fliplr(self.data2dSag)
         self.data2dSag = np.require(self.data2dSag,np.uint8,'C')
 
-        self.data2dCor = self.data4dImg[:,0,:, self.curSlice] #2D data for coronal
+        self.data2dCor = self.data4dImg[:,0,:, self.curSliceIndex] #2D data for coronal
         self.data2dCor = np.rot90(self.data2dCor,1) #rotate ccw 90
         self.data2dCor = np.flipud(self.data2dCor) #flipud
         self.data2dCor = np.require(self.data2dCor,np.uint8,'C')
@@ -333,7 +348,7 @@ class VoiSelectionGUI(Ui_constructVoi, QWidget):
 
         self.axialFrameNum.setText(str(self.newZVal+1))
 
-        self.data2dAx = self.data4dImg[:,:,self.newZVal, self.curSlice]#, self.curSlice] #defining 2D data for axial
+        self.data2dAx = self.data4dImg[:,:,self.newZVal, self.curSliceIndex]#, self.curSliceIndex #defining 2D data for axial
         self.data2dAx = np.flipud(self.data2dAx) #flipud
         self.data2dAx = np.rot90(self.data2dAx,3) #rotate
         self.data2dAx = np.require(self.data2dAx,np.uint8,'C')
@@ -356,7 +371,7 @@ class VoiSelectionGUI(Ui_constructVoi, QWidget):
 
         self.sagittalFrameNum.setText(str(self.newXVal+1))
 
-        self.data2dSag = self.data4dImg[self.newXVal,:,:, self.curSlice]#, self.curSlice]
+        self.data2dSag = self.data4dImg[self.newXVal,:,:, self.curSliceIndex]#, self.curSliceIndex
         self.data2dSag = np.flipud(self.data2dSag) #flipud
         self.data2dSag = np.rot90(self.data2dSag,2) #rotate
         self.data2dSag = np.fliplr(self.data2dSag)
@@ -381,7 +396,7 @@ class VoiSelectionGUI(Ui_constructVoi, QWidget):
 
         self.coronalFrameNum.setText(str(self.newYVal+1))
 
-        self.data2dCor = self.data4dImg[:,self.newYVal,:, self.curSlice]#, self.curSlice]
+        self.data2dCor = self.data4dImg[:,self.newYVal,:, self.curSliceIndex]#, self.curSliceIndex
         self.data2dCor = np.rot90(self.data2dCor,1) #rotate
         self.data2dCor = np.flipud(self.data2dCor) #flipud
         self.data2dCor = np.require(self.data2dCor, np.uint8,'C')
@@ -587,7 +602,8 @@ class VoiSelectionGUI(Ui_constructVoi, QWidget):
             self.curROIDrawn = True
             self.redrawRoiButton.setHidden(False)
             self.closeRoiButton.setHidden(True)
-            if (len(self.planesDrawn) == 1) or (len(self.planesDrawn) >= 3 and ((self.planesDrawn[0]!=self.planesDrawn[1]) and (self.planesDrawn[1]!=self.planesDrawn[2]) and (self.planesDrawn[2]!=self.planesDrawn[0]))):
+            # if (len(self.planesDrawn) == 1) or (len(self.planesDrawn) >= 3 and ((self.planesDrawn[0]!=self.planesDrawn[1]) and (self.planesDrawn[1]!=self.planesDrawn[2]) and (self.planesDrawn[2]!=self.planesDrawn[0]))):
+            if len(self.planesDrawn):
                 self.interpolateVoiButton.clicked.connect(self.voi3dInterpolation)
 
     def undoLastPoint(self):
@@ -614,7 +630,41 @@ class VoiSelectionGUI(Ui_constructVoi, QWidget):
             self.painted == "none"
 
     def moveToTic(self):
+        self.ticAnalysisGui.timeLine = None
         self.computeTic()
+        self.ticAnalysisGui.data4dImg = self.data4dImg
+        self.ticAnalysisGui.curSliceIndex = self.curSliceIndex
+        self.ticAnalysisGui.newXVal = self.newXVal
+        self.ticAnalysisGui.newYVal = self.newYVal
+        self.ticAnalysisGui.newZVal = self.newZVal
+        self.ticAnalysisGui.x = self.x
+        self.ticAnalysisGui.y = self.y
+        self.ticAnalysisGui.z = self.z
+        self.ticAnalysisGui.maskCoverImg = self.maskCoverImg
+        self.ticAnalysisGui.widthAx = self.widthAx
+        self.ticAnalysisGui.heightAx = self.heightAx
+        self.ticAnalysisGui.bytesLineAx = self.bytesLineAx
+        self.ticAnalysisGui.maskAxW = self.maskAxW
+        self.ticAnalysisGui.maskAxH = self.maskAxH
+        self.ticAnalysisGui.maskBytesLineAx = self.maskBytesLineAx
+        self.ticAnalysisGui.widthSag = self.widthSag
+        self.ticAnalysisGui.heightSag = self.heightSag
+        self.ticAnalysisGui.bytesLineSag = self.bytesLineSag
+        self.ticAnalysisGui.maskSagW = self.maskSagW
+        self.ticAnalysisGui.maskSagH = self.maskSagH
+        self.ticAnalysisGui.maskBytesLineSag = self.maskBytesLineSag
+        self.ticAnalysisGui.widthCor = self.widthCor
+        self.ticAnalysisGui.heightCor = self.heightCor
+        self.ticAnalysisGui.bytesLineCor = self.bytesLineCor
+        self.ticAnalysisGui.maskCorW = self.maskCorW
+        self.ticAnalysisGui.maskCorH = self.maskCorH
+        self.ticAnalysisGui.maskBytesLineCor = self.maskBytesLineCor
+        self.ticAnalysisGui.sliceArray = self.sliceArray
+        self.voiAlphaSpinBox.setValue(100)
+        self.alphaValueChanged()
+        self.ticAnalysisGui.changeAxialSlices()
+        self.ticAnalysisGui.changeSagSlices()
+        self.ticAnalysisGui.changeCorSlices()
         self.ticAnalysisGui.deSelectLastPointButton.setHidden(True)
         self.ticAnalysisGui.removeSelectedPointsButton.setHidden(True)
         self.ticAnalysisGui.restoreLastPointsButton.setHidden(True)
@@ -654,28 +704,29 @@ class VoiSelectionGUI(Ui_constructVoi, QWidget):
             self.update()
 
     def voi3dInterpolation(self):
-        if len(self.planesDrawn) >= 3:
-            points = calculateSpline3D(list(chain.from_iterable(self.pointsPlotted)))
-        else:
-            points = set()
-            for group in np.array(self.pointsPlotted):
-                for point in group:
-                    points.add(tuple(point))
+        if len(self.planesDrawn):
+            if len(self.planesDrawn) >= 3:
+                points = calculateSpline3D(list(chain.from_iterable(self.pointsPlotted)))
+            else:
+                points = set()
+                for group in np.array(self.pointsPlotted):
+                    for point in group:
+                        points.add(tuple(point))
 
-        self.pointsPlotted = []
-        self.maskCoverImg.fill(0)
-        
-        for point in points:
-            if max(self.data4dImg[tuple(point)]) != 0:
-                self.maskCoverImg[tuple(point)] = [0,0,255,int(self.curAlpha)]
-                self.pointsPlotted.append(tuple(point))
-        if len(self.pointsPlotted) == 0:
-            print("VOI not in US image.\nDraw new VOI over US image")
+            self.pointsPlotted = []
             self.maskCoverImg.fill(0)
-            self.changeAxialSlices()
-            self.changeSagSlices()
-            self.changeCorSlices()
-            return
+            
+            for point in points:
+                if max(self.data4dImg[tuple(point)]) != 0:
+                    self.maskCoverImg[tuple(point)] = [0,0,255,int(self.curAlpha)]
+                    self.pointsPlotted.append(tuple(point))
+            if len(self.pointsPlotted) == 0:
+                print("VOI not in US image.\nDraw new VOI over US image")
+                self.maskCoverImg.fill(0)
+                self.changeAxialSlices()
+                self.changeSagSlices()
+                self.changeCorSlices()
+                return
         
         mask = np.zeros((self.maskCoverImg.shape[0], self.maskCoverImg.shape[1], self.maskCoverImg.shape[2]))
 
@@ -712,6 +763,7 @@ class VoiSelectionGUI(Ui_constructVoi, QWidget):
         self.drawRoiButton.setHidden(True)
         self.undoLastPtButton.setHidden(True)
         self.redrawRoiButton.setHidden(True)
+        self.voiAdviceLabel.setHidden(True)
 
         self.voiAlphaLabel.setHidden(False)
         self.voiAlphaOfLabel.setHidden(False)
@@ -755,12 +807,13 @@ class VoiSelectionGUI(Ui_constructVoi, QWidget):
         self.continueButton.setHidden(True)
         self.interpolateVoiButton.setHidden(True)
         self.restartVoiButton.setHidden(True)
+        self.voiAdviceLabel.setHidden(True)
 
         self.ax.clear()
         self.ax.plot(self.ticAnalysisGui.ticX[:,0], self.ticAnalysisGui.ticY)
 
         # self.sliceArray = self.ticEditor.ticX[:,1]
-        # if self.curSlice >= len(self.sliceArray):
+        # if self.curSliceIndex>= len(self.sliceArray):
         #     self.curSliceSlider.setValue(len(self.sliceArray)-1)
         #     self.curSliceSliderValueChanged()
         # self.curSliceSlider.setMaximum(len(self.sliceArray)-1)
@@ -768,6 +821,7 @@ class VoiSelectionGUI(Ui_constructVoi, QWidget):
 
         tmppv = np.max(self.ticAnalysisGui.ticY)
         self.ticAnalysisGui.ticY = self.ticAnalysisGui.ticY/tmppv;
+        x = self.ticAnalysisGui.ticX[:,0] - np.min(self.ticAnalysisGui.ticX[:,0])
 
         # Bunch of checks
         if np.isnan(np.sum(self.ticAnalysisGui.ticY)):
@@ -779,8 +833,10 @@ class VoiSelectionGUI(Ui_constructVoi, QWidget):
 
         # Do the fitting
         try:
-            params, popt, wholecurve = lf.data_fit([self.ticAnalysisGui.ticX[:,0], self.ticAnalysisGui.ticY], tmppv);
+            params, popt, wholecurve = lf.data_fit([x, self.ticAnalysisGui.ticY], tmppv);
             self.ax.plot(self.ticAnalysisGui.ticX[:,0], wholecurve)
+            range = max(self.ticAnalysisGui.ticX[:,0]) - min(self.ticAnalysisGui.ticX[:,0])
+            self.ax.set_xlim(xmin=min(self.ticAnalysisGui.ticX[:,0])-(0.05*range), xmax=max(self.ticAnalysisGui.ticX[:,0])+(0.05*range))
         except RuntimeError:
             print('RunTimeError')
             params = np.array([np.max(self.ticAnalysisGui.ticY)*tmppv, np.trapz(self.ticAnalysisGui.ticY*tmppv, x=self.ticAnalysisGui.ticX[:,0]), self.ticAnalysisGui.ticX[-1,0], np.argmax(self.ticAnalysisGui.ticY), np.max(self.ticAnalysisGui.ticX[:,0])*2, 0]);
@@ -796,6 +852,8 @@ class VoiSelectionGUI(Ui_constructVoi, QWidget):
         self.voiVolumeVal.setText(str(np.around(self.voxelScale, decimals=1)))
 
         self.ticAnalysisGui.hide()
+        self.curSliceSlider.setValue(self.ticAnalysisGui.curSliceIndex)
+        self.curSliceSliderValueChanged()
         self.show()
 
 

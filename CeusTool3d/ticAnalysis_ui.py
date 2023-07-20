@@ -35,7 +35,7 @@ class Ui_ticEditor(object):
         self.analysisParamsLabel_2.setWordWrap(True)
         self.selectT0Button = QPushButton(ticEditor)
         self.selectT0Button.setObjectName(u"selectT0Button")
-        self.selectT0Button.setGeometry(QRect(680, 640, 171, 41))
+        self.selectT0Button.setGeometry(QRect(680, 690, 171, 41))
         self.selectT0Button.setStyleSheet(u"QPushButton {\n"
 "	color: white;\n"
 "	font-size: 16px;\n"
@@ -171,16 +171,16 @@ class Ui_ticEditor(object):
         self.analysisParamsLabel.setAlignment(Qt.AlignCenter)
         self.ticFrame = QFrame(ticEditor)
         self.ticFrame.setObjectName(u"ticFrame")
-        self.ticFrame.setGeometry(QRect(400, 100, 721, 501))
+        self.ticFrame.setGeometry(QRect(400, 360, 721, 311))
         self.ticFrame.setFrameShape(QFrame.StyledPanel)
         self.ticFrame.setFrameShadow(QFrame.Raised)
         self.t0Slider = QSlider(ticEditor)
         self.t0Slider.setObjectName(u"t0Slider")
-        self.t0Slider.setGeometry(QRect(490, 640, 281, 41))
+        self.t0Slider.setGeometry(QRect(490, 690, 281, 41))
         self.t0Slider.setOrientation(Qt.Horizontal)
         self.acceptT0Button = QPushButton(ticEditor)
         self.acceptT0Button.setObjectName(u"acceptT0Button")
-        self.acceptT0Button.setGeometry(QRect(870, 640, 171, 41))
+        self.acceptT0Button.setGeometry(QRect(870, 690, 171, 41))
         self.acceptT0Button.setStyleSheet(u"QPushButton {\n"
 "	color: white;\n"
 "	font-size: 16px;\n"
@@ -189,7 +189,7 @@ class Ui_ticEditor(object):
 "}")
         self.deSelectLastPointButton = QPushButton(ticEditor)
         self.deSelectLastPointButton.setObjectName(u"deSelectLastPointButton")
-        self.deSelectLastPointButton.setGeometry(QRect(350, 640, 181, 41))
+        self.deSelectLastPointButton.setGeometry(QRect(350, 690, 181, 41))
         self.deSelectLastPointButton.setStyleSheet(u"QPushButton {\n"
 "	color: white;\n"
 "	font-size: 16px;\n"
@@ -198,7 +198,7 @@ class Ui_ticEditor(object):
 "}")
         self.removeSelectedPointsButton = QPushButton(ticEditor)
         self.removeSelectedPointsButton.setObjectName(u"removeSelectedPointsButton")
-        self.removeSelectedPointsButton.setGeometry(QRect(560, 640, 181, 41))
+        self.removeSelectedPointsButton.setGeometry(QRect(560, 690, 181, 41))
         self.removeSelectedPointsButton.setStyleSheet(u"QPushButton {\n"
 "	color: white;\n"
 "	font-size: 16px;\n"
@@ -207,7 +207,7 @@ class Ui_ticEditor(object):
 "}")
         self.restoreLastPointsButton = QPushButton(ticEditor)
         self.restoreLastPointsButton.setObjectName(u"restoreLastPointsButton")
-        self.restoreLastPointsButton.setGeometry(QRect(770, 640, 181, 41))
+        self.restoreLastPointsButton.setGeometry(QRect(770, 690, 181, 41))
         self.restoreLastPointsButton.setStyleSheet(u"QPushButton {\n"
 "	color: white;\n"
 "	font-size: 16px;\n"
@@ -216,7 +216,7 @@ class Ui_ticEditor(object):
 "}")
         self.acceptTicButton = QPushButton(ticEditor)
         self.acceptTicButton.setObjectName(u"acceptTicButton")
-        self.acceptTicButton.setGeometry(QRect(980, 640, 181, 41))
+        self.acceptTicButton.setGeometry(QRect(980, 690, 181, 41))
         self.acceptTicButton.setStyleSheet(u"QPushButton {\n"
 "	color: white;\n"
 "	font-size: 16px;\n"
@@ -232,6 +232,105 @@ class Ui_ticEditor(object):
 "	background: rgb(90, 37, 255);\n"
 "	border-radius: 15px;\n"
 "}")
+        self.maskLayerAx = QLabel(ticEditor)
+        self.maskLayerAx.setObjectName(u"maskLayerAx")
+        self.maskLayerAx.setGeometry(QRect(360, 120, 231, 211))
+        self.maskLayerAx.setStyleSheet(u"QLabel {\n"
+"	background-color: transparent;\n"
+"}")
+        self.axCoverLabel = QLabel(ticEditor)
+        self.axCoverLabel.setObjectName(u"axCoverLabel")
+        self.axCoverLabel.setGeometry(QRect(360, 120, 231, 211))
+        self.axCoverLabel.setStyleSheet(u"QLabel {\n"
+"	background-color: transparent;\n"
+"}")
+        self.axialPlaneLabel = QLabel(ticEditor)
+        self.axialPlaneLabel.setObjectName(u"axialPlaneLabel")
+        self.axialPlaneLabel.setGeometry(QRect(340, 80, 271, 51))
+        self.axialPlaneLabel.setStyleSheet(u"QLabel {\n"
+"	font-size: 18px;\n"
+"	color: rgb(255, 255, 255);\n"
+"	background-color: rgba(255, 255, 255, 0);\n"
+"}")
+        self.axialPlaneLabel.setAlignment(Qt.AlignCenter)
+        self.axialPlaneLabel.setTextInteractionFlags(Qt.NoTextInteraction)
+        self.axialPlane = QLabel(ticEditor)
+        self.axialPlane.setObjectName(u"axialPlane")
+        self.axialPlane.setGeometry(QRect(360, 120, 231, 211))
+        self.sagCoverLabel = QLabel(ticEditor)
+        self.sagCoverLabel.setObjectName(u"sagCoverLabel")
+        self.sagCoverLabel.setGeometry(QRect(640, 120, 231, 211))
+        self.sagCoverLabel.setStyleSheet(u"QLabel {\n"
+"	background-color: transparent;\n"
+"}")
+        self.maskLayerSag = QLabel(ticEditor)
+        self.maskLayerSag.setObjectName(u"maskLayerSag")
+        self.maskLayerSag.setGeometry(QRect(640, 120, 231, 211))
+        self.maskLayerSag.setStyleSheet(u"QLabel {\n"
+"	background-color: transparent;\n"
+"}")
+        self.sagittalPlaneLabel = QLabel(ticEditor)
+        self.sagittalPlaneLabel.setObjectName(u"sagittalPlaneLabel")
+        self.sagittalPlaneLabel.setGeometry(QRect(620, 80, 271, 51))
+        self.sagittalPlaneLabel.setStyleSheet(u"QLabel {\n"
+"	font-size: 18px;\n"
+"	color: rgb(255, 255, 255);\n"
+"	background-color: rgba(255, 255, 255, 0);\n"
+"}")
+        self.sagittalPlaneLabel.setAlignment(Qt.AlignCenter)
+        self.sagittalPlaneLabel.setTextInteractionFlags(Qt.NoTextInteraction)
+        self.sagPlane = QLabel(ticEditor)
+        self.sagPlane.setObjectName(u"sagPlane")
+        self.sagPlane.setGeometry(QRect(640, 120, 231, 211))
+        self.corPlane = QLabel(ticEditor)
+        self.corPlane.setObjectName(u"corPlane")
+        self.corPlane.setGeometry(QRect(920, 120, 231, 211))
+        self.maskLayerCor = QLabel(ticEditor)
+        self.maskLayerCor.setObjectName(u"maskLayerCor")
+        self.maskLayerCor.setGeometry(QRect(920, 120, 231, 211))
+        self.maskLayerCor.setStyleSheet(u"QLabel {\n"
+"	background-color: transparent;\n"
+"}")
+        self.corCoverLabel = QLabel(ticEditor)
+        self.corCoverLabel.setObjectName(u"corCoverLabel")
+        self.corCoverLabel.setGeometry(QRect(920, 120, 231, 211))
+        self.corCoverLabel.setStyleSheet(u"QLabel {\n"
+"	background-color: transparent;\n"
+"}")
+        self.coronalPlaneLabel = QLabel(ticEditor)
+        self.coronalPlaneLabel.setObjectName(u"coronalPlaneLabel")
+        self.coronalPlaneLabel.setGeometry(QRect(900, 80, 271, 51))
+        self.coronalPlaneLabel.setStyleSheet(u"QLabel {\n"
+"	font-size: 18px;\n"
+"	color: rgb(255, 255, 255);\n"
+"	background-color: rgba(255, 255, 255, 0);\n"
+"}")
+        self.coronalPlaneLabel.setAlignment(Qt.AlignCenter)
+        self.coronalPlaneLabel.setTextInteractionFlags(Qt.NoTextInteraction)
+        self.axialPlane.raise_()
+        self.sagPlane.raise_()
+        self.maskLayerSag.raise_()
+        self.analysisParamsLabel_2.raise_()
+        self.selectT0Button.raise_()
+        self.sidebar.raise_()
+        self.analysisParamsSidebar.raise_()
+        self.ticFrame.raise_()
+        self.t0Slider.raise_()
+        self.acceptT0Button.raise_()
+        self.deSelectLastPointButton.raise_()
+        self.removeSelectedPointsButton.raise_()
+        self.restoreLastPointsButton.raise_()
+        self.acceptTicButton.raise_()
+        self.backButton.raise_()
+        self.maskLayerAx.raise_()
+        self.axCoverLabel.raise_()
+        self.axialPlaneLabel.raise_()
+        self.sagCoverLabel.raise_()
+        self.sagittalPlaneLabel.raise_()
+        self.corPlane.raise_()
+        self.maskLayerCor.raise_()
+        self.corCoverLabel.raise_()
+        self.coronalPlaneLabel.raise_()
 
         self.retranslateUi(ticEditor)
 
@@ -259,5 +358,17 @@ class Ui_ticEditor(object):
         self.restoreLastPointsButton.setText(QCoreApplication.translate("ticEditor", u"Restore Last Points", None))
         self.acceptTicButton.setText(QCoreApplication.translate("ticEditor", u"Accept TIC", None))
         self.backButton.setText(QCoreApplication.translate("ticEditor", u"Back", None))
+        self.maskLayerAx.setText("")
+        self.axCoverLabel.setText("")
+        self.axialPlaneLabel.setText(QCoreApplication.translate("ticEditor", u"Axial Plane", None))
+        self.axialPlane.setText("")
+        self.sagCoverLabel.setText("")
+        self.maskLayerSag.setText("")
+        self.sagittalPlaneLabel.setText(QCoreApplication.translate("ticEditor", u"Sagittal Plane", None))
+        self.sagPlane.setText("")
+        self.corPlane.setText("")
+        self.maskLayerCor.setText("")
+        self.corCoverLabel.setText("")
+        self.coronalPlaneLabel.setText(QCoreApplication.translate("ticEditor", u"Coronal Plane", None))
     # retranslateUi
 

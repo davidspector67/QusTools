@@ -105,9 +105,9 @@ class SelectImageGUI_UtcTool2d(Ui_selectImage, QWidget):
             return
 
         # Create folder to store ROI drawings
-        if os.path.exists("imROIs"):
-            shutil.rmtree("imROIs")
-        os.mkdir("imROIs")
+        if os.path.exists("Junk"):
+            shutil.rmtree("Junk")
+        os.mkdir("Junk")
 
         selectImageHelper(self.imagePathInput)
 

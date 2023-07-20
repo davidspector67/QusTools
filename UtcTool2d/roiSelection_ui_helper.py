@@ -94,7 +94,7 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
     
     def plotOnCanvas(self): # Plot current image on GUI
         self.ax = self.figure.add_subplot(111)
-        im = plt.imread(os.path.join("imROIs", "bModeIm.png"))
+        im = plt.imread(os.path.join("Junk", "bModeIm.png"))
         plt.imshow(im, cmap='Greys_r')
 
         if len(pointsPlottedX) > 0:
@@ -158,7 +158,7 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
             self.bytesLine = self.imData.strides[0]
             self.qIm = QImage(self.imData, self.arWidth, self.arHeight, self.bytesLine, QImage.Format_Grayscale8).scaled(721, 501)
 
-            self.qIm.mirrored().save(os.path.join("imROIs", "bModeImRaw.png")) # Save as .png file
+            self.qIm.mirrored().save(os.path.join("Junk", "bModeImRaw.png")) # Save as .png file
 
             self.pixSizeAx = self.imgDataStruct.bMode.shape[0] #were both scBmode
             self.pixSizeLat = self.imgDataStruct.bMode.shape[1]
@@ -189,7 +189,7 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
             self.bytesLine = self.imData.strides[0]
             self.qIm = QImage(self.imData, self.arWidth, self.arHeight, self.bytesLine, QImage.Format_Grayscale8).scaled(721, 501)
 
-            self.qIm.mirrored().save(os.path.join("imROIs", "bModeImRaw.png")) # Save as .png file
+            self.qIm.mirrored().save(os.path.join("Junk", "bModeImRaw.png")) # Save as .png file
 
             self.pixSizeAx = self.imgDataStruct.bMode.shape[0] #were both scBmode
             self.pixSizeLat = self.imgDataStruct.bMode.shape[1]
@@ -221,7 +221,7 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
             self.bytesLine = self.imData.strides[0]
             self.qIm = QImage(self.imData, self.arWidth, self.arHeight, self.bytesLine, QImage.Format_RGB888) 
 
-            self.qIm.mirrored().save(os.path.join("imROIs", "bModeImRaw.png")) # Save as .png file
+            self.qIm.mirrored().save(os.path.join("Junk", "bModeImRaw.png")) # Save as .png file
 
             self.pixSizeAx = self.arHeight
             self.pixSizeLat = self.arWidth
@@ -235,7 +235,7 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
 
         # Implement correct previously assigned image display settings
 
-        self.cvIm = Image.open(os.path.join("imROIs", "bModeImRaw.png"))
+        self.cvIm = Image.open(os.path.join("Junk", "bModeImRaw.png"))
         enhancer = ImageEnhance.Contrast(self.cvIm)
 
         imOutput = enhancer.enhance(self.editImageDisplayGUI.contrastVal.value())
@@ -243,7 +243,7 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
         imOutput = bright.enhance(self.editImageDisplayGUI.brightnessVal.value())
         sharp = ImageEnhance.Sharpness(imOutput)
         imOutput = sharp.enhance(self.editImageDisplayGUI.sharpnessVal.value())
-        imOutput.save(os.path.join("imROIs", "bModeIm.png"))
+        imOutput.save(os.path.join("Junk", "bModeIm.png"))
 
         self.plotOnCanvas()
 
@@ -279,7 +279,7 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
     def closeInterpolation(self): # Finish drawing ROI
         if len(pointsPlottedX) > 2:
             self.ax.clear()
-            im = plt.imread(os.path.join("imROIs", "bModeIm.png"))
+            im = plt.imread(os.path.join("Junk", "bModeIm.png"))
             plt.imshow(im, cmap='Greys_r')
             pointsPlottedX.append(pointsPlottedX[0])
             pointsPlottedY.append(pointsPlottedY[0])
@@ -302,7 +302,7 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
 
     def restartROI(self): # Remove previously drawn roi and prepare user to draw a new one
         self.ax.clear()
-        im = plt.imread(os.path.join("imROIs", "bModeIm.png"))
+        im = plt.imread(os.path.join("Junk", "bModeIm.png"))
         self.ax.imshow(im, cmap='Greys_r')
         global pointsPlottedX, pointsPlottedY, finalSplineX, finalSplineY
         finalSplineX = []
@@ -321,14 +321,14 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
         self.undoLastPtButton.clicked.connect(self.undoLastPt)
 
     def updateBModeSettings(self): # Updates background photo when image settings are modified
-        self.cvIm = Image.open(os.path.join("imROIs", "bModeImRaw.png"))
+        self.cvIm = Image.open(os.path.join("Junk", "bModeImRaw.png"))
         contrast = ImageEnhance.Contrast(self.cvIm)
         imOutput = contrast.enhance(self.editImageDisplayGUI.contrastVal.value())
         brightness = ImageEnhance.Brightness(imOutput)
         imOutput = brightness.enhance(self.editImageDisplayGUI.brightnessVal.value())
         sharpness = ImageEnhance.Sharpness(imOutput)
         imOutput = sharpness.enhance(self.editImageDisplayGUI.sharpnessVal.value())
-        imOutput.save(os.path.join("imROIs", "bModeIm.png"))
+        imOutput.save(os.path.join("Junk", "bModeIm.png"))
         self.plotOnCanvas()
     
     def interpolatePoints(self, event): # Update ROI being drawn using spline using 2D interpolation

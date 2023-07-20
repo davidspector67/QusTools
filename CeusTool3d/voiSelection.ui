@@ -509,7 +509,7 @@ QPushButton:checked {
 }</string>
    </property>
    <property name="text">
-    <string>Current Slice:</string>
+    <string>Current Slice (in seconds):</string>
    </property>
    <property name="textFormat">
     <enum>Qt::AutoText</enum>
@@ -587,26 +587,6 @@ QPushButton:checked {
    </property>
    <property name="textInteractionFlags">
     <set>Qt::NoTextInteraction</set>
-   </property>
-  </widget>
-  <widget class="QSpinBox" name="curSliceSpinBox">
-   <property name="geometry">
-    <rect>
-     <x>640</x>
-     <y>430</y>
-     <width>48</width>
-     <height>24</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>13</pointsize>
-    </font>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">QSpinBox{
-	background-color: white,
-}</string>
    </property>
   </widget>
   <widget class="QLabel" name="voiAlphaLabel">
@@ -1615,6 +1595,53 @@ QPushButton:checked {
    </property>
    <property name="checkable">
     <bool>false</bool>
+   </property>
+  </widget>
+  <widget class="QDoubleSpinBox" name="curSliceSpinBox">
+   <property name="geometry">
+    <rect>
+     <x>630</x>
+     <y>430</y>
+     <width>68</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QDoubleSpinBox {
+	background: white;
+}</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="voiAdviceLabel">
+   <property name="geometry">
+    <rect>
+     <x>380</x>
+     <y>500</y>
+     <width>361</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QLabel {
+	font-size: 20px;
+	color: rgb(255, 255, 255);
+	background-color: rgba(255, 255, 255, 0);
+}</string>
+   </property>
+   <property name="text">
+    <string>For best results, draw 1 ROI in each plane before interpolating</string>
+   </property>
+   <property name="textFormat">
+    <enum>Qt::AutoText</enum>
+   </property>
+   <property name="scaledContents">
+    <bool>false</bool>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
    </property>
   </widget>
  </widget>

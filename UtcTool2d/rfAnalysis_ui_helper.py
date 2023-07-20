@@ -128,6 +128,7 @@ class RfAnalysisGUI(QWidget, Ui_rfAnalysis):
         self.phantomPathInput.setText(phantomName)
         global rfd
         rfd = (self.imagePathInput.text()[-4:] == '.rfd')
+        rfd = True
 
     def cleanStructs(self): # Discard windows outside of scan-converted ultrasound image
         splineList = [self.roiWindowSplinesStruct.top, self.roiWindowSplinesStruct.bottom, self.roiWindowSplinesStruct.left, self.roiWindowSplinesStruct.right]
@@ -172,7 +173,7 @@ class RfAnalysisGUI(QWidget, Ui_rfAnalysis):
     def plotOnCanvas(self): # Plot current image on GUI
         self.figure.clear()
         self.ax = self.figure.add_subplot(111)
-        im = plt.imread(os.path.join("imROIs", "bModeIm.png"))
+        im = plt.imread(os.path.join("Junk", "bModeIm.png"))
         self.ax.imshow(im, cmap='Greys_r')
 
         self.ax.plot(self.splineX, self.splineY, color = "cyan", zorder=1, linewidth=0.75)
@@ -183,7 +184,7 @@ class RfAnalysisGUI(QWidget, Ui_rfAnalysis):
         self.canvas.draw() # Refresh canvas
 
     def updateBModeSettings(self): # Updates background photo when image settings are modified
-        self.cvIm = Image.open(os.path.join("imROIs", "bModeImRaw.png"))
+        self.cvIm = Image.open(os.path.join("Junk", "bModeImRaw.png"))
         contrast = ImageEnhance.Contrast(self.cvIm)
         hi = self.editImageDisplayGUI.contrastVal.value()
         imOutput = contrast.enhance(self.editImageDisplayGUI.contrastVal.value())
@@ -193,7 +194,7 @@ class RfAnalysisGUI(QWidget, Ui_rfAnalysis):
         sharpness = ImageEnhance.Sharpness(imOutput)
         hi = self.editImageDisplayGUI.sharpnessVal.value()
         imOutput = sharpness.enhance(self.editImageDisplayGUI.sharpnessVal.value())
-        imOutput.save(os.path.join("imROIs", "bModeIm.png"))
+        imOutput.save(os.path.join("Junk", "bModeIm.png"))
         self.plotOnCanvas()
 
     def mbfChecked(self):
