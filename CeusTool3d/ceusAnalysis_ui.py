@@ -437,7 +437,7 @@ class Ui_rfAnalysis(object):
         self.tmmpVal.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
         self.voiVolumeVal = QLabel(rfAnalysis)
         self.voiVolumeVal.setObjectName(u"voiVolumeVal")
-        self.voiVolumeVal.setGeometry(QRect(790, 700, 51, 51))
+        self.voiVolumeVal.setGeometry(QRect(790, 700, 151, 51))
         self.voiVolumeVal.setFont(font1)
         self.voiVolumeVal.setStyleSheet(u"QLabel {\n"
 "	color: white;\n"

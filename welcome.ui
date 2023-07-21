@@ -53,9 +53,9 @@
   <widget class="QPushButton" name="utc2dButton">
    <property name="geometry">
     <rect>
-     <x>380</x>
+     <x>350</x>
      <y>220</y>
-     <width>421</width>
+     <width>491</width>
      <height>51</height>
     </rect>
    </property>
@@ -77,9 +77,9 @@
   <widget class="QPushButton" name="utc3dButton">
    <property name="geometry">
     <rect>
-     <x>380</x>
+     <x>350</x>
      <y>330</y>
-     <width>421</width>
+     <width>491</width>
      <height>51</height>
     </rect>
    </property>
@@ -101,9 +101,9 @@
   <widget class="QPushButton" name="ceus2dButton">
    <property name="geometry">
     <rect>
-     <x>380</x>
+     <x>350</x>
      <y>440</y>
-     <width>421</width>
+     <width>491</width>
      <height>51</height>
     </rect>
    </property>
@@ -119,15 +119,15 @@
 }</string>
    </property>
    <property name="text">
-    <string>2D Contrast-Enhanced Ultrasound (CEUS)</string>
+    <string>2D Contrast-Enhanced Ultrasound (CEUS) with Motion Correction</string>
    </property>
   </widget>
   <widget class="QPushButton" name="ceus3dButton">
    <property name="geometry">
     <rect>
-     <x>380</x>
+     <x>350</x>
      <y>550</y>
-     <width>421</width>
+     <width>491</width>
      <height>51</height>
     </rect>
    </property>

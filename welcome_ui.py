@@ -35,7 +35,7 @@ class Ui_qusPage(object):
         self.qusLabel.setWordWrap(True)
         self.utc2dButton = QPushButton(qusPage)
         self.utc2dButton.setObjectName(u"utc2dButton")
-        self.utc2dButton.setGeometry(QRect(380, 220, 421, 51))
+        self.utc2dButton.setGeometry(QRect(350, 220, 491, 51))
         self.utc2dButton.setStyleSheet(u"QPushButton {\n"
 "	color: white;\n"
 "	font-size: 16px;\n"
@@ -44,7 +44,7 @@ class Ui_qusPage(object):
 "}")
         self.utc3dButton = QPushButton(qusPage)
         self.utc3dButton.setObjectName(u"utc3dButton")
-        self.utc3dButton.setGeometry(QRect(380, 330, 421, 51))
+        self.utc3dButton.setGeometry(QRect(350, 330, 491, 51))
         self.utc3dButton.setStyleSheet(u"QPushButton {\n"
 "	color: white;\n"
 "	font-size: 16px;\n"
@@ -53,7 +53,7 @@ class Ui_qusPage(object):
 "}")
         self.ceus2dButton = QPushButton(qusPage)
         self.ceus2dButton.setObjectName(u"ceus2dButton")
-        self.ceus2dButton.setGeometry(QRect(380, 440, 421, 51))
+        self.ceus2dButton.setGeometry(QRect(350, 440, 491, 51))
         self.ceus2dButton.setStyleSheet(u"QPushButton {\n"
 "	color: white;\n"
 "	font-size: 16px;\n"
@@ -62,7 +62,7 @@ class Ui_qusPage(object):
 "}")
         self.ceus3dButton = QPushButton(qusPage)
         self.ceus3dButton.setObjectName(u"ceus3dButton")
-        self.ceus3dButton.setGeometry(QRect(380, 550, 421, 51))
+        self.ceus3dButton.setGeometry(QRect(350, 550, 491, 51))
         self.ceus3dButton.setStyleSheet(u"QPushButton {\n"
 "	color: white;\n"
 "	font-size: 16px;\n"
@@ -89,7 +89,7 @@ class Ui_qusPage(object):
 #if QT_CONFIG(tooltip)
         self.ceus2dButton.setToolTip(QCoreApplication.translate("qusPage", u"<html><head/><body><p><br/></p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
-        self.ceus2dButton.setText(QCoreApplication.translate("qusPage", u"2D Contrast-Enhanced Ultrasound (CEUS)", None))
+        self.ceus2dButton.setText(QCoreApplication.translate("qusPage", u"2D Contrast-Enhanced Ultrasound (CEUS) with Motion Correction", None))
 #if QT_CONFIG(tooltip)
         self.ceus3dButton.setToolTip(QCoreApplication.translate("qusPage", u"<html><head/><body><p><br/></p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
