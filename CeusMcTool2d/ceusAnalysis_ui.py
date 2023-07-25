@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'roiSelection.ui'
+## Form generated from reading UI file 'ceusAnalysis.ui'
 ##
 ## Created by: Qt User Interface Compiler version 5.15.2
 ##
@@ -13,15 +13,15 @@ from PySide2.QtGui import *
 from PySide2.QtWidgets import *
 
 
-class Ui_constructRoi(object):
-    def setupUi(self, constructRoi):
-        if not constructRoi.objectName():
-            constructRoi.setObjectName(u"constructRoi")
-        constructRoi.resize(1175, 749)
-        constructRoi.setStyleSheet(u"QWidget {\n"
+class Ui_ceusAnalysis(object):
+    def setupUi(self, ceusAnalysis):
+        if not ceusAnalysis.objectName():
+            ceusAnalysis.setObjectName(u"ceusAnalysis")
+        ceusAnalysis.resize(1175, 749)
+        ceusAnalysis.setStyleSheet(u"QWidget {\n"
 "	background: rgb(42, 42, 42);\n"
 "}")
-        self.axialPlaneLabel = QLabel(constructRoi)
+        self.axialPlaneLabel = QLabel(ceusAnalysis)
         self.axialPlaneLabel.setObjectName(u"axialPlaneLabel")
         self.axialPlaneLabel.setGeometry(QRect(410, 100, 271, 51))
         self.axialPlaneLabel.setStyleSheet(u"QLabel {\n"
@@ -31,7 +31,7 @@ class Ui_constructRoi(object):
 "}")
         self.axialPlaneLabel.setAlignment(Qt.AlignCenter)
         self.axialPlaneLabel.setTextInteractionFlags(Qt.NoTextInteraction)
-        self.sagittalPlaneLabel = QLabel(constructRoi)
+        self.sagittalPlaneLabel = QLabel(ceusAnalysis)
         self.sagittalPlaneLabel.setObjectName(u"sagittalPlaneLabel")
         self.sagittalPlaneLabel.setGeometry(QRect(830, 100, 271, 51))
         self.sagittalPlaneLabel.setStyleSheet(u"QLabel {\n"
@@ -41,9 +41,9 @@ class Ui_constructRoi(object):
 "}")
         self.sagittalPlaneLabel.setAlignment(Qt.AlignCenter)
         self.sagittalPlaneLabel.setTextInteractionFlags(Qt.NoTextInteraction)
-        self.curSliceLabel = QLabel(constructRoi)
+        self.curSliceLabel = QLabel(ceusAnalysis)
         self.curSliceLabel.setObjectName(u"curSliceLabel")
-        self.curSliceLabel.setGeometry(QRect(350, 530, 361, 51))
+        self.curSliceLabel.setGeometry(QRect(300, 530, 361, 51))
         self.curSliceLabel.setStyleSheet(u"QLabel {\n"
 "	font-size: 20px;\n"
 "	color: rgb(255, 255, 255);\n"
@@ -53,13 +53,13 @@ class Ui_constructRoi(object):
         self.curSliceLabel.setScaledContents(False)
         self.curSliceLabel.setAlignment(Qt.AlignCenter)
         self.curSliceLabel.setWordWrap(True)
-        self.curSliceSlider = QSlider(constructRoi)
+        self.curSliceSlider = QSlider(ceusAnalysis)
         self.curSliceSlider.setObjectName(u"curSliceSlider")
-        self.curSliceSlider.setGeometry(QRect(369, 590, 191, 41))
+        self.curSliceSlider.setGeometry(QRect(380, 590, 191, 41))
         self.curSliceSlider.setOrientation(Qt.Horizontal)
-        self.curSliceOfLabel = QLabel(constructRoi)
+        self.curSliceOfLabel = QLabel(ceusAnalysis)
         self.curSliceOfLabel.setObjectName(u"curSliceOfLabel")
-        self.curSliceOfLabel.setGeometry(QRect(665, 595, 41, 31))
+        self.curSliceOfLabel.setGeometry(QRect(455, 650, 41, 31))
         self.curSliceOfLabel.setStyleSheet(u"QLabel {\n"
 "	font-size: 17px;\n"
 "	color: rgb(255, 255, 255);\n"
@@ -67,17 +67,7 @@ class Ui_constructRoi(object):
 "}")
         self.curSliceOfLabel.setAlignment(Qt.AlignCenter)
         self.curSliceOfLabel.setTextInteractionFlags(Qt.NoTextInteraction)
-        self.curSliceTotal = QLabel(constructRoi)
-        self.curSliceTotal.setObjectName(u"curSliceTotal")
-        self.curSliceTotal.setGeometry(QRect(700, 595, 61, 31))
-        self.curSliceTotal.setStyleSheet(u"QLabel {\n"
-"	font-size: 17px;\n"
-"	color: rgb(255, 255, 255);\n"
-"	background-color: rgba(255, 255, 255, 0);\n"
-"}")
-        self.curSliceTotal.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
-        self.curSliceTotal.setTextInteractionFlags(Qt.NoTextInteraction)
-        self.sidebar = QWidget(constructRoi)
+        self.sidebar = QWidget(ceusAnalysis)
         self.sidebar.setObjectName(u"sidebar")
         self.sidebar.setGeometry(QRect(0, 0, 341, 751))
         self.sidebar.setStyleSheet(u"QWidget {\n"
@@ -168,7 +158,7 @@ class Ui_constructRoi(object):
         self.ticAnalysisSidebar.setObjectName(u"ticAnalysisSidebar")
         self.ticAnalysisSidebar.setGeometry(QRect(0, 360, 341, 121))
         self.ticAnalysisSidebar.setStyleSheet(u"QFrame {\n"
-"	background-color:  rgb(49, 0, 124);\n"
+"	background-color:  rgb(99, 0, 174);\n"
 "	border: 1px solid black;\n"
 "}")
         self.ticAnalysisSidebar.setFrameShape(QFrame.StyledPanel)
@@ -184,11 +174,11 @@ class Ui_constructRoi(object):
 "	font-weight: bold;\n"
 "}")
         self.ticAnalysisLabel.setAlignment(Qt.AlignCenter)
-        self.analysisParamsSidebar = QFrame(constructRoi)
+        self.analysisParamsSidebar = QFrame(ceusAnalysis)
         self.analysisParamsSidebar.setObjectName(u"analysisParamsSidebar")
         self.analysisParamsSidebar.setGeometry(QRect(0, 240, 341, 121))
         self.analysisParamsSidebar.setStyleSheet(u"QFrame {\n"
-"	background-color: rgb(49, 0, 124);\n"
+"	background-color: rgb(99, 0, 174);\n"
 "	border: 1px solid black;\n"
 "}")
         self.analysisParamsSidebar.setFrameShape(QFrame.StyledPanel)
@@ -204,37 +194,28 @@ class Ui_constructRoi(object):
 "	font-weight:bold;\n"
 "}")
         self.analysisParamsLabel.setAlignment(Qt.AlignCenter)
-        self.bmodePlane = QLabel(constructRoi)
-        self.bmodePlane.setObjectName(u"bmodePlane")
-        self.bmodePlane.setGeometry(QRect(360, 150, 381, 351))
-        self.bmodeMaskLayer = QLabel(constructRoi)
-        self.bmodeMaskLayer.setObjectName(u"bmodeMaskLayer")
-        self.bmodeMaskLayer.setGeometry(QRect(360, 150, 381, 351))
-        self.bmodeMaskLayer.setStyleSheet(u"QLabel {\n"
-"	background-color: transparent;\n"
-"}")
-        self.cePlane = QLabel(constructRoi)
+        self.cePlane = QLabel(ceusAnalysis)
         self.cePlane.setObjectName(u"cePlane")
         self.cePlane.setGeometry(QRect(770, 150, 381, 351))
-        self.mcBmodeDisplayLabel = QLabel(constructRoi)
+        self.mcBmodeDisplayLabel = QLabel(ceusAnalysis)
         self.mcBmodeDisplayLabel.setObjectName(u"mcBmodeDisplayLabel")
         self.mcBmodeDisplayLabel.setGeometry(QRect(360, 150, 381, 351))
         self.mcBmodeDisplayLabel.setStyleSheet(u"QLabel {\n"
 "	background-color: transparent;\n"
 "}")
-        self.ceMaskLayer = QLabel(constructRoi)
+        self.ceMaskLayer = QLabel(ceusAnalysis)
         self.ceMaskLayer.setObjectName(u"ceMaskLayer")
         self.ceMaskLayer.setGeometry(QRect(770, 150, 381, 351))
         self.ceMaskLayer.setStyleSheet(u"QLabel {\n"
 "	background-color: transparent;\n"
 "}")
-        self.mcCeDisplayLabel = QLabel(constructRoi)
+        self.mcCeDisplayLabel = QLabel(ceusAnalysis)
         self.mcCeDisplayLabel.setObjectName(u"mcCeDisplayLabel")
         self.mcCeDisplayLabel.setGeometry(QRect(770, 150, 381, 351))
         self.mcCeDisplayLabel.setStyleSheet(u"QLabel {\n"
 "	background-color: transparent;\n"
 "}")
-        self.backButton = QPushButton(constructRoi)
+        self.backButton = QPushButton(ceusAnalysis)
         self.backButton.setObjectName(u"backButton")
         self.backButton.setGeometry(QRect(10, 690, 131, 41))
         self.backButton.setStyleSheet(u"QPushButton {\n"
@@ -243,16 +224,16 @@ class Ui_constructRoi(object):
 "	background: rgb(90, 37, 255);\n"
 "	border-radius: 15px;\n"
 "}")
-        self.curSliceSpinBox = QSpinBox(constructRoi)
+        self.curSliceSpinBox = QSpinBox(ceusAnalysis)
         self.curSliceSpinBox.setObjectName(u"curSliceSpinBox")
-        self.curSliceSpinBox.setGeometry(QRect(620, 600, 48, 24))
+        self.curSliceSpinBox.setGeometry(QRect(410, 655, 48, 24))
         self.curSliceSpinBox.setStyleSheet(u"QSpinBox {\n"
 "	background: white;\n"
 "	color: black;\n"
 "}")
-        self.curSliceOfLabel_2 = QLabel(constructRoi)
+        self.curSliceOfLabel_2 = QLabel(ceusAnalysis)
         self.curSliceOfLabel_2.setObjectName(u"curSliceOfLabel_2")
-        self.curSliceOfLabel_2.setGeometry(QRect(480, 660, 41, 31))
+        self.curSliceOfLabel_2.setGeometry(QRect(410, 700, 41, 31))
         self.curSliceOfLabel_2.setStyleSheet(u"QLabel {\n"
 "	font-size: 17px;\n"
 "	color: rgb(255, 255, 255);\n"
@@ -260,9 +241,9 @@ class Ui_constructRoi(object):
 "}")
         self.curSliceOfLabel_2.setAlignment(Qt.AlignCenter)
         self.curSliceOfLabel_2.setTextInteractionFlags(Qt.NoTextInteraction)
-        self.totalSecondsLabel = QLabel(constructRoi)
+        self.totalSecondsLabel = QLabel(ceusAnalysis)
         self.totalSecondsLabel.setObjectName(u"totalSecondsLabel")
-        self.totalSecondsLabel.setGeometry(QRect(515, 660, 61, 31))
+        self.totalSecondsLabel.setGeometry(QRect(445, 700, 61, 31))
         self.totalSecondsLabel.setStyleSheet(u"QLabel {\n"
 "	font-size: 17px;\n"
 "	color: rgb(255, 255, 255);\n"
@@ -270,9 +251,9 @@ class Ui_constructRoi(object):
 "}")
         self.totalSecondsLabel.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
         self.totalSecondsLabel.setTextInteractionFlags(Qt.NoTextInteraction)
-        self.curSecondLabel = QLabel(constructRoi)
+        self.curSecondLabel = QLabel(ceusAnalysis)
         self.curSecondLabel.setObjectName(u"curSecondLabel")
-        self.curSecondLabel.setGeometry(QRect(420, 660, 61, 31))
+        self.curSecondLabel.setGeometry(QRect(350, 700, 61, 31))
         self.curSecondLabel.setStyleSheet(u"QLabel {\n"
 "	font-size: 17px;\n"
 "	color: rgb(255, 255, 255);\n"
@@ -280,9 +261,9 @@ class Ui_constructRoi(object):
 "}")
         self.curSecondLabel.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
         self.curSecondLabel.setTextInteractionFlags(Qt.NoTextInteraction)
-        self.secondsLabel = QLabel(constructRoi)
+        self.secondsLabel = QLabel(ceusAnalysis)
         self.secondsLabel.setObjectName(u"secondsLabel")
-        self.secondsLabel.setGeometry(QRect(580, 660, 81, 31))
+        self.secondsLabel.setGeometry(QRect(510, 700, 81, 31))
         self.secondsLabel.setStyleSheet(u"QLabel {\n"
 "	font-size: 17px;\n"
 "	color: rgb(255, 255, 255);\n"
@@ -290,7 +271,7 @@ class Ui_constructRoi(object):
 "}")
         self.secondsLabel.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
         self.secondsLabel.setTextInteractionFlags(Qt.NoTextInteraction)
-        self.constructRoiLabel = QLabel(constructRoi)
+        self.constructRoiLabel = QLabel(ceusAnalysis)
         self.constructRoiLabel.setObjectName(u"constructRoiLabel")
         self.constructRoiLabel.setGeometry(QRect(540, -10, 431, 131))
         self.constructRoiLabel.setStyleSheet(u"QLabel {\n"
@@ -302,154 +283,204 @@ class Ui_constructRoi(object):
         self.constructRoiLabel.setScaledContents(False)
         self.constructRoiLabel.setAlignment(Qt.AlignCenter)
         self.constructRoiLabel.setWordWrap(True)
-        self.undoLastPtButton = QPushButton(constructRoi)
-        self.undoLastPtButton.setObjectName(u"undoLastPtButton")
-        self.undoLastPtButton.setGeometry(QRect(970, 570, 171, 41))
-        self.undoLastPtButton.setStyleSheet(u"QPushButton {\n"
-"	color: white;\n"
-"	font-size: 16px;\n"
-"	background: rgb(90, 37, 255);\n"
-"	border-radius: 15px;\n"
-"}")
-        self.undoLastPtButton.setCheckable(False)
-        self.closeRoiButton = QPushButton(constructRoi)
-        self.closeRoiButton.setObjectName(u"closeRoiButton")
-        self.closeRoiButton.setGeometry(QRect(780, 630, 171, 41))
-        self.closeRoiButton.setStyleSheet(u"QPushButton {\n"
-"	color: white;\n"
-"	font-size: 16px;\n"
-"	background: rgb(90, 37, 255);\n"
-"	border-radius: 15px;\n"
-"}")
-        self.closeRoiButton.setCheckable(False)
-        self.redrawRoiButton = QPushButton(constructRoi)
-        self.redrawRoiButton.setObjectName(u"redrawRoiButton")
-        self.redrawRoiButton.setGeometry(QRect(780, 630, 171, 41))
-        self.redrawRoiButton.setStyleSheet(u"QPushButton {\n"
-"	color: white;\n"
-"	font-size: 16px;\n"
-"	background: rgb(90, 37, 255);\n"
-"	border-radius: 15px;\n"
-"}")
-        self.redrawRoiButton.setCheckable(False)
-        self.drawRoiButton = QPushButton(constructRoi)
-        self.drawRoiButton.setObjectName(u"drawRoiButton")
-        self.drawRoiButton.setGeometry(QRect(780, 570, 171, 41))
-        self.drawRoiButton.setStyleSheet(u"QPushButton {\n"
-"	color: white;\n"
-"	font-size: 16px;\n"
-"	background: rgb(90, 37, 255);\n"
-"	border-radius: 15px;\n"
-"}\n"
-"QPushButton:checked {\n"
-"	color:white; \n"
-"	font-size: 16px;\n"
-"	background: rgb(45, 0, 110);\n"
-"	border-radius: 15px;\n"
-"}\n"
-"")
-        self.drawRoiButton.setCheckable(True)
-        self.drawRoiButton.setChecked(False)
-        self.fitToRoiButton = QPushButton(constructRoi)
-        self.fitToRoiButton.setObjectName(u"fitToRoiButton")
-        self.fitToRoiButton.setGeometry(QRect(970, 630, 171, 41))
-        self.fitToRoiButton.setStyleSheet(u"QPushButton {\n"
-"	color: white;\n"
-"	font-size: 16px;\n"
-"	background: rgb(90, 37, 255);\n"
-"	border-radius: 15px;\n"
-"}")
-        self.fitToRoiButton.setCheckable(False)
-        self.acceptGeneratedRoiButton = QPushButton(constructRoi)
-        self.acceptGeneratedRoiButton.setObjectName(u"acceptGeneratedRoiButton")
-        self.acceptGeneratedRoiButton.setGeometry(QRect(970, 600, 171, 41))
-        self.acceptGeneratedRoiButton.setStyleSheet(u"QPushButton {\n"
-"	color: white;\n"
-"	font-size: 16px;\n"
-"	background: rgb(90, 37, 255);\n"
-"	border-radius: 15px;\n"
-"}")
-        self.acceptGeneratedRoiButton.setCheckable(True)
-        self.acceptGeneratedRoiButton.setChecked(False)
-        self.roiFitNoteLabel = QLabel(constructRoi)
-        self.roiFitNoteLabel.setObjectName(u"roiFitNoteLabel")
-        self.roiFitNoteLabel.setGeometry(QRect(780, 690, 341, 41))
-        self.roiFitNoteLabel.setStyleSheet(u"QLabel {\n"
-"	color: rgb(255, 0, 23);\n"
-"	font-size: 20px;\n"
-"	background-color: rgba(255, 255, 255, 0);\n"
-"}")
-        self.roiFitNoteLabel.setAlignment(Qt.AlignCenter)
-        self.bmodeCoverLabel = QLabel(constructRoi)
+        self.bmodeCoverLabel = QLabel(ceusAnalysis)
         self.bmodeCoverLabel.setObjectName(u"bmodeCoverLabel")
         self.bmodeCoverLabel.setGeometry(QRect(360, 150, 381, 351))
         self.bmodeCoverLabel.setStyleSheet(u"QLabel {\n"
 "	background-color: transparent;\n"
 "}")
-        self.ceCoverLabel = QLabel(constructRoi)
+        self.ceCoverLabel = QLabel(ceusAnalysis)
         self.ceCoverLabel.setObjectName(u"ceCoverLabel")
         self.ceCoverLabel.setGeometry(QRect(770, 150, 381, 351))
         self.ceCoverLabel.setStyleSheet(u"QLabel {\n"
 "	background-color: transparent;\n"
 "}")
-        self.undoRoiButton = QPushButton(constructRoi)
-        self.undoRoiButton.setObjectName(u"undoRoiButton")
-        self.undoRoiButton.setGeometry(QRect(780, 600, 171, 41))
-        self.undoRoiButton.setStyleSheet(u"QPushButton {\n"
+        self.peVal = QLabel(ceusAnalysis)
+        self.peVal.setObjectName(u"peVal")
+        self.peVal.setGeometry(QRect(1100, 560, 51, 51))
+        font = QFont()
+        font.setPointSize(14)
+        self.peVal.setFont(font)
+        self.peVal.setStyleSheet(u"QLabel {\n"
 "	color: white;\n"
-"	font-size: 16px;\n"
-"	background: rgb(90, 37, 255);\n"
-"	border-radius: 15px;\n"
-"}\n"
-"")
-        self.undoRoiButton.setCheckable(True)
-        self.undoRoiButton.setChecked(False)
+"	background-color: rgba(0,0,0,0);\n"
+"}")
+        self.peVal.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
+        self.tpLabel = QLabel(ceusAnalysis)
+        self.tpLabel.setObjectName(u"tpLabel")
+        self.tpLabel.setGeometry(QRect(1040, 600, 91, 51))
+        self.tpLabel.setFont(font)
+        self.tpLabel.setStyleSheet(u"QLabel {\n"
+"	color: white;\n"
+"	background-color: rgba(0,0,0,0);\n"
+"}")
+        self.tpLabel.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
+        self.voiVolumeVal = QLabel(ceusAnalysis)
+        self.voiVolumeVal.setObjectName(u"voiVolumeVal")
+        self.voiVolumeVal.setGeometry(QRect(1100, 650, 151, 51))
+        self.voiVolumeVal.setFont(font)
+        self.voiVolumeVal.setStyleSheet(u"QLabel {\n"
+"	color: white;\n"
+"	background-color: rgba(0,0,0,0);\n"
+"}")
+        self.voiVolumeVal.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
+        self.mttLabel = QLabel(ceusAnalysis)
+        self.mttLabel.setObjectName(u"mttLabel")
+        self.mttLabel.setGeometry(QRect(1040, 580, 81, 51))
+        self.mttLabel.setFont(font)
+        self.mttLabel.setStyleSheet(u"QLabel {\n"
+"	color: white;\n"
+"	background-color: rgba(0,0,0,0);\n"
+"}")
+        self.mttLabel.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
+        self.tpVal = QLabel(ceusAnalysis)
+        self.tpVal.setObjectName(u"tpVal")
+        self.tpVal.setGeometry(QRect(1100, 600, 51, 51))
+        self.tpVal.setFont(font)
+        self.tpVal.setStyleSheet(u"QLabel {\n"
+"	color: white;\n"
+"	background-color: rgba(0,0,0,0);\n"
+"}")
+        self.tpVal.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
+        self.voiVolumeLabel = QLabel(ceusAnalysis)
+        self.voiVolumeLabel.setObjectName(u"voiVolumeLabel")
+        self.voiVolumeLabel.setGeometry(QRect(1040, 640, 71, 71))
+        self.voiVolumeLabel.setFont(font)
+        self.voiVolumeLabel.setStyleSheet(u"QLabel {\n"
+"	color: white;\n"
+"	background-color: rgba(0,0,0,0);\n"
+"}")
+        self.voiVolumeLabel.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
+        self.tmppvLabel = QLabel(ceusAnalysis)
+        self.tmppvLabel.setObjectName(u"tmppvLabel")
+        self.tmppvLabel.setGeometry(QRect(1040, 620, 71, 51))
+        self.tmppvLabel.setFont(font)
+        self.tmppvLabel.setStyleSheet(u"QLabel {\n"
+"	color: white;\n"
+"	background-color: rgba(0,0,0,0);\n"
+"}")
+        self.tmppvLabel.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
+        self.ticDisplay = QFrame(ceusAnalysis)
+        self.ticDisplay.setObjectName(u"ticDisplay")
+        self.ticDisplay.setGeometry(QRect(620, 560, 401, 171))
+        self.ticDisplay.setFrameShape(QFrame.StyledPanel)
+        self.ticDisplay.setFrameShadow(QFrame.Raised)
+        self.aucVal = QLabel(ceusAnalysis)
+        self.aucVal.setObjectName(u"aucVal")
+        self.aucVal.setGeometry(QRect(1100, 540, 51, 51))
+        self.aucVal.setFont(font)
+        self.aucVal.setStyleSheet(u"QLabel {\n"
+"	color: white;\n"
+"	background-color: rgba(0,0,0,0);\n"
+"}")
+        self.aucVal.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
+        self.peLabel = QLabel(ceusAnalysis)
+        self.peLabel.setObjectName(u"peLabel")
+        self.peLabel.setGeometry(QRect(1040, 560, 91, 51))
+        self.peLabel.setFont(font)
+        self.peLabel.setStyleSheet(u"QLabel {\n"
+"	color: white;\n"
+"	background-color: rgba(0,0,0,0);\n"
+"}")
+        self.peLabel.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
+        self.resultsLabel = QLabel(ceusAnalysis)
+        self.resultsLabel.setObjectName(u"resultsLabel")
+        self.resultsLabel.setGeometry(QRect(670, 510, 361, 51))
+        self.resultsLabel.setStyleSheet(u"QLabel {\n"
+"	font-size: 20px;\n"
+"	color: rgb(255, 255, 255);\n"
+"	background-color: rgba(255, 255, 255, 0);\n"
+"}")
+        self.resultsLabel.setTextFormat(Qt.AutoText)
+        self.resultsLabel.setScaledContents(False)
+        self.resultsLabel.setAlignment(Qt.AlignCenter)
+        self.resultsLabel.setWordWrap(True)
+        self.tmppvVal = QLabel(ceusAnalysis)
+        self.tmppvVal.setObjectName(u"tmppvVal")
+        self.tmppvVal.setGeometry(QRect(1100, 620, 71, 51))
+        self.tmppvVal.setFont(font)
+        self.tmppvVal.setStyleSheet(u"QLabel {\n"
+"	color: white;\n"
+"	background-color: rgba(0,0,0,0);\n"
+"}")
+        self.tmppvVal.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
+        self.mttVal = QLabel(ceusAnalysis)
+        self.mttVal.setObjectName(u"mttVal")
+        self.mttVal.setGeometry(QRect(1100, 580, 51, 51))
+        self.mttVal.setFont(font)
+        self.mttVal.setStyleSheet(u"QLabel {\n"
+"	color: white;\n"
+"	background-color: rgba(0,0,0,0);\n"
+"}")
+        self.mttVal.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
+        self.aucLabel = QLabel(ceusAnalysis)
+        self.aucLabel.setObjectName(u"aucLabel")
+        self.aucLabel.setGeometry(QRect(1040, 540, 81, 51))
+        self.aucLabel.setFont(font)
+        self.aucLabel.setStyleSheet(u"QLabel {\n"
+"	color: white;\n"
+"	background-color: rgba(0,0,0,0);\n"
+"}")
+        self.aucLabel.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
+        self.curSliceTotal = QLabel(ceusAnalysis)
+        self.curSliceTotal.setObjectName(u"curSliceTotal")
+        self.curSliceTotal.setGeometry(QRect(490, 650, 61, 31))
+        self.curSliceTotal.setStyleSheet(u"QLabel {\n"
+"	font-size: 17px;\n"
+"	color: rgb(255, 255, 255);\n"
+"	background-color: rgba(255, 255, 255, 0);\n"
+"}")
+        self.curSliceTotal.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
+        self.curSliceTotal.setTextInteractionFlags(Qt.NoTextInteraction)
 
-        self.retranslateUi(constructRoi)
+        self.retranslateUi(ceusAnalysis)
 
-        QMetaObject.connectSlotsByName(constructRoi)
+        QMetaObject.connectSlotsByName(ceusAnalysis)
     # setupUi
 
-    def retranslateUi(self, constructRoi):
-        constructRoi.setWindowTitle(QCoreApplication.translate("constructRoi", u"Select Region of Interest", None))
-        self.axialPlaneLabel.setText(QCoreApplication.translate("constructRoi", u"B-Mode", None))
-        self.sagittalPlaneLabel.setText(QCoreApplication.translate("constructRoi", u"Contrast-Enhanced Image", None))
-        self.curSliceLabel.setText(QCoreApplication.translate("constructRoi", u"Current Frame:", None))
-        self.curSliceOfLabel.setText(QCoreApplication.translate("constructRoi", u"of", None))
-        self.curSliceTotal.setText(QCoreApplication.translate("constructRoi", u"0", None))
+    def retranslateUi(self, ceusAnalysis):
+        ceusAnalysis.setWindowTitle(QCoreApplication.translate("ceusAnalysis", u"Select Region of Interest", None))
+        self.axialPlaneLabel.setText(QCoreApplication.translate("ceusAnalysis", u"B-Mode", None))
+        self.sagittalPlaneLabel.setText(QCoreApplication.translate("ceusAnalysis", u"Contrast-Enhanced Image", None))
+        self.curSliceLabel.setText(QCoreApplication.translate("ceusAnalysis", u"Current Frame:", None))
+        self.curSliceOfLabel.setText(QCoreApplication.translate("ceusAnalysis", u"of", None))
 #if QT_CONFIG(tooltip)
-        self.sidebar.setToolTip(QCoreApplication.translate("constructRoi", u"<html><head/><body><p><br/></p></body></html>", None))
+        self.sidebar.setToolTip(QCoreApplication.translate("ceusAnalysis", u"<html><head/><body><p><br/></p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
-        self.imageSelectionLabelSidebar.setText(QCoreApplication.translate("constructRoi", u"Image Selection:", None))
-        self.imageLabel.setText(QCoreApplication.translate("constructRoi", u"Image:", None))
-        self.imagePathInput.setText(QCoreApplication.translate("constructRoi", u"Sample filename ", None))
-        self.roiSidebarLabel.setText(QCoreApplication.translate("constructRoi", u"Region of Interest (ROI) Selection", None))
-        self.rfAnalysisLabel.setText(QCoreApplication.translate("constructRoi", u"Export Results", None))
-        self.ticAnalysisLabel.setText(QCoreApplication.translate("constructRoi", u"Contrast-Enhanced Ultrasound\n"
+        self.imageSelectionLabelSidebar.setText(QCoreApplication.translate("ceusAnalysis", u"Image Selection:", None))
+        self.imageLabel.setText(QCoreApplication.translate("ceusAnalysis", u"Image:", None))
+        self.imagePathInput.setText(QCoreApplication.translate("ceusAnalysis", u"Sample filename ", None))
+        self.roiSidebarLabel.setText(QCoreApplication.translate("ceusAnalysis", u"Region of Interest (ROI) Selection", None))
+        self.rfAnalysisLabel.setText(QCoreApplication.translate("ceusAnalysis", u"Export Results", None))
+        self.ticAnalysisLabel.setText(QCoreApplication.translate("ceusAnalysis", u"Contrast-Enhanced Ultrasound\n"
 "(CEUS) Analysis", None))
-        self.analysisParamsLabel.setText(QCoreApplication.translate("constructRoi", u"TIC Modification", None))
-        self.bmodePlane.setText("")
-        self.bmodeMaskLayer.setText("")
+        self.analysisParamsLabel.setText(QCoreApplication.translate("ceusAnalysis", u"TIC Modification", None))
         self.cePlane.setText("")
         self.mcBmodeDisplayLabel.setText("")
         self.ceMaskLayer.setText("")
         self.mcCeDisplayLabel.setText("")
-        self.backButton.setText(QCoreApplication.translate("constructRoi", u"Back", None))
-        self.curSliceOfLabel_2.setText(QCoreApplication.translate("constructRoi", u"of", None))
-        self.totalSecondsLabel.setText(QCoreApplication.translate("constructRoi", u"0", None))
-        self.curSecondLabel.setText(QCoreApplication.translate("constructRoi", u"0", None))
-        self.secondsLabel.setText(QCoreApplication.translate("constructRoi", u"seconds", None))
-        self.constructRoiLabel.setText(QCoreApplication.translate("constructRoi", u"Construct Region of Interest (ROI):", None))
-        self.undoLastPtButton.setText(QCoreApplication.translate("constructRoi", u"Undo Last Point", None))
-        self.closeRoiButton.setText(QCoreApplication.translate("constructRoi", u"Close ROI", None))
-        self.redrawRoiButton.setText(QCoreApplication.translate("constructRoi", u"Redraw ROI", None))
-        self.drawRoiButton.setText(QCoreApplication.translate("constructRoi", u"Draw ROI", None))
-        self.fitToRoiButton.setText(QCoreApplication.translate("constructRoi", u"Fit to ROI", None))
-        self.acceptGeneratedRoiButton.setText(QCoreApplication.translate("constructRoi", u"Accept Generated ROI", None))
-        self.roiFitNoteLabel.setText(QCoreApplication.translate("constructRoi", u"NOTE: Will fit to ROI using current\n"
-"frame as reference", None))
+        self.backButton.setText(QCoreApplication.translate("ceusAnalysis", u"Back", None))
+        self.curSliceOfLabel_2.setText(QCoreApplication.translate("ceusAnalysis", u"of", None))
+        self.totalSecondsLabel.setText(QCoreApplication.translate("ceusAnalysis", u"0", None))
+        self.curSecondLabel.setText(QCoreApplication.translate("ceusAnalysis", u"0", None))
+        self.secondsLabel.setText(QCoreApplication.translate("ceusAnalysis", u"seconds", None))
+        self.constructRoiLabel.setText(QCoreApplication.translate("ceusAnalysis", u"Construct Region of Interest (ROI):", None))
         self.bmodeCoverLabel.setText("")
         self.ceCoverLabel.setText("")
-        self.undoRoiButton.setText(QCoreApplication.translate("constructRoi", u"Undo", None))
+        self.peVal.setText(QCoreApplication.translate("ceusAnalysis", u"0", None))
+        self.tpLabel.setText(QCoreApplication.translate("ceusAnalysis", u"TP", None))
+        self.voiVolumeVal.setText(QCoreApplication.translate("ceusAnalysis", u"0", None))
+        self.mttLabel.setText(QCoreApplication.translate("ceusAnalysis", u"MTT", None))
+        self.tpVal.setText(QCoreApplication.translate("ceusAnalysis", u"0", None))
+        self.voiVolumeLabel.setText(QCoreApplication.translate("ceusAnalysis", u"ROI Area\n"
+"(mm^2)", None))
+        self.tmppvLabel.setText(QCoreApplication.translate("ceusAnalysis", u"TMPPV", None))
+        self.aucVal.setText(QCoreApplication.translate("ceusAnalysis", u"0", None))
+        self.peLabel.setText(QCoreApplication.translate("ceusAnalysis", u"PE", None))
+        self.resultsLabel.setText(QCoreApplication.translate("ceusAnalysis", u"Results:", None))
+        self.tmppvVal.setText(QCoreApplication.translate("ceusAnalysis", u"0", None))
+        self.mttVal.setText(QCoreApplication.translate("ceusAnalysis", u"0", None))
+        self.aucLabel.setText(QCoreApplication.translate("ceusAnalysis", u"AUC", None))
+        self.curSliceTotal.setText(QCoreApplication.translate("ceusAnalysis", u"0", None))
     # retranslateUi
 

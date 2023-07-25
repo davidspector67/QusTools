@@ -232,16 +232,10 @@ class Ui_ticEditor(object):
 "	background: rgb(90, 37, 255);\n"
 "	border-radius: 15px;\n"
 "}")
-        self.sagCoverLabel = QLabel(ticEditor)
-        self.sagCoverLabel.setObjectName(u"sagCoverLabel")
-        self.sagCoverLabel.setGeometry(QRect(440, 120, 231, 211))
-        self.sagCoverLabel.setStyleSheet(u"QLabel {\n"
-"	background-color: transparent;\n"
-"}")
-        self.maskLayerSag = QLabel(ticEditor)
-        self.maskLayerSag.setObjectName(u"maskLayerSag")
-        self.maskLayerSag.setGeometry(QRect(440, 120, 231, 211))
-        self.maskLayerSag.setStyleSheet(u"QLabel {\n"
+        self.bmodeCoverLabel = QLabel(ticEditor)
+        self.bmodeCoverLabel.setObjectName(u"bmodeCoverLabel")
+        self.bmodeCoverLabel.setGeometry(QRect(440, 120, 231, 211))
+        self.bmodeCoverLabel.setStyleSheet(u"QLabel {\n"
 "	background-color: transparent;\n"
 "}")
         self.sagittalPlaneLabel = QLabel(ticEditor)
@@ -254,22 +248,16 @@ class Ui_ticEditor(object):
 "}")
         self.sagittalPlaneLabel.setAlignment(Qt.AlignCenter)
         self.sagittalPlaneLabel.setTextInteractionFlags(Qt.NoTextInteraction)
-        self.sagPlane = QLabel(ticEditor)
-        self.sagPlane.setObjectName(u"sagPlane")
-        self.sagPlane.setGeometry(QRect(440, 120, 231, 211))
-        self.corPlane = QLabel(ticEditor)
-        self.corPlane.setObjectName(u"corPlane")
-        self.corPlane.setGeometry(QRect(810, 120, 231, 211))
-        self.maskLayerCor = QLabel(ticEditor)
-        self.maskLayerCor.setObjectName(u"maskLayerCor")
-        self.maskLayerCor.setGeometry(QRect(810, 120, 231, 211))
-        self.maskLayerCor.setStyleSheet(u"QLabel {\n"
-"	background-color: transparent;\n"
-"}")
-        self.corCoverLabel = QLabel(ticEditor)
-        self.corCoverLabel.setObjectName(u"corCoverLabel")
-        self.corCoverLabel.setGeometry(QRect(810, 120, 231, 211))
-        self.corCoverLabel.setStyleSheet(u"QLabel {\n"
+        self.mcBmodeDisplayLabel = QLabel(ticEditor)
+        self.mcBmodeDisplayLabel.setObjectName(u"mcBmodeDisplayLabel")
+        self.mcBmodeDisplayLabel.setGeometry(QRect(440, 120, 231, 211))
+        self.mcCeDisplayLabel = QLabel(ticEditor)
+        self.mcCeDisplayLabel.setObjectName(u"mcCeDisplayLabel")
+        self.mcCeDisplayLabel.setGeometry(QRect(810, 120, 231, 211))
+        self.ceCoverLabel = QLabel(ticEditor)
+        self.ceCoverLabel.setObjectName(u"ceCoverLabel")
+        self.ceCoverLabel.setGeometry(QRect(810, 120, 231, 211))
+        self.ceCoverLabel.setStyleSheet(u"QLabel {\n"
 "	background-color: transparent;\n"
 "}")
         self.coronalPlaneLabel = QLabel(ticEditor)
@@ -282,8 +270,7 @@ class Ui_ticEditor(object):
 "}")
         self.coronalPlaneLabel.setAlignment(Qt.AlignCenter)
         self.coronalPlaneLabel.setTextInteractionFlags(Qt.NoTextInteraction)
-        self.sagPlane.raise_()
-        self.maskLayerSag.raise_()
+        self.mcBmodeDisplayLabel.raise_()
         self.analysisParamsLabel_2.raise_()
         self.selectT0Button.raise_()
         self.sidebar.raise_()
@@ -296,11 +283,10 @@ class Ui_ticEditor(object):
         self.restoreLastPointsButton.raise_()
         self.acceptTicButton.raise_()
         self.backButton.raise_()
-        self.sagCoverLabel.raise_()
+        self.bmodeCoverLabel.raise_()
         self.sagittalPlaneLabel.raise_()
-        self.corPlane.raise_()
-        self.maskLayerCor.raise_()
-        self.corCoverLabel.raise_()
+        self.mcCeDisplayLabel.raise_()
+        self.ceCoverLabel.raise_()
         self.coronalPlaneLabel.raise_()
 
         self.retranslateUi(ticEditor)
@@ -329,13 +315,11 @@ class Ui_ticEditor(object):
         self.restoreLastPointsButton.setText(QCoreApplication.translate("ticEditor", u"Restore Last Points", None))
         self.acceptTicButton.setText(QCoreApplication.translate("ticEditor", u"Accept TIC", None))
         self.backButton.setText(QCoreApplication.translate("ticEditor", u"Back", None))
-        self.sagCoverLabel.setText("")
-        self.maskLayerSag.setText("")
+        self.bmodeCoverLabel.setText("")
         self.sagittalPlaneLabel.setText(QCoreApplication.translate("ticEditor", u"B-Mode Image", None))
-        self.sagPlane.setText("")
-        self.corPlane.setText("")
-        self.maskLayerCor.setText("")
-        self.corCoverLabel.setText("")
+        self.mcBmodeDisplayLabel.setText("")
+        self.mcCeDisplayLabel.setText("")
+        self.ceCoverLabel.setText("")
         self.coronalPlaneLabel.setText(QCoreApplication.translate("ticEditor", u"Contrast-Enhanced Image", None))
     # retranslateUi
 

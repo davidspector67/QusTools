@@ -529,25 +529,7 @@
     <string>Back</string>
    </property>
   </widget>
-  <widget class="QLabel" name="sagCoverLabel">
-   <property name="geometry">
-    <rect>
-     <x>440</x>
-     <y>120</y>
-     <width>231</width>
-     <height>211</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">QLabel {
-	background-color: transparent;
-}</string>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="maskLayerSag">
+  <widget class="QLabel" name="bmodeCoverLabel">
    <property name="geometry">
     <rect>
      <x>440</x>
@@ -591,7 +573,7 @@
     <set>Qt::NoTextInteraction</set>
    </property>
   </widget>
-  <widget class="QLabel" name="sagPlane">
+  <widget class="QLabel" name="mcBmodeDisplayLabel">
    <property name="geometry">
     <rect>
      <x>440</x>
@@ -604,7 +586,7 @@
     <string/>
    </property>
   </widget>
-  <widget class="QLabel" name="corPlane">
+  <widget class="QLabel" name="mcCeDisplayLabel">
    <property name="geometry">
     <rect>
      <x>810</x>
@@ -617,25 +599,7 @@
     <string/>
    </property>
   </widget>
-  <widget class="QLabel" name="maskLayerCor">
-   <property name="geometry">
-    <rect>
-     <x>810</x>
-     <y>120</y>
-     <width>231</width>
-     <height>211</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">QLabel {
-	background-color: transparent;
-}</string>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="corCoverLabel">
+  <widget class="QLabel" name="ceCoverLabel">
    <property name="geometry">
     <rect>
      <x>810</x>
@@ -679,8 +643,7 @@
     <set>Qt::NoTextInteraction</set>
    </property>
   </widget>
-  <zorder>sagPlane</zorder>
-  <zorder>maskLayerSag</zorder>
+  <zorder>mcBmodeDisplayLabel</zorder>
   <zorder>analysisParamsLabel_2</zorder>
   <zorder>selectT0Button</zorder>
   <zorder>sidebar</zorder>
@@ -693,11 +656,10 @@
   <zorder>restoreLastPointsButton</zorder>
   <zorder>acceptTicButton</zorder>
   <zorder>backButton</zorder>
-  <zorder>sagCoverLabel</zorder>
+  <zorder>bmodeCoverLabel</zorder>
   <zorder>sagittalPlaneLabel</zorder>
-  <zorder>corPlane</zorder>
-  <zorder>maskLayerCor</zorder>
-  <zorder>corCoverLabel</zorder>
+  <zorder>mcCeDisplayLabel</zorder>
+  <zorder>ceCoverLabel</zorder>
   <zorder>coronalPlaneLabel</zorder>
  </widget>
  <resources/>

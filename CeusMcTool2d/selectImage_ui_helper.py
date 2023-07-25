@@ -21,6 +21,7 @@ class SelectImageGUI_CeusMcTool2d(Ui_selectImage, QWidget):
         # self.selectImage = QWidget()
         super().__init__()
         self.setupUi(self)
+        self.imageFilenameDisplay.setHidden(True)
         self.selectImageErrorMsg.setHidden(True)
         self.imagesScrollArea.setHidden(True)
         self.undoSpreadsheetButton.setHidden(True)
@@ -31,6 +32,19 @@ class SelectImageGUI_CeusMcTool2d(Ui_selectImage, QWidget):
         QHeaderView::section{
             background-color: white;
             font-size: 15px;
+            color: black;
+        }""")
+        self.imagesScrollArea.verticalHeader().setStyleSheet("""
+        QHeaderView::section{
+            background-color: white;
+            font-size: 15px;
+            color: black;
+        }
+        QHeaderView::section::selected{
+            background-color: pink;
+            font-size: 14px;
+            color: black
+            font-weight: bold;
         }""")
 
         self.imageNifti = 0
@@ -78,7 +92,9 @@ class SelectImageGUI_CeusMcTool2d(Ui_selectImage, QWidget):
             self.imagesScrollArea.setVerticalHeaderLabels(self.patients)
 
             for i in range(len(self.patients)):
-                self.imagesScrollArea.setItem(i, 0, QTableWidgetItem(self.scans[i]))
+                item = QTableWidgetItem(self.scans[i])
+                item.setFlags(item.flags() & ~Qt.ItemIsEditable)
+                self.imagesScrollArea.setItem(i, 0, item)
 
 
     def backToWelcomeScreen(self):
