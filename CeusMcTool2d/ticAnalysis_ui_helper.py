@@ -245,7 +245,7 @@ class TicAnalysisGUI(Ui_ticEditor, QWidget):
         self.ceusAnalysisGui.h_CE = self.h_CE
         self.ceusAnalysisGui.curSliceSpinBox.setValue(self.sliceArray[self.curFrameIndex])
         self.ceusAnalysisGui.curSliceSlider.setValue(self.curFrameIndex)
-        self.ceusAnalysisGui.curSliceTotal.setText(str(self.mcResultsBmode.shape[0]))
+        self.ceusAnalysisGui.curSliceTotal.setText(str(self.mcResultsBmode.shape[0]-1))
         self.ceusAnalysisGui.totalSecondsLabel.setText(str(self.sliceArray[-1]))
         self.ceusAnalysisGui.curSliceSlider.setMaximum(self.mcResultsBmode.shape[0]-1)
         self.ceusAnalysisGui.curSliceSpinBox.setMaximum(self.mcResultsBmode.shape[0]-1)
