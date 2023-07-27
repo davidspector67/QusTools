@@ -244,21 +244,23 @@
   <widget class="QLabel" name="selectImageErrorMsg">
    <property name="geometry">
     <rect>
-     <x>700</x>
-     <y>580</y>
-     <width>111</width>
-     <height>41</height>
+     <x>550</x>
+     <y>590</y>
+     <width>421</width>
+     <height>81</height>
     </rect>
    </property>
    <property name="styleSheet">
     <string notr="true">QLabel {
 	color: rgb(255, 0, 23);
-	font-size: 25px;
+	font-size: 20px;
 	background-color: rgba(255, 255, 255, 0);
 }</string>
    </property>
    <property name="text">
-    <string>Error Msg</string>
+    <string>ERROR: At least one dimension of phantom data
+smaller than corresponding dimension
+of image data</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>

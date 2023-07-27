@@ -33,11 +33,6 @@ class Ui_constructRoi(object):
         self.constructRoiLabel.setScaledContents(False)
         self.constructRoiLabel.setAlignment(Qt.AlignCenter)
         self.constructRoiLabel.setWordWrap(True)
-        self.imDisplayFrame = QFrame(constructRoi)
-        self.imDisplayFrame.setObjectName(u"imDisplayFrame")
-        self.imDisplayFrame.setGeometry(QRect(400, 190, 721, 501))
-        self.imDisplayFrame.setFrameShape(QFrame.StyledPanel)
-        self.imDisplayFrame.setFrameShadow(QFrame.Raised)
         self.drawRoiButton = QPushButton(constructRoi)
         self.drawRoiButton.setObjectName(u"drawRoiButton")
         self.drawRoiButton.setGeometry(QRect(370, 110, 171, 41))
@@ -226,7 +221,7 @@ class Ui_constructRoi(object):
         self.analysisParamsLabel.setAlignment(Qt.AlignCenter)
         self.editImageDisplayButton = QPushButton(constructRoi)
         self.editImageDisplayButton.setObjectName(u"editImageDisplayButton")
-        self.editImageDisplayButton.setGeometry(QRect(940, 700, 181, 41))
+        self.editImageDisplayButton.setGeometry(QRect(960, 690, 181, 41))
         self.editImageDisplayButton.setStyleSheet(u"QPushButton {\n"
 "	color: white;\n"
 "	font-size: 12px;\n"
@@ -262,6 +257,61 @@ class Ui_constructRoi(object):
 "	background: rgb(90, 37, 255);\n"
 "	border-radius: 15px;\n"
 "}")
+        self.curFrameSlider = QSlider(constructRoi)
+        self.curFrameSlider.setObjectName(u"curFrameSlider")
+        self.curFrameSlider.setGeometry(QRect(550, 691, 251, 41))
+        self.curFrameSlider.setOrientation(Qt.Horizontal)
+        self.curFrameLabel = QLabel(constructRoi)
+        self.curFrameLabel.setObjectName(u"curFrameLabel")
+        self.curFrameLabel.setGeometry(QRect(810, 695, 51, 31))
+        self.curFrameLabel.setStyleSheet(u"QLabel {\n"
+"	font-size: 15px;\n"
+"	color: rgb(255, 255, 255);\n"
+"	background-color: rgba(255, 255, 255, 0);\n"
+"}")
+        self.curFrameLabel.setTextFormat(Qt.AutoText)
+        self.curFrameLabel.setScaledContents(False)
+        self.curFrameLabel.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
+        self.curFrameLabel.setWordWrap(True)
+        self.ofFramesLabel = QLabel(constructRoi)
+        self.ofFramesLabel.setObjectName(u"ofFramesLabel")
+        self.ofFramesLabel.setGeometry(QRect(860, 695, 51, 31))
+        self.ofFramesLabel.setStyleSheet(u"QLabel {\n"
+"	font-size: 15px;\n"
+"	color: rgb(255, 255, 255);\n"
+"	background-color: rgba(255, 255, 255, 0);\n"
+"}")
+        self.ofFramesLabel.setTextFormat(Qt.AutoText)
+        self.ofFramesLabel.setScaledContents(False)
+        self.ofFramesLabel.setAlignment(Qt.AlignCenter)
+        self.ofFramesLabel.setWordWrap(True)
+        self.totalFramesLabel = QLabel(constructRoi)
+        self.totalFramesLabel.setObjectName(u"totalFramesLabel")
+        self.totalFramesLabel.setGeometry(QRect(910, 695, 51, 31))
+        self.totalFramesLabel.setStyleSheet(u"QLabel {\n"
+"	font-size: 15px;\n"
+"	color: rgb(255, 255, 255);\n"
+"	background-color: rgba(255, 255, 255, 0);\n"
+"}")
+        self.totalFramesLabel.setTextFormat(Qt.AutoText)
+        self.totalFramesLabel.setScaledContents(False)
+        self.totalFramesLabel.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
+        self.totalFramesLabel.setWordWrap(True)
+        self.imDisplayFrame = QLabel(constructRoi)
+        self.imDisplayFrame.setObjectName(u"imDisplayFrame")
+        self.imDisplayFrame.setGeometry(QRect(400, 170, 721, 501))
+        self.imMaskFrame = QLabel(constructRoi)
+        self.imMaskFrame.setObjectName(u"imMaskFrame")
+        self.imMaskFrame.setGeometry(QRect(400, 170, 721, 501))
+        self.imMaskFrame.setStyleSheet(u"QLabel {\n"
+"	background-color: transparent;\n"
+"}")
+        self.imCoverFrame = QLabel(constructRoi)
+        self.imCoverFrame.setObjectName(u"imCoverFrame")
+        self.imCoverFrame.setGeometry(QRect(400, 170, 721, 501))
+        self.imCoverFrame.setStyleSheet(u"QLabel {\n"
+"	background-color: transparent;\n"
+"}")
 
         self.retranslateUi(constructRoi)
 
@@ -290,5 +340,11 @@ class Ui_constructRoi(object):
         self.closeRoiButton.setText(QCoreApplication.translate("constructRoi", u"Close ROI", None))
         self.redrawRoiButton.setText(QCoreApplication.translate("constructRoi", u"Redraw ROI", None))
         self.backButton.setText(QCoreApplication.translate("constructRoi", u"Back", None))
+        self.curFrameLabel.setText(QCoreApplication.translate("constructRoi", u"0", None))
+        self.ofFramesLabel.setText(QCoreApplication.translate("constructRoi", u"of", None))
+        self.totalFramesLabel.setText(QCoreApplication.translate("constructRoi", u"0", None))
+        self.imDisplayFrame.setText("")
+        self.imMaskFrame.setText("")
+        self.imCoverFrame.setText("")
     # retranslateUi
 

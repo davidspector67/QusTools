@@ -169,11 +169,6 @@ class Ui_rfAnalysis(object):
 "	font-weight:bold;\n"
 "}")
         self.label_6.setAlignment(Qt.AlignCenter)
-        self.imDisplayFrame = QFrame(rfAnalysis)
-        self.imDisplayFrame.setObjectName(u"imDisplayFrame")
-        self.imDisplayFrame.setGeometry(QRect(400, 180, 721, 501))
-        self.imDisplayFrame.setFrameShape(QFrame.StyledPanel)
-        self.imDisplayFrame.setFrameShadow(QFrame.Raised)
         self.displayMbfButton = QPushButton(rfAnalysis)
         self.displayMbfButton.setObjectName(u"displayMbfButton")
         self.displayMbfButton.setGeometry(QRect(360, 120, 181, 41))
@@ -379,6 +374,11 @@ class Ui_rfAnalysis(object):
 "	background: rgb(90, 37, 255);\n"
 "	border-radius: 15px;\n"
 "}")
+        self.imDisplayFrame = QFrame(rfAnalysis)
+        self.imDisplayFrame.setObjectName(u"imDisplayFrame")
+        self.imDisplayFrame.setGeometry(QRect(400, 180, 721, 501))
+        self.imDisplayFrame.setFrameShape(QFrame.StyledPanel)
+        self.imDisplayFrame.setFrameShadow(QFrame.Raised)
 
         self.retranslateUi(rfAnalysis)
 

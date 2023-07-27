@@ -21,25 +21,26 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
         super().__init__()
         self.setupUi(self)
 
-        global pointsPlottedX, pointsPlottedY
-        pointsPlottedX = []
-        pointsPlottedY = []
+        self.curPointsPlottedX = []
+        self.curPointsPlottedY = []
+        self.finalSplineX = []
+        self.finalSplineY = []
+        self.oldSpline = []
         self.imagePathInput.setHidden(True)
         self.phantomPathInput.setHidden(True)
+        self.ofFramesLabel.setHidden(True)
+        self.curFrameLabel.setHidden(True)
+        self.totalFramesLabel.setHidden(True)
+        self.curFrameSlider.setHidden(True)
 
-        # Prepare B-Mode display plot
-        self.horizontalLayout = QHBoxLayout(self.imDisplayFrame)
-        self.horizontalLayout.setObjectName("horizontalLayout")
-        self.figure = plt.figure()
-        self.canvas = FigureCanvas(self.figure)
-        self.horizontalLayout.addWidget(self.canvas)
+        self.editImageDisplayButton.setHidden(True)
 
-        self.editImageDisplayGUI = EditImageDisplayGUI()
-        self.editImageDisplayGUI.contrastVal.valueChanged.connect(self.changeContrast)
-        self.editImageDisplayGUI.brightnessVal.valueChanged.connect(self.changeBrightness)    
-        self.editImageDisplayGUI.sharpnessVal.valueChanged.connect(self.changeSharpness)
+        self.imCoverPixmap = QPixmap(721, 501)
+        self.imCoverPixmap.fill(Qt.transparent)
+        self.imCoverFrame.setPixmap(self.imCoverPixmap)
 
         self.lastGui = None
+        self.imArray = None
         self.axWinSizeVal = None
         self.latWinSizeVal = None
         self.axOverlapVal = None
@@ -51,16 +52,15 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
         self.clipFactorVal = None
         self.samplingFreqVal = None
         self.analysisParamsGUI = None
+        self.maskCoverImg = None
 
         self.scatteredPoints = []
 
         self.redrawRoiButton.setHidden(True)
         
-        self.editImageDisplayButton.clicked.connect(self.openImageEditor)
-        self.drawRoiButton.clicked.connect(self.recordDrawROIClicked)
         self.undoLastPtButton.clicked.connect(self.undoLastPt)
         self.closeRoiButton.clicked.connect(self.closeInterpolation)
-        self.redrawRoiButton.clicked.connect(self.restartROI)
+        self.redrawRoiButton.clicked.connect(self.undoLastRoi)
         self.acceptRoiButton.clicked.connect(self.acceptROI)
         self.backButton.clicked.connect(self.backToLastScreen)
 
@@ -68,23 +68,64 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
         self.lastGui.show()
         self.hide()
 
-    def changeContrast(self):
-        self.editImageDisplayGUI.contrastValDisplay.setValue(int(self.editImageDisplayGUI.contrastVal.value()*10))
-        self.updateBModeSettings()
+    def mousePressEvent(self,event):
+        self.xCur = event.x()
+        self.yCur = event.y()
+        if self.drawRoiButton.isChecked():
+            # Plot ROI points
+            if self.xCur < 1121 and self.xCur > 400 and self.yCur < 671 and self.yCur > 170:
+                self.actualX = int((self.xCur - 401)*(self.imData.shape[1])/721)
+                self.actualY = int((self.yCur - 171)*(self.imData.shape[0])/501)
+                plotY = self.xCur - 401
+                plotX = self.yCur - 171
+            else:
+                return
+            self.finalSplineX.append(self.actualX)
+            self.finalSplineY.append(self.actualY)
+            self.curPointsPlottedX.append(plotX)
+            self.curPointsPlottedY.append(plotY)
+            self.updateSpline()
 
-    def changeBrightness(self):
-        self.editImageDisplayGUI.brightnessValDisplay.setValue(int(self.editImageDisplayGUI.brightnessVal.value()*10))
-        self.updateBModeSettings()
+    def updateSpline(self):
+        self.maskCoverImg.fill(0)
+        if len(self.curPointsPlottedX) > 0:            
+            if len(self.curPointsPlottedX) > 1:
+                xSpline, ySpline = calculateSpline(self.curPointsPlottedX, self.curPointsPlottedY)
+                spline = [(int(xSpline[i]), int(ySpline[i])) for i in range(len(xSpline))]
+                spline = np.array([*set(spline)])
+                xSpline, ySpline = np.transpose(spline)
+                xSpline = np.clip(xSpline, a_min=0, a_max=500)
+                ySpline = np.clip(ySpline, a_min=0, a_max=720)
+                for i in range(len(xSpline)):
+                    self.maskCoverImg[xSpline[i]-1:xSpline[i]+2, ySpline[i]-1:ySpline[i]+2] = [255, 255, 0, 255]
 
-    def changeSharpness(self):
-        self.editImageDisplayGUI.sharpnessValDisplay.setValue(int(self.editImageDisplayGUI.sharpnessVal.value()*10))
-        self.updateBModeSettings()
+            for i in range(len(self.curPointsPlottedX)):
+                self.maskCoverImg[self.curPointsPlottedX[i]-2:self.curPointsPlottedX[i]+3, \
+                                    self.curPointsPlottedY[i]-2:self.curPointsPlottedY[i]+3] = [0,0,255, 255]
 
-    def openImageEditor(self):
-        if self.editImageDisplayGUI.isVisible():
-            self.editImageDisplayGUI.hide()
+        self.plotOnCanvas()
+        self.updateCrosshair()
+
+    def mouseMoveEvent(self, event):
+        self.xCur = event.x()
+        self.yCur = event.y()
+        self.updateCrosshair()
+
+    def updateCrosshair(self):
+        if self.xCur < 1121 and self.xCur > 400 and self.yCur < 671 and self.yCur > 170:
+            plotX = self.xCur - 401
         else:
-            self.editImageDisplayGUI.show()
+            return
+        
+        plotY = self.yCur - 171
+        self.imCoverFrame.pixmap().fill(Qt.transparent)
+        painter = QPainter(self.imCoverFrame.pixmap())
+        painter.setPen(Qt.yellow)
+        bmodeVertLine = QLine(plotX, 0, plotX, 501)
+        bmodeLatLine = QLine(0, plotY, 721, plotY)
+        painter.drawLines([bmodeVertLine, bmodeLatLine])
+        painter.end()
+        self.update()
 
     def setFilenameDisplays(self, imageName, phantomName):
         self.imagePathInput.setHidden(False)
@@ -93,21 +134,20 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
         self.phantomPathInput.setText(phantomName)
     
     def plotOnCanvas(self): # Plot current image on GUI
-        self.ax = self.figure.add_subplot(111)
-        im = plt.imread(os.path.join("Junk", "bModeIm.png"))
-        plt.imshow(im, cmap='Greys_r')
+        self.imData = np.array(self.imArray[self.frame]).reshape(self.arHeight, self.arWidth)
+        self.imData = np.require(self.imData,np.uint8,'C')
+        self.bytesLine = self.imData.strides[0]
+        self.arHeight = self.imData.shape[0]
+        self.arWidth = self.imData.shape[1]
 
-        if len(pointsPlottedX) > 0:
-            self.scatteredPoints.append(self.ax.scatter(pointsPlottedX[-1], pointsPlottedY[-1], marker="o", s=0.5, c="red", zorder=500))
-            if len(pointsPlottedX) > 1:
-                xSpline, ySpline = calculateSpline(pointsPlottedX, pointsPlottedY)
-                self.spline = self.ax.plot(xSpline, ySpline, color = "cyan", zorder=1, linewidth=0.75)
-        self.figure.subplots_adjust(left=0,right=1, bottom=0,top=1, hspace=0.2,wspace=0.2)
-        self.cursor = matplotlib.widgets.Cursor(self.ax, color="gold", linewidth=0.4, useblit=True)
-        self.cursor.set_active(False)
-        plt.tick_params(bottom=False, left=False, labelbottom=False, labelleft=False)
-        self.canvas.draw() # Refresh canvas
+        self.maskCoverImg = np.require(self.maskCoverImg, np.uint8, 'C')
+        self.bytesLineMask, _ = self.maskCoverImg[:,:,0].strides
+        self.qImgMask = QImage(self.maskCoverImg, self.maskCoverImg.shape[1], self.maskCoverImg.shape[0], self.bytesLineMask, QImage.Format_ARGB32)
 
+        self.imMaskFrame.setPixmap(QPixmap.fromImage(self.qImgMask).scaled(721, 501))
+
+        self.qIm = QImage(self.imData, self.arWidth, self.arHeight, self.bytesLine, QImage.Format_Grayscale8)
+        self.imDisplayFrame.setPixmap(QPixmap.fromImage(self.qIm).scaled(721, 501))
 
     def openImage(self, imageFilePath, phantomFilePath): # Open initial image given data and phantom files previously inputted
         # Assume inputted files are correct 
@@ -163,10 +203,6 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
             self.pixSizeAx = self.imgDataStruct.bMode.shape[0] #were both scBmode
             self.pixSizeLat = self.imgDataStruct.bMode.shape[1]
 
-            self.editImageDisplayGUI.contrastVal.setValue(4)
-            self.editImageDisplayGUI.brightnessVal.setValue(0.75)
-            self.editImageDisplayGUI.sharpnessVal.setValue(3)
-
             self.axWinSizeVal = 10#7#1#1480/20000000*10000 # must be at least 10 times wavelength
             self.latWinSizeVal = 10#7#1#1480/20000000*10000 # must be at least 10 times wavelength
             self.axOverlapVal = 50
@@ -178,25 +214,29 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
             self.clipFactorVal = 95
             self.samplingFreqVal = 20
 
-        if dataFileName[-4:] == ".rfd" and phantFileName[-4:] == ".rfd": # Display Philips image and assign relevant default analysis params
-            self.frame = 51
-            imArray, self.imgDataStruct, self.imgInfoStruct, self.refDataStruct, self.refInfoStruct = rfdParser.getImage(dataFileName, dataFileLocation, phantFileName, phantFileLocation)
-            self.arHeight = imArray.shape[0]
-            self.arWidth = imArray.shape[1]
-            self.imData = np.array(imArray).reshape(self.arHeight, self.arWidth)
-            self.imData = np.flipud(self.imData) #flipud
+        elif dataFileName[-4:] == ".rfd" and phantFileName[-4:] == ".rfd": # Display Philips image and assign relevant default analysis params
+            self.imArray, self.imgDataStruct, self.imgInfoStruct, self.refDataStruct, self.refInfoStruct = rfdParser.getImage(dataFileName, dataFileLocation, phantFileName, phantFileLocation)
+            self.frame = 0
+            self.imData = np.array(self.imArray[self.frame]).reshape(self.imArray.shape[1], self.imArray.shape[2])
             self.imData = np.require(self.imData,np.uint8,'C')
+            self.maskCoverImg = np.zeros([501, 721, 4])
             self.bytesLine = self.imData.strides[0]
-            self.qIm = QImage(self.imData, self.arWidth, self.arHeight, self.bytesLine, QImage.Format_Grayscale8).scaled(721, 501)
+            self.arHeight = self.imData.shape[0]
+            self.arWidth = self.imData.shape[1]
+            self.qIm = QImage(self.imData, self.arWidth, self.arHeight, self.bytesLine, QImage.Format_Grayscale8)
 
-            self.qIm.mirrored().save(os.path.join("Junk", "bModeImRaw.png")) # Save as .png file
+            self.imDisplayFrame.setPixmap(QPixmap.fromImage(self.qIm).scaled(721, 501))
 
             self.pixSizeAx = self.imgDataStruct.bMode.shape[0] #were both scBmode
             self.pixSizeLat = self.imgDataStruct.bMode.shape[1]
 
-            self.editImageDisplayGUI.contrastVal.setValue(4)
-            self.editImageDisplayGUI.brightnessVal.setValue(0.75)
-            self.editImageDisplayGUI.sharpnessVal.setValue(3)
+            self.ofFramesLabel.setHidden(False)
+            self.curFrameLabel.setHidden(False)
+            self.totalFramesLabel.setHidden(False)
+            self.curFrameSlider.setHidden(False)
+            self.curFrameSlider.setMaximum(self.imArray.shape[0]-1)
+            self.totalFramesLabel.setText(str(self.imArray.shape[0]-1))
+            self.curFrameSlider.valueChanged.connect(self.curFrameChanged)
 
             self.axOverlapVal = 50
             self.latOverlapVal = 50
@@ -205,11 +245,11 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
             self.clipFactorVal = 95
             self.minFreqVal = 7
             self.maxFreqVal = 17
-            self.axWinSizeVal = 3.5#1480/40000000*5000 # must be at least 10 times wavelength
-            self.latWinSizeVal = 3.5#self.axialWinSize * 6 # must be at least 10 times wavelength
+            self.axWinSizeVal = 0.5#1480/40000000*5000 # must be at least 10 times wavelength
+            self.latWinSizeVal = 1.5#self.axialWinSize * 6 # must be at least 10 times wavelength
             self.samplingFreqVal = 40
 
-        if imageFilePath.endswith(".dcm"):
+        elif imageFilePath.endswith(".dcm"):
             ds = pydicom.dcmread(imageFilePath)
             imArray = ds.pixel_array
 
@@ -232,125 +272,90 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
 
         else:
             return
-
-        # Implement correct previously assigned image display settings
-
-        self.cvIm = Image.open(os.path.join("Junk", "bModeImRaw.png"))
-        enhancer = ImageEnhance.Contrast(self.cvIm)
-
-        imOutput = enhancer.enhance(self.editImageDisplayGUI.contrastVal.value())
-        bright = ImageEnhance.Brightness(imOutput)
-        imOutput = bright.enhance(self.editImageDisplayGUI.brightnessVal.value())
-        sharp = ImageEnhance.Sharpness(imOutput)
-        imOutput = sharp.enhance(self.editImageDisplayGUI.sharpnessVal.value())
-        imOutput.save(os.path.join("Junk", "bModeIm.png"))
-
+        
         self.plotOnCanvas()
 
-    def recordDrawROIClicked(self):
-        if self.drawRoiButton.isChecked(): # Set up b-mode to be drawn on
-            # image, =self.ax.plot([], [], marker="o",markersize=3, markerfacecolor="red")
-            # self.cid = image.figure.canvas.mpl_connect('button_press_event', self.interpolatePoints)
-            self.cid = self.figure.canvas.mpl_connect('button_press_event', self.interpolatePoints)
-            self.cursor.set_active(True)
-        else: # No longer let b-mode be drawn on
-            self.cid = self.figure.canvas.mpl_disconnect(self.cid)
-            self.cursor.set_active(False)
-        self.canvas.draw()
-
-    def undoLastPt(self): # When drawing ROI, undo last point plotted
-        if len(pointsPlottedX) > 0:
-            self.scatteredPoints[-1].remove()
-            self.scatteredPoints.pop()
-            pointsPlottedX.pop()
-            pointsPlottedY.pop()
-            if len(pointsPlottedX) > 0:
-                global finalSplineX
-                global finalSplineY
-                oldSpline = self.spline.pop(0)
-                oldSpline.remove()
-                if len(pointsPlottedX) > 1:
-                    finalSplineX, finalSplineY = calculateSpline(pointsPlottedX, pointsPlottedY)
-                    self.spline = self.ax.plot(finalSplineX, finalSplineY, color = "cyan", linewidth=0.75)
-            self.canvas.draw()
-            self.drawRoiButton.setChecked(True)
-            self.recordDrawROIClicked()
+    def curFrameChanged(self):
+        self.frame = self.curFrameSlider.value()
+        self.curFrameLabel.setText(str(self.frame))
+        self.plotOnCanvas()
 
     def closeInterpolation(self): # Finish drawing ROI
-        if len(pointsPlottedX) > 2:
-            self.ax.clear()
-            im = plt.imread(os.path.join("Junk", "bModeIm.png"))
-            plt.imshow(im, cmap='Greys_r')
-            pointsPlottedX.append(pointsPlottedX[0])
-            pointsPlottedY.append(pointsPlottedY[0])
-            global finalSplineX, finalSplineY
-            finalSplineX, finalSplineY = calculateSpline(pointsPlottedX, pointsPlottedY)
-            self.ax.plot(finalSplineX, finalSplineY, color = "cyan", linewidth=0.75)
-            image, =self.ax.plot([], [], marker="o",markersize=3, markerfacecolor="red")
-            image.figure.canvas.mpl_disconnect(self.cid)
-            self.figure.subplots_adjust(left=0,right=1, bottom=0,top=1, hspace=0.2,wspace=0.2)
-            plt.tick_params(bottom=False, left=False)
-            self.canvas.draw()
-            self.ROIDrawn = True
+        if len(self.curPointsPlottedX) > 2:
+            self.drawRoiButton.setChecked(False)
+
+            # remove duplicate points
+            points = np.transpose(np.array([self.curPointsPlottedX, self.curPointsPlottedY]))
+            points = removeDuplicates(points)
+            [self.curPointsPlottedX, self.curPointsPlottedY] = np.transpose(points)
+            points = np.transpose(np.array([self.finalSplineX, self.finalSplineY]))
+            points = removeDuplicates(points)
+            [self.finalSplineX, self.finalSplineY] = np.transpose(points)
+            self.curPointsPlottedX = list(self.curPointsPlottedX)
+            self.curPointsPlottedY = list(self.curPointsPlottedY)
+            self.finalSplineX = list(self.finalSplineX)
+            self.finalSplineY = list(self.finalSplineY)
+            self.curPointsPlottedX.append(self.curPointsPlottedX[0])
+            self.curPointsPlottedY.append(self.curPointsPlottedY[0])
+            self.finalSplineX.append(self.finalSplineX[0])
+            self.finalSplineY.append(self.finalSplineY[0])
+            self.maskCoverImg.fill(0)
+
+            xSpline, ySpline = calculateSpline(self.curPointsPlottedX, self.curPointsPlottedY)
+            self.xSpline = xSpline
+            self.ySpline = ySpline
+            spline = [(int(xSpline[i]), int(ySpline[i])) for i in range(len(xSpline))]
+            spline = np.array([*set(spline)])
+            xSpline, ySpline = np.transpose(spline)
+            xSpline = np.clip(xSpline, a_min=0, a_max=500)
+            ySpline = np.clip(ySpline, a_min=0, a_max=720)
+            for i in range(len(xSpline)):
+                self.maskCoverImg[xSpline[i]-1:xSpline[i]+2, ySpline[i]-1:ySpline[i]+2] = [0, 0, 255, 255]
+            self.curPointsPlottedX = []
+            self.curPointsPlottedY = []
             self.drawRoiButton.setChecked(False)
             self.drawRoiButton.setCheckable(False)
             self.redrawRoiButton.setHidden(False)
             self.closeRoiButton.setHidden(True)
-            self.cursor.set_active(False)
-            self.undoLastPtButton.clicked.disconnect()
-            self.canvas.draw()
+            self.plotOnCanvas()
 
-    def restartROI(self): # Remove previously drawn roi and prepare user to draw a new one
-        self.ax.clear()
-        im = plt.imread(os.path.join("Junk", "bModeIm.png"))
-        self.ax.imshow(im, cmap='Greys_r')
-        global pointsPlottedX, pointsPlottedY, finalSplineX, finalSplineY
-        finalSplineX = []
-        finalSplineY = []
-        pointsPlottedX = []
-        pointsPlottedY = []
-        self.drawRoiButton.setChecked(False)
-        image, = self.ax.plot([], [], marker="o", markersize=3, markerfacecolor="red")
-        image.figure.canvas.mpl_disconnect(self.cid)
-        self.figure.subplots_adjust(left=0,right=1, bottom=0,top=1, hspace=0.2,wspace=0.2)
-        self.ax.tick_params(bottom=False, left=False)
-        self.canvas.draw()
-        self.drawRoiButton.setCheckable(True)
-        self.closeRoiButton.setHidden(False)
-        self.redrawRoiButton.setHidden(True)
-        self.undoLastPtButton.clicked.connect(self.undoLastPt)
+    def undoLastPt(self):
+        if len(self.curPointsPlottedX):
+            self.maskCoverImg[self.curPointsPlottedX[-1]-2:self.curPointsPlottedX[-1]+3, \
+                            self.curPointsPlottedY[-1]-2:self.curPointsPlottedY[-1]+3] = [0,0,0,0]
+            self.curPointsPlottedX.pop()
+            self.curPointsPlottedY.pop()
+            self.finalSplineX.pop()
+            self.finalSplineY.pop()
+            self.updateSpline()
 
-    def updateBModeSettings(self): # Updates background photo when image settings are modified
-        self.cvIm = Image.open(os.path.join("Junk", "bModeImRaw.png"))
-        contrast = ImageEnhance.Contrast(self.cvIm)
-        imOutput = contrast.enhance(self.editImageDisplayGUI.contrastVal.value())
-        brightness = ImageEnhance.Brightness(imOutput)
-        imOutput = brightness.enhance(self.editImageDisplayGUI.brightnessVal.value())
-        sharpness = ImageEnhance.Sharpness(imOutput)
-        imOutput = sharpness.enhance(self.editImageDisplayGUI.sharpnessVal.value())
-        imOutput.save(os.path.join("Junk", "bModeIm.png"))
-        self.plotOnCanvas()
-    
-    def interpolatePoints(self, event): # Update ROI being drawn using spline using 2D interpolation
-        pointsPlottedX.append(int(event.xdata))
-        pointsPlottedY.append(int(event.ydata))
-        plottedPoints = len(pointsPlottedX)
-
-        if plottedPoints > 1:
-            if plottedPoints > 2:
-                oldSpline = self.spline.pop(0)
-                oldSpline.remove()
-
-            xSpline, ySpline = calculateSpline(pointsPlottedX, pointsPlottedY)
-            self.spline = self.ax.plot(xSpline, ySpline, color = "cyan", zorder=1, linewidth=0.75)
-            plt.subplots_adjust(left=0,right=1, bottom=0,top=1, hspace=0.2,wspace=0.2)
-            plt.tick_params(bottom=False, left=False)
-        self.scatteredPoints.append(self.ax.scatter(pointsPlottedX[-1], pointsPlottedY[-1], marker="o", s=0.5, c="red", zorder=500))
-        self.canvas.draw()
+    def undoLastRoi(self):
+        if not self.drawRoiButton.isCheckable():
+            self.curPointsPlottedX = []
+            self.curPointsPlottedY = []
+            self.finalSplineX = []
+            self.finalSplineY = []
+            self.drawRoiButton.setCheckable(True)
+            self.redrawRoiButton.setHidden(True)
+            self.closeRoiButton.setHidden(False)
+            self.maskCoverImg.fill(0)
+            self.plotOnCanvas()
+            self.update()
 
     def acceptROI(self):
-        if len(pointsPlottedX) > 1 and pointsPlottedX[0] == pointsPlottedX[-1]:
+        if len(self.finalSplineX):
             del self.analysisParamsGUI
+
+            imData = np.array(self.imArray[self.frame]).reshape(self.arHeight, self.arWidth)
+            imData = np.flipud(imData)
+            imData = np.require(imData, np.uint8, 'C')
+            bytesLine = imData.strides[0]
+            arHeight = imData.shape[0]
+            arWidth = imData.shape[1]
+            savedIm = QImage(imData, arWidth, arHeight, bytesLine, QImage.Format_Grayscale8).scaled(721, 501)
+
+            savedIm.mirrored().save(os.path.join("Junk", "bModeImRaw.png"))
+            savedIm.mirrored().save(os.path.join("Junk", "bModeIm.png"))
             self.analysisParamsGUI = AnalysisParamsGUI()
             self.analysisParamsGUI.axWinSizeVal.setValue(self.axWinSizeVal)
             self.analysisParamsGUI.latWinSizeVal.setValue(self.latWinSizeVal)
@@ -358,17 +363,18 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
             self.analysisParamsGUI.latOverlapVal.setValue(self.latOverlapVal)
             self.analysisParamsGUI.minFreqVal.setValue(self.minFreqVal)
             self.analysisParamsGUI.maxFreqVal.setValue(self.maxFreqVal)
-            self.analysisParamsGUI.startDepthVal.setValue(self.startDepthVal)
-            self.analysisParamsGUI.endDepthVal.setValue(self.endDepthVal)
+            # self.analysisParamsGUI.startDepthVal.setValue(self.startDepthVal)
+            # self.analysisParamsGUI.endDepthVal.setValue(self.endDepthVal)
             self.analysisParamsGUI.clipFactorVal.setValue(self.clipFactorVal)
             self.analysisParamsGUI.samplingFreqVal.setValue(self.samplingFreqVal)
-            self.analysisParamsGUI.finalSplineX = finalSplineX
-            self.analysisParamsGUI.finalSplineY = finalSplineY
+            self.analysisParamsGUI.finalSplineX = self.ySpline
+            self.analysisParamsGUI.finalSplineY = self.xSpline
+            self.analysisParamsGUI.frame = self.frame
+            self.analysisParamsGUI.imArray = self.imArray
             self.analysisParamsGUI.setFilenameDisplays(self.imagePathInput.text().split('/')[-1], self.phantomPathInput.text().split('/')[-1])
             self.analysisParamsGUI.show()
             self.analysisParamsGUI.lastGui = self
-            self.editImageDisplayGUI.hide()
-            self.hide()
+            # self.hide()
 
 def calculateSpline(xpts, ypts): # 2D spline interpolation
     cv = []
@@ -383,3 +389,9 @@ def calculateSpline(xpts, ypts): # 2D spline interpolation
         tck, u_ = interpolate.splprep(cv.T, s=0.0, k=3)
     x,y = np.array(interpolate.splev(np.linspace(0, 1, 1000), tck))
     return x, y
+
+def removeDuplicates(ar):
+        # Credit: https://stackoverflow.com/questions/480214/how-do-i-remove-duplicates-from-a-list-while-preserving-order
+        seen = set()
+        seen_add = seen.add
+        return [x for x in ar if not (tuple(x) in seen or seen_add(tuple(x)))]

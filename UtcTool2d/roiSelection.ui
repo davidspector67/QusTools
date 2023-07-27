@@ -50,22 +50,6 @@
     <bool>true</bool>
    </property>
   </widget>
-  <widget class="QFrame" name="imDisplayFrame">
-   <property name="geometry">
-    <rect>
-     <x>400</x>
-     <y>190</y>
-     <width>721</width>
-     <height>501</height>
-    </rect>
-   </property>
-   <property name="frameShape">
-    <enum>QFrame::StyledPanel</enum>
-   </property>
-   <property name="frameShadow">
-    <enum>QFrame::Raised</enum>
-   </property>
-  </widget>
   <widget class="QPushButton" name="drawRoiButton">
    <property name="geometry">
     <rect>
@@ -502,8 +486,8 @@ QPushButton:checked {
   <widget class="QPushButton" name="editImageDisplayButton">
    <property name="geometry">
     <rect>
-     <x>940</x>
-     <y>700</y>
+     <x>960</x>
+     <y>690</y>
      <width>181</width>
      <height>41</height>
     </rect>
@@ -587,6 +571,164 @@ QPushButton:checked {
    </property>
    <property name="text">
     <string>Back</string>
+   </property>
+  </widget>
+  <widget class="QSlider" name="curFrameSlider">
+   <property name="geometry">
+    <rect>
+     <x>550</x>
+     <y>691</y>
+     <width>251</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="QLabel" name="curFrameLabel">
+   <property name="geometry">
+    <rect>
+     <x>810</x>
+     <y>695</y>
+     <width>51</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QLabel {
+	font-size: 15px;
+	color: rgb(255, 255, 255);
+	background-color: rgba(255, 255, 255, 0);
+}</string>
+   </property>
+   <property name="text">
+    <string>0</string>
+   </property>
+   <property name="textFormat">
+    <enum>Qt::AutoText</enum>
+   </property>
+   <property name="scaledContents">
+    <bool>false</bool>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="ofFramesLabel">
+   <property name="geometry">
+    <rect>
+     <x>860</x>
+     <y>695</y>
+     <width>51</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QLabel {
+	font-size: 15px;
+	color: rgb(255, 255, 255);
+	background-color: rgba(255, 255, 255, 0);
+}</string>
+   </property>
+   <property name="text">
+    <string>of</string>
+   </property>
+   <property name="textFormat">
+    <enum>Qt::AutoText</enum>
+   </property>
+   <property name="scaledContents">
+    <bool>false</bool>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="totalFramesLabel">
+   <property name="geometry">
+    <rect>
+     <x>910</x>
+     <y>695</y>
+     <width>51</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QLabel {
+	font-size: 15px;
+	color: rgb(255, 255, 255);
+	background-color: rgba(255, 255, 255, 0);
+}</string>
+   </property>
+   <property name="text">
+    <string>0</string>
+   </property>
+   <property name="textFormat">
+    <enum>Qt::AutoText</enum>
+   </property>
+   <property name="scaledContents">
+    <bool>false</bool>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="imDisplayFrame">
+   <property name="geometry">
+    <rect>
+     <x>400</x>
+     <y>170</y>
+     <width>721</width>
+     <height>501</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="imMaskFrame">
+   <property name="geometry">
+    <rect>
+     <x>400</x>
+     <y>170</y>
+     <width>721</width>
+     <height>501</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QLabel {
+	background-color: transparent;
+}</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="imCoverFrame">
+   <property name="geometry">
+    <rect>
+     <x>400</x>
+     <y>170</y>
+     <width>721</width>
+     <height>501</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QLabel {
+	background-color: transparent;
+}</string>
+   </property>
+   <property name="text">
+    <string/>
    </property>
   </widget>
  </widget>

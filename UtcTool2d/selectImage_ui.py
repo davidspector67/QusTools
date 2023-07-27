@@ -114,10 +114,10 @@ class Ui_selectImage(object):
 "}")
         self.selectImageErrorMsg = QLabel(selectImage)
         self.selectImageErrorMsg.setObjectName(u"selectImageErrorMsg")
-        self.selectImageErrorMsg.setGeometry(QRect(700, 580, 111, 41))
+        self.selectImageErrorMsg.setGeometry(QRect(550, 590, 421, 81))
         self.selectImageErrorMsg.setStyleSheet(u"QLabel {\n"
 "	color: rgb(255, 0, 23);\n"
-"	font-size: 25px;\n"
+"	font-size: 20px;\n"
 "	background-color: rgba(255, 255, 255, 0);\n"
 "}")
         self.selectImageErrorMsg.setAlignment(Qt.AlignCenter)
@@ -355,7 +355,9 @@ class Ui_selectImage(object):
         self.chooseImageFileButton.setText(QCoreApplication.translate("selectImage", u"Choose File", None))
         self.clearImagePathButton.setText(QCoreApplication.translate("selectImage", u"Clear Path", None))
         self.generateImageButton.setText(QCoreApplication.translate("selectImage", u"Generate Image", None))
-        self.selectImageErrorMsg.setText(QCoreApplication.translate("selectImage", u"Error Msg", None))
+        self.selectImageErrorMsg.setText(QCoreApplication.translate("selectImage", u"ERROR: At least one dimension of phantom data\n"
+"smaller than corresponding dimension\n"
+"of image data", None))
         self.imagePathFolderLabel.setText(QCoreApplication.translate("selectImage", u"Input Path to Image Folder", None))
         self.phantomPathFolderLabel.setText(QCoreApplication.translate("selectImage", u"Input Path to Phantom Folder", None))
         self.choosePhantomFolderButton.setText(QCoreApplication.translate("selectImage", u"Choose Folder", None))

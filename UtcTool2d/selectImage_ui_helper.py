@@ -55,6 +55,27 @@ class SelectImageGUI_UtcTool2d(Ui_selectImage, QWidget):
 
     def moveToRoiSelection(self):
         if os.path.exists(self.imagePathInput.text()) and os.path.exists(self.phantomPathInput.text()):
+            if self.imagePathInput.text().endswith('.rfd') and self.phantomPathInput.text().endswith('.rfd'):
+                imageName = self.imagePathInput.text().split('/')[-1]
+                phantomName = self.phantomPathInput.text().split('/')[-1]
+                vIm = imageName.split("SpV")[1]
+                vIm = vIm.split("_")[0]
+                fIm = imageName.split("VpF")[1]
+                fIm = fIm.split("_")[0]
+                aIm = imageName.split("FpA")[1]
+                aIm = aIm.split("_")[0]
+                vPhant = phantomName.split("SpV")[1]
+                vPhant = vPhant.split("_")[0]
+                fPhant = phantomName.split("VpF")[1]
+                fPhant = fPhant.split("_")[0]
+                aPhant = phantomName.split("FpA")[1]
+                aPhant = aPhant.split("_")[0]
+                
+                if aPhant < aIm or vPhant < vIm or fPhant < fPhant:
+                    self.selectImageErrorMsg.setHidden(False)
+                    return
+
+    
             del self.roiSelectionGUI
             self.roiSelectionGUI = RoiSelectionGUI()
             self.roiSelectionGUI.setFilenameDisplays(self.imagePathInput.text().split('/')[-1], self.phantomPathInput.text().split('/')[-1])
@@ -110,11 +131,13 @@ class SelectImageGUI_UtcTool2d(Ui_selectImage, QWidget):
         os.mkdir("Junk")
 
         selectImageHelper(self.imagePathInput)
+        self.selectImageErrorMsg.setHidden(True)
 
     def selectPhantomFile(self):
         if not self.choosingIndividualFiles:
             return
         selectImageHelper(self.phantomPathInput)
+        self.selectImageErrorMsg.setHidden(True)
 
 
 

@@ -151,7 +151,7 @@ class Ui_analysisParams(object):
         self.rfAnalysisLabel.setAlignment(Qt.AlignCenter)
         self.analysisParamsLabel_2 = QLabel(analysisParams)
         self.analysisParamsLabel_2.setObjectName(u"analysisParamsLabel_2")
-        self.analysisParamsLabel_2.setGeometry(QRect(460, -20, 571, 131))
+        self.analysisParamsLabel_2.setGeometry(QRect(460, 10, 571, 131))
         self.analysisParamsLabel_2.setStyleSheet(u"QLabel {\n"
 "	font-size: 29px;\n"
 "	color: rgb(255, 255, 255);\n"
@@ -163,62 +163,32 @@ class Ui_analysisParams(object):
         self.analysisParamsLabel_2.setWordWrap(True)
         self.continueButton = QPushButton(analysisParams)
         self.continueButton.setObjectName(u"continueButton")
-        self.continueButton.setGeometry(QRect(670, 620, 171, 41))
+        self.continueButton.setGeometry(QRect(670, 580, 171, 41))
         self.continueButton.setStyleSheet(u"QPushButton {\n"
 "	color: white;\n"
 "	font-size: 16px;\n"
 "	background: rgb(90, 37, 255);\n"
 "	border-radius: 15px;\n"
 "}")
-        self.frameVal = QSpinBox(analysisParams)
-        self.frameVal.setObjectName(u"frameVal")
-        self.frameVal.setGeometry(QRect(1060, 425, 51, 31))
-        self.frameVal.setStyleSheet(u"QSpinBox {\n"
-"	background-color: white;\n"
-"	color: black;\n"
-"}")
-        self.endDepthVal = QDoubleSpinBox(analysisParams)
-        self.endDepthVal.setObjectName(u"endDepthVal")
-        self.endDepthVal.setGeometry(QRect(1050, 200, 61, 21))
-        self.endDepthVal.setStyleSheet(u"QDoubleSpinBox {\n"
-"	background-color: white;\n"
-"	color: black;\n"
-"}")
         self.latOverlapVal = QSpinBox(analysisParams)
         self.latOverlapVal.setObjectName(u"latOverlapVal")
-        self.latOverlapVal.setGeometry(QRect(670, 345, 51, 31))
+        self.latOverlapVal.setGeometry(QRect(670, 415, 51, 31))
         self.latOverlapVal.setStyleSheet(u"QSpinBox {\n"
-"	background-color: white;\n"
-"	color: black;\n"
-"}")
-        self.startDepthVal = QDoubleSpinBox(analysisParams)
-        self.startDepthVal.setObjectName(u"startDepthVal")
-        self.startDepthVal.setGeometry(QRect(1050, 125, 61, 21))
-        self.startDepthVal.setStyleSheet(u"QDoubleSpinBox {\n"
 "	background-color: white;\n"
 "	color: black;\n"
 "}")
         self.axOverlapVal = QSpinBox(analysisParams)
         self.axOverlapVal.setObjectName(u"axOverlapVal")
-        self.axOverlapVal.setGeometry(QRect(670, 265, 51, 31))
+        self.axOverlapVal.setGeometry(QRect(670, 345, 51, 31))
         self.axOverlapVal.setStyleSheet(u"QSpinBox {\n"
 "	background-color: white;\n"
 "	color: black;\n"
 "}")
-        self.frameLabel = QLabel(analysisParams)
-        self.frameLabel.setObjectName(u"frameLabel")
-        self.frameLabel.setGeometry(QRect(790, 420, 231, 51))
-        font = QFont()
-        font.setPointSize(18)
-        self.frameLabel.setFont(font)
-        self.frameLabel.setStyleSheet(u"QLabel {\n"
-"	color: white;\n"
-"	background-color: rgba(0,0,0,0);\n"
-"}")
-        self.frameLabel.setAlignment(Qt.AlignCenter)
         self.maxFreqLabel = QLabel(analysisParams)
         self.maxFreqLabel.setObjectName(u"maxFreqLabel")
-        self.maxFreqLabel.setGeometry(QRect(580, 500, 231, 51))
+        self.maxFreqLabel.setGeometry(QRect(790, 410, 231, 51))
+        font = QFont()
+        font.setPointSize(18)
         self.maxFreqLabel.setFont(font)
         self.maxFreqLabel.setStyleSheet(u"QLabel {\n"
 "	color: white;\n"
@@ -227,7 +197,7 @@ class Ui_analysisParams(object):
         self.maxFreqLabel.setAlignment(Qt.AlignCenter)
         self.minFreqLabel = QLabel(analysisParams)
         self.minFreqLabel.setObjectName(u"minFreqLabel")
-        self.minFreqLabel.setGeometry(QRect(400, 420, 231, 51))
+        self.minFreqLabel.setGeometry(QRect(790, 330, 231, 51))
         self.minFreqLabel.setFont(font)
         self.minFreqLabel.setStyleSheet(u"QLabel {\n"
 "	color: white;\n"
@@ -236,7 +206,7 @@ class Ui_analysisParams(object):
         self.minFreqLabel.setAlignment(Qt.AlignCenter)
         self.latOverlapLabel = QLabel(analysisParams)
         self.latOverlapLabel.setObjectName(u"latOverlapLabel")
-        self.latOverlapLabel.setGeometry(QRect(400, 340, 231, 51))
+        self.latOverlapLabel.setGeometry(QRect(400, 410, 231, 51))
         self.latOverlapLabel.setFont(font)
         self.latOverlapLabel.setStyleSheet(u"QLabel {\n"
 "	color: white;\n"
@@ -245,7 +215,7 @@ class Ui_analysisParams(object):
         self.latOverlapLabel.setAlignment(Qt.AlignCenter)
         self.axOverlapLabel = QLabel(analysisParams)
         self.axOverlapLabel.setObjectName(u"axOverlapLabel")
-        self.axOverlapLabel.setGeometry(QRect(400, 260, 231, 51))
+        self.axOverlapLabel.setGeometry(QRect(400, 330, 231, 51))
         self.axOverlapLabel.setFont(font)
         self.axOverlapLabel.setStyleSheet(u"QLabel {\n"
 "	color: white;\n"
@@ -254,7 +224,7 @@ class Ui_analysisParams(object):
         self.axOverlapLabel.setAlignment(Qt.AlignCenter)
         self.latWinSizeLabel = QLabel(analysisParams)
         self.latWinSizeLabel.setObjectName(u"latWinSizeLabel")
-        self.latWinSizeLabel.setGeometry(QRect(400, 180, 231, 51))
+        self.latWinSizeLabel.setGeometry(QRect(400, 260, 231, 51))
         self.latWinSizeLabel.setFont(font)
         self.latWinSizeLabel.setStyleSheet(u"QLabel {\n"
 "	color: white;\n"
@@ -263,34 +233,16 @@ class Ui_analysisParams(object):
         self.latWinSizeLabel.setAlignment(Qt.AlignCenter)
         self.axWinSizeLabel = QLabel(analysisParams)
         self.axWinSizeLabel.setObjectName(u"axWinSizeLabel")
-        self.axWinSizeLabel.setGeometry(QRect(400, 110, 231, 51))
+        self.axWinSizeLabel.setGeometry(QRect(400, 190, 231, 51))
         self.axWinSizeLabel.setFont(font)
         self.axWinSizeLabel.setStyleSheet(u"QLabel {\n"
 "	color: white;\n"
 "	background-color: rgba(0,0,0,0);\n"
 "}")
         self.axWinSizeLabel.setAlignment(Qt.AlignCenter)
-        self.startDepthLabel = QLabel(analysisParams)
-        self.startDepthLabel.setObjectName(u"startDepthLabel")
-        self.startDepthLabel.setGeometry(QRect(790, 110, 231, 51))
-        self.startDepthLabel.setFont(font)
-        self.startDepthLabel.setStyleSheet(u"QLabel {\n"
-"	color: white;\n"
-"	background-color: rgba(0,0,0,0);\n"
-"}")
-        self.startDepthLabel.setAlignment(Qt.AlignCenter)
-        self.endDepthLabel = QLabel(analysisParams)
-        self.endDepthLabel.setObjectName(u"endDepthLabel")
-        self.endDepthLabel.setGeometry(QRect(790, 180, 231, 51))
-        self.endDepthLabel.setFont(font)
-        self.endDepthLabel.setStyleSheet(u"QLabel {\n"
-"	color: white;\n"
-"	background-color: rgba(0,0,0,0);\n"
-"}")
-        self.endDepthLabel.setAlignment(Qt.AlignCenter)
         self.clipFactorLabel = QLabel(analysisParams)
         self.clipFactorLabel.setObjectName(u"clipFactorLabel")
-        self.clipFactorLabel.setGeometry(QRect(790, 250, 231, 51))
+        self.clipFactorLabel.setGeometry(QRect(790, 190, 231, 51))
         self.clipFactorLabel.setFont(font)
         self.clipFactorLabel.setStyleSheet(u"QLabel {\n"
 "	color: white;\n"
@@ -299,7 +251,7 @@ class Ui_analysisParams(object):
         self.clipFactorLabel.setAlignment(Qt.AlignCenter)
         self.samplingFreqLabel = QLabel(analysisParams)
         self.samplingFreqLabel.setObjectName(u"samplingFreqLabel")
-        self.samplingFreqLabel.setGeometry(QRect(790, 340, 231, 51))
+        self.samplingFreqLabel.setGeometry(QRect(790, 260, 231, 51))
         self.samplingFreqLabel.setFont(font)
         self.samplingFreqLabel.setStyleSheet(u"QLabel {\n"
 "	color: white;\n"
@@ -328,42 +280,42 @@ class Ui_analysisParams(object):
         self.exportResultsLabel.setAlignment(Qt.AlignCenter)
         self.minFreqVal = QDoubleSpinBox(analysisParams)
         self.minFreqVal.setObjectName(u"minFreqVal")
-        self.minFreqVal.setGeometry(QRect(670, 440, 61, 21))
+        self.minFreqVal.setGeometry(QRect(1060, 350, 61, 21))
         self.minFreqVal.setStyleSheet(u"QDoubleSpinBox {\n"
 "	background-color: white;\n"
 "	color: black;\n"
 "}")
         self.maxFreqVal = QDoubleSpinBox(analysisParams)
         self.maxFreqVal.setObjectName(u"maxFreqVal")
-        self.maxFreqVal.setGeometry(QRect(850, 510, 61, 21))
+        self.maxFreqVal.setGeometry(QRect(1060, 420, 61, 21))
         self.maxFreqVal.setStyleSheet(u"QDoubleSpinBox {\n"
 "	background-color: white;\n"
 "	color: black;\n"
 "}")
         self.samplingFreqVal = QDoubleSpinBox(analysisParams)
         self.samplingFreqVal.setObjectName(u"samplingFreqVal")
-        self.samplingFreqVal.setGeometry(QRect(1060, 350, 61, 21))
+        self.samplingFreqVal.setGeometry(QRect(1060, 270, 61, 21))
         self.samplingFreqVal.setStyleSheet(u"QDoubleSpinBox {\n"
 "	background-color: white;\n"
 "	color: black;\n"
 "}")
         self.axWinSizeVal = QDoubleSpinBox(analysisParams)
         self.axWinSizeVal.setObjectName(u"axWinSizeVal")
-        self.axWinSizeVal.setGeometry(QRect(670, 130, 61, 21))
+        self.axWinSizeVal.setGeometry(QRect(670, 210, 61, 21))
         self.axWinSizeVal.setStyleSheet(u"QDoubleSpinBox {\n"
 "	background-color: white;\n"
 "	color: black;\n"
 "}")
         self.latWinSizeVal = QDoubleSpinBox(analysisParams)
         self.latWinSizeVal.setObjectName(u"latWinSizeVal")
-        self.latWinSizeVal.setGeometry(QRect(670, 190, 61, 21))
+        self.latWinSizeVal.setGeometry(QRect(670, 270, 61, 21))
         self.latWinSizeVal.setStyleSheet(u"QDoubleSpinBox {\n"
 "	background-color: white;\n"
 "	color: black;\n"
 "}")
         self.clipFactorVal = QSpinBox(analysisParams)
         self.clipFactorVal.setObjectName(u"clipFactorVal")
-        self.clipFactorVal.setGeometry(QRect(1060, 260, 51, 31))
+        self.clipFactorVal.setGeometry(QRect(1060, 200, 51, 31))
         self.clipFactorVal.setStyleSheet(u"QSpinBox {\n"
 "	background-color: white;\n"
 "	color: black;\n"
@@ -398,16 +350,13 @@ class Ui_analysisParams(object):
         self.rfAnalysisLabel.setText(QCoreApplication.translate("analysisParams", u"Radio Frequency Data Analysis", None))
         self.analysisParamsLabel_2.setText(QCoreApplication.translate("analysisParams", u"Select Radio Frequency Analysis Parameters:", None))
         self.continueButton.setText(QCoreApplication.translate("analysisParams", u"Continue", None))
-        self.frameLabel.setText(QCoreApplication.translate("analysisParams", u"Frame", None))
         self.maxFreqLabel.setText(QCoreApplication.translate("analysisParams", u"Maximum Frequency (MHz)", None))
-        self.minFreqLabel.setText(QCoreApplication.translate("analysisParams", u"MinimumFrequency (MHz)", None))
+        self.minFreqLabel.setText(QCoreApplication.translate("analysisParams", u"Minimum Frequency (MHz)", None))
         self.latOverlapLabel.setText(QCoreApplication.translate("analysisParams", u"Lateral Overlap (%)", None))
         self.axOverlapLabel.setText(QCoreApplication.translate("analysisParams", u"Axial Overlap (%)", None))
         self.latWinSizeLabel.setText(QCoreApplication.translate("analysisParams", u"Lateral Window Size (mm)", None))
         self.axWinSizeLabel.setText(QCoreApplication.translate("analysisParams", u"Axial Window Size (mm)", None))
-        self.startDepthLabel.setText(QCoreApplication.translate("analysisParams", u"Starting Depth (mm)", None))
-        self.endDepthLabel.setText(QCoreApplication.translate("analysisParams", u"Ending Depth (mm)", None))
-        self.clipFactorLabel.setText(QCoreApplication.translate("analysisParams", u"Clip Factor (%)", None))
+        self.clipFactorLabel.setText(QCoreApplication.translate("analysisParams", u"Window Threshold (%)", None))
         self.samplingFreqLabel.setText(QCoreApplication.translate("analysisParams", u"Sampling Frequency (MHz)", None))
         self.exportResultsLabel.setText(QCoreApplication.translate("analysisParams", u"Export Results", None))
         self.backButton.setText(QCoreApplication.translate("analysisParams", u"Back", None))

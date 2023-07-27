@@ -21,9 +21,10 @@ class AnalysisParamsGUI(Ui_analysisParams, QWidget):
 
         self.rfAnalysisGUI = None
         self.lastGui = None
-
         self.finalSplineX = None
         self.finalSplineY = None
+        self.frame = None
+        self.imArray = None
 
         self.continueButton.clicked.connect(self.continueToRfAnalysis)
         self.backButton.clicked.connect(self.backToLastScreen)
@@ -45,9 +46,9 @@ class AnalysisParamsGUI(Ui_analysisParams, QWidget):
         self.rfAnalysisGUI.imgInfoStruct = self.lastGui.imgInfoStruct
         self.rfAnalysisGUI.refDataStruct = self.lastGui.refDataStruct
         self.rfAnalysisGUI.refInfoStruct = self.lastGui.refInfoStruct
-        self.rfAnalysisGUI.editImageDisplayGUI.contrastVal.setValue(self.lastGui.editImageDisplayGUI.contrastVal.value())
-        self.rfAnalysisGUI.editImageDisplayGUI.brightnessVal.setValue(self.lastGui.editImageDisplayGUI.brightnessVal.value())
-        self.rfAnalysisGUI.editImageDisplayGUI.sharpnessVal.setValue(self.lastGui.editImageDisplayGUI.sharpnessVal.value())
+        self.rfAnalysisGUI.frame = self.frame
+        # self.rfAnalysisGUI.imArray = self.imArray
+        self.rfAnalysisGUI.editImageDisplayButton.setHidden(True)
         self.rfAnalysisGUI.axialWinSize = self.axWinSizeVal.value()
         self.rfAnalysisGUI.lateralWinSize = self.latWinSizeVal.value()
         self.rfAnalysisGUI.axialOverlap = self.axOverlapVal.value()/100
@@ -57,6 +58,10 @@ class AnalysisParamsGUI(Ui_analysisParams, QWidget):
         self.rfAnalysisGUI.maxFrequency = self.maxFreqVal.value()*1000000 # MHz -> Hz
         self.rfAnalysisGUI.samplingFreq = self.samplingFreqVal.value()*1000000 # MHz -> Hz
         self.rfAnalysisGUI.setFilenameDisplays(self.imagePathInput.text().split('/')[-1], self.phantomPathInput.text().split('/')[-1])
+        # self.rfAnalysisGUI.paramapCoverImg = np.zeros([self.imArray.shape[1], self.imArray.shape[2], 4])
+        # self.rfAnalysisGUI.maskCoverImg = np.zeros([501, 721, 4])
+        # self.rfAnalysisGUI.xSpline = self.finalSplineX
+        # self.rfAnalysisGUI.ySpline = self.finalSplineY
         self.rfAnalysisGUI.displayROIWindows()
         self.rfAnalysisGUI.show()
         self.rfAnalysisGUI.lastGui = self

@@ -163,7 +163,7 @@ def spectralAnalysisDefault6db(npsNormalized, f, db6LowF, db6HighF):
 def computeSpecWindows(
     imgRF, refRF, top, bottom, left, right,
     minFrequency, maxFrequency, imgLowBandFreq, imgUpBandFreq,
-    imgSamplingFreq
+    imgSamplingFreq, frame
 ):
 
     # Set some flags
@@ -201,8 +201,8 @@ def computeSpecWindows(
     for i in range(len(top)):
 
         # Make some adjustments and find the window to use
-        imgWindow = imgRF[top[i]:bottom[i],left[i]:right[i]]
-        refWindow = refRF[top[i]:bottom[i],left[i]:right[i]]
+        imgWindow = imgRF[frame,top[i]:bottom[i],left[i]:right[i]]
+        refWindow = refRF[frame,top[i]:bottom[i],left[i]:right[i]]
 
         [f, ps] = computePowerSpec(imgWindow, f0, f1, fs) # initially had round(img_gain), but since not used in function, we left it out
         [f, rPS] = computePowerSpec(refWindow, f0, f1, fs) # Same as above, except for round(ref_gain)

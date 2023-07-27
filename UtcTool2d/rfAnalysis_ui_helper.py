@@ -46,6 +46,7 @@ class RfAnalysisGUI(QWidget, Ui_rfAnalysis):
         self.imgInfoStruct = None
         self.refDataStruct = None
         self.refInfoStruct = None
+        self.frame = None
 
         self.axialWinSize = None
         self.lateralWinSize = None
@@ -71,7 +72,6 @@ class RfAnalysisGUI(QWidget, Ui_rfAnalysis):
         self.figure = plt.figure()
         self.canvas = FigureCanvas(self.figure)
         self.horizontalLayout.addWidget(self.canvas)
-        self.plotOnCanvas()
 
         self.editImageDisplayGUI = EditImageDisplayGUI()
         self.editImageDisplayButton.clicked.connect(self.openImageEditor)
@@ -88,6 +88,9 @@ class RfAnalysisGUI(QWidget, Ui_rfAnalysis):
         self.editImageDisplayGUI.contrastVal.valueChanged.connect(self.changeContrast)
         self.editImageDisplayGUI.brightnessVal.valueChanged.connect(self.changeBrightness)
         self.editImageDisplayGUI.sharpnessVal.valueChanged.connect(self.changeSharpness)
+        self.editImageDisplayGUI.contrastVal.setValue(1)
+        self.editImageDisplayGUI.brightnessVal.setValue(1)
+        self.editImageDisplayGUI.sharpnessVal.setValue(1)
         
         # Prepare heatmap legend plot
         self.horizLayoutLeg = QHBoxLayout(self.legend)
@@ -238,14 +241,16 @@ class RfAnalysisGUI(QWidget, Ui_rfAnalysis):
         # self.roiWindowSplinesStruct, self.roiWindowSplinesStructPreSC = roiWindowsGenerator(finalSplineX, finalSplineY, self.imgDataStruct['scBmode'].size[0], self.imgDataStruct['scBmode'].size[1], self.axialWinSize, self.lateralWinSize, self.imgInfoStruct['axialRes'], self.imgInfoStruct['lateralRes'], self.axialOverlap, self.lateralOverlap, self.threshold, np.asarray(self.imgDataStruct['scRF']['xmap']), np.asarray(self.imgDataStruct['scRF']['ymap']))'
         if not rfd:
             self.roiWindowSplinesStruct, self.roiWindowSplinesStructPreSC = roiWindowsGenerator(self.splineX, self.splineY, self.imgDataStruct.scBmode.shape[0], self.imgDataStruct.scBmode.shape[1], self.axialWinSize, self.lateralWinSize, self.imgInfoStruct.axialRes, self.imgInfoStruct.lateralRes, self.axialOverlap, self.lateralOverlap, self.threshold, self.imgDataStruct.scRF.xmap, self.imgDataStruct.scRF.ymap)
+            self.cleanStructs()
         else:
-            xScale = self.cvIm.width/self.imgDataStruct.bMode.shape[1] 
-            yScale = self.cvIm.height/self.imgDataStruct.bMode.shape[0]
+            xScale = self.cvIm.width/self.imgDataStruct.bMode.shape[2] 
+            yScale = self.cvIm.height/self.imgDataStruct.bMode.shape[1]
             x = self.splineX/xScale
             y = self.splineY/yScale
-            self.roiWindowSplinesStruct = roiWindowsGenerator(x, y, self.imgDataStruct.bMode.shape[0], self.imgDataStruct.bMode.shape[1], self.axialWinSize, self.lateralWinSize, self.imgInfoStruct.axialRes, self.imgInfoStruct.lateralRes, self.axialOverlap, self.lateralOverlap, self.threshold)
-        self.cleanStructs()
-        self.ax.plot(self.splineX, self.splineY, color = "cyan", linewidth=0.75) # re-plot drawn ROI
+            self.roiWindowSplinesStruct = roiWindowsGenerator(x, y, self.imgDataStruct.bMode.shape[1], self.imgDataStruct.bMode.shape[2], self.axialWinSize, self.lateralWinSize, self.imgInfoStruct.axialRes, self.imgInfoStruct.lateralRes, self.axialOverlap, self.lateralOverlap, self.threshold)
+            self.roiWindowSplinesStructPreSC = self.roiWindowSplinesStruct
+        # self.cleanStructs()
+        # self.ax.plot(self.splineX, self.splineY, color = "cyan", linewidth=0.75) # re-plot drawn ROI
 
     def displayROIWindows(self):
         self.computeROIWindows()
@@ -260,8 +265,8 @@ class RfAnalysisGUI(QWidget, Ui_rfAnalysis):
                 roisTop = self.roiWindowSplinesStruct.top
                 roisBottom = self.roiWindowSplinesStruct.bottom
             else:
-                xScale = self.cvIm.width/self.imgDataStruct.bMode.shape[1]
-                yScale = self.cvIm.height/self.imgDataStruct.bMode.shape[0]
+                xScale = self.cvIm.width/self.imgDataStruct.bMode.shape[2]
+                yScale = self.cvIm.height/self.imgDataStruct.bMode.shape[1]
                 for i in range(len(self.roiWindowSplinesStruct.left)):
                     roisLeft.append(self.roiWindowSplinesStruct.left[i]*xScale)#4.2969)
                     roisRight.append(self.roiWindowSplinesStruct.right[i]*xScale)#4.2969)
@@ -281,13 +286,14 @@ class RfAnalysisGUI(QWidget, Ui_rfAnalysis):
             self.updateLegend()
         # else:
             # self.invalidPath.setText("No statistically significant windows have been found in the\ncurrently drawn ROI.")
+        self.plotOnCanvas()
         self.figure.subplots_adjust(left=0,right=1, bottom=0,top=1, hspace=0.2,wspace=0.2)
         plt.tick_params(bottom=False, left=False)
         self.canvas.draw()
 
     def computeWindowSpec(self):
         global mbf, ss, si, minMBF, maxMBF, minSS, maxSS, minSI, maxSI
-        self.winTopBottomDepth, self.winLeftRightWidth, mbf, ss, si = computeSpecWindows(self.imgDataStruct.rf,self.refDataStruct.rf, self.roiWindowSplinesStructPreSC.top, self.roiWindowSplinesStructPreSC.bottom, self.roiWindowSplinesStructPreSC.left, self.roiWindowSplinesStructPreSC.right, self.minFrequency, self.maxFrequency, self.imgInfoStruct.lowBandFreq, self.imgInfoStruct.upBandFreq, self.samplingFreq)
+        self.winTopBottomDepth, self.winLeftRightWidth, mbf, ss, si = computeSpecWindows(self.imgDataStruct.rf,self.refDataStruct.rf, self.roiWindowSplinesStructPreSC.top, self.roiWindowSplinesStructPreSC.bottom, self.roiWindowSplinesStructPreSC.left, self.roiWindowSplinesStructPreSC.right, self.minFrequency, self.maxFrequency, self.imgInfoStruct.lowBandFreq, self.imgInfoStruct.upBandFreq, self.samplingFreq, self.frame)
         minMBF = min(mbf)
         maxMBF = max(mbf)
         minSS = min(ss)
