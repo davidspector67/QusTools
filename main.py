@@ -3,6 +3,7 @@ from PySide2.QtWidgets import QApplication
 from CeusTool3d.selectImage_ui_helper import *
 from UtcTool2d.selectImage_ui_helper import *
 from CeusMcTool2d.selectImage_ui_helper import *
+from UtcTool2dIQ.selectImage_ui_helper import *
 from welcome_ui import *
 
 class QusGui(Ui_qusPage, QWidget):
@@ -12,11 +13,19 @@ class QusGui(Ui_qusPage, QWidget):
         self.utc2dButton.clicked.connect(self.moveToUtc2d)
         self.ceus3dButton.clicked.connect(self.moveToCeus3d)
         self.ceus2dButton.clicked.connect(self.moveToCeusMc2d)
+        self.utc3dButton.clicked.connect(self.moveToUtc2dIQ)
         self.nextPage = None
 
     def moveToUtc2d(self):
         del self.nextPage
         self.nextPage = SelectImageGUI_UtcTool2d()
+        self.nextPage.show()
+        self.nextPage.welcomeGui = self
+        self.hide()
+
+    def moveToUtc2dIQ(self):
+        del self.nextPage
+        self.nextPage = SelectImageGUI_UtcTool2dIQ()
         self.nextPage.show()
         self.nextPage.welcomeGui = self
         self.hide()

@@ -182,22 +182,22 @@ def readFileInfo(filename, filepath, input):
     return Info
 
 def readFileImg(Info, frame, input):
-    # echoData = input["rf_data_all_fund"]# indexing works by frame, angle, image
+    echoData = input["rf_data_all_fund"]# indexing works by frame, angle, image
     # while not(len(echoData[0].shape) > 1 and echoData[0].shape[0]>100 and echoData[0].shape[1]>100):
     #     echoData = echoData[0]
     # echoData = np.array(echoData[frame]).astype(np.int32)
 
-    echoData = np.real(input["IQData"])
-    bmode = 20*np.log10(abs(input["IQData"]))
-    bmode = np.clip(bmode, (0.95*np.amax(bmode)-55), 0.95*np.amax(bmode)).astype(np.float)
-    bmode -= np.amin(bmode)
-    bmode *= (255/np.amax(bmode))
+    # echoData = np.real(input["IQData"])
+    # bmode = 20*np.log10(abs(input["IQData"]))
+    # bmode = np.clip(bmode, (0.95*np.amax(bmode)-55), 0.95*np.amax(bmode)).astype(np.float)
+    # bmode -= np.amin(bmode)
+    # bmode *= (255/np.amax(bmode))
 
-    # bmode = np.zeros(echoData.shape).astype(np.int32)
+    bmode = np.zeros(echoData.shape).astype(np.int32)
 
     # Do Hilbert Transform on each column
-    # for i in range(echoData.shape[1]):
-    #     bmode[:,i] = 20*np.log10(abs(hilbert(echoData[:,i])))
+    for i in range(echoData.shape[1]):
+        bmode[:,i] = 20*np.log10(abs(hilbert(echoData[:,i])))
 
     ModeIM = echoData
 

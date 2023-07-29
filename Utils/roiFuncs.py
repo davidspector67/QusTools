@@ -158,6 +158,85 @@ def spectralAnalysisDefault6db(npsNormalized, f, db6LowF, db6HighF):
 
     return mbfit, fBand, npsLinfit, p, rsqu, ib
 
+def computeSpecWindowsIQ(
+    imgRF, refRF, top, bottom, left, right,
+    minFrequency, maxFrequency, imgLowBandFreq, imgUpBandFreq,
+    imgSamplingFreq
+):
+
+    # Set some flags
+    db6LowF = imgLowBandFreq #.txFrequency - 3000000, hardcoded
+    db6HighF = imgUpBandFreq #.txFrequency - 3000000, hardcoded
+
+    # Frequency params
+    fs = imgSamplingFreq*2 # Not sure why multiply by two here, but it's the only way it works ~ Ahmed?
+    """Look into this"""
+    f0 = minFrequency  
+    f1 = maxFrequency
+    fRange = round((f1-f0)*(4096/fs))
+
+    # Output pre-allocation
+    if len(top) >= 1:
+        imNps = np.zeros((len(top),fRange))
+        imPs = np.zeros((len(top),fRange))
+        imF = np.zeros((len(top),fRange)) 
+        """Find out why zeros are different dimensions for different filetypes (.rfd vs .rf, etc)"""
+        imRps = np.zeros((len(top), fRange))
+        imWinTopBottomDepth = np.zeros((len(top),2))
+        imWinLeftRightWidth = np.zeros((len(top),2))
+        imMbf = np.zeros(len(top))
+        imSs = np.zeros(len(top))
+        imSi = np.zeros(len(top))
+    else:
+        imNps = []
+        imPs = []
+        imF = []
+        imRps = []
+        imWinTopBottomDepth = []
+        imWinLeftRightWidth = []
+
+    # Compute spectral parameters for each window
+    for i in range(len(top)):
+
+        # Make some adjustments and find the window to use
+        imgWindow = imgRF[top[i]:bottom[i],left[i]:right[i]]
+        refWindow = refRF[top[i]:bottom[i],left[i]:right[i]]
+
+        [f, ps] = computePowerSpec(imgWindow, f0, f1, fs) # initially had round(img_gain), but since not used in function, we left it out
+        [f, rPS] = computePowerSpec(refWindow, f0, f1, fs) # Same as above, except for round(ref_gain)
+        # [f, ps] = eng.computePowerSpec(matlab.double(np.ascontiguousarray(imgWindow)), matlab.double(f0), matlab.double(f1), matlab.double(fs), 0, nargout=2)
+        # [f, rPS] = eng.computePowerSpec(matlab.double(np.ascontiguousarray(refWindow)), matlab.double(f0), matlab.double(f1), matlab.double(fs), 0, nargout=2)
+        nps = np.asarray(ps)-np.asarray(rPS) # SUBTRACTION method: log data
+        # fig = plt.figure()
+        # hi = fig.add_subplot()
+        # hi.plot(f,nps)
+
+        # Get ready to send output
+        for j in range(fRange):
+            # imNps[i,j]=nps[0][j]
+            # imPs[i,j]=ps[0][j]
+            # imRps[i,j]=rPS[0][j]
+            # imF[i,j]=f[0][j]
+            imNps[i,j]=nps[j]
+            imPs[i,j]=ps[j]
+            imRps[i,j]=rPS[j]
+            imF[i,j]=f[j]
+        imWinLeftRightWidth[i,0]=left[i]
+        imWinLeftRightWidth[i,1]=right[i]
+        imWinTopBottomDepth[i,0]=top[i]
+        imWinTopBottomDepth[i,1]=bottom[i]
+
+        # Compute QUS parameters
+        [mbfit, _, _, p, _, _] = spectralAnalysisDefault6db(nps, f, db6LowF, db6HighF)
+        # [mbfit, _, _, p, _, _] = eng.spectralAnalysisDefault6db(matlab.double(np.ascontiguousarray(nps)), matlab.double(f), matlab.double(db6LowF), matlab.double(db6HighF), matlab.double(2), nargout=6)
+        imMbf[i]=mbfit
+        # imSs[i]=p[0][0]
+        # imSi[i]=p[0][1]
+        imSs[i]=p[0]
+        imSi[i]=p[1]
+
+    return imWinTopBottomDepth, imWinLeftRightWidth, imMbf, imSs, imSi
+
 
 
 def computeSpecWindows(
