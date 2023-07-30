@@ -13,3 +13,4 @@ scikit-image==0.19.3
 scikit-learn==1.1.1
 pydicom==2.4.1
 PySide2==5.15.2.1
+openpyxl==3.0.10

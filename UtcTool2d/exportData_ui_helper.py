@@ -1,4 +1,7 @@
 from UtcTool2d.exportData_ui import *
+from openpyxl import load_workbook, Workbook
+from openpyxl.utils.dataframe import dataframe_to_rows
+import pandas as pd
 import os
 import re
 
@@ -84,7 +87,13 @@ class ExportDataGUI(Ui_exportData, QWidget):
                 self.fileNameErrorLabel.setHidden(False)
                 return
             try:
-                self.dataFrame.to_excel(os.path.join(self.newFolderPathInput.text(), self.newFileNameInput.text()))
+                wb = Workbook()
+                ws = wb.active
+                for r in dataframe_to_rows(self.dataFrame, index=False, header=True):
+                    ws.append(r)
+                wb.save(os.path.join(self.newFolderPathInput.text(), self.newFileNameInput.text()))
+                wb.close()
+                
                 self.dataSavedSuccessfully()
             except Exception as e:
                 print(str(e))
@@ -93,7 +102,14 @@ class ExportDataGUI(Ui_exportData, QWidget):
     def appendToFile(self):
         if os.path.exists(self.appendFilePath.text()) and self.appendFilePath.text().endswith(".xlsx"):
             try:
-                self.dataFrame.append_df_to_excel(self.appendFilePath.text())
+                # Since writes to 'Sheet1', make sure not to change sheet names
+                wb = load_workbook(self.appendFilePath.text())
+                ws = wb.active
+                for r in dataframe_to_rows(self.dataFrame, index=False, header=False):
+                    ws.append(r)
+                wb.save(self.appendFilePath.text())
+                wb.close()
+
                 self.dataSavedSuccessfully()
             except Exception as e:
                 print(str(e))

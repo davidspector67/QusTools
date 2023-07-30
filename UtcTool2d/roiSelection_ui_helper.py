@@ -66,6 +66,7 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
         self.backButton.clicked.connect(self.backToLastScreen)
 
     def backToLastScreen(self):
+        self.lastGui.dataFrame = self.dataFrame
         self.lastGui.show()
         self.hide()
 

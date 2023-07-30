@@ -50,7 +50,7 @@ class RfAnalysisGUI(QWidget, Ui_rfAnalysis):
         self.frame = None
         self.dataFrame = None
         self.exportDataGUI = None
-        self.newData
+        self.newData = None
 
         self.axialWinSize = None
         self.lateralWinSize = None
@@ -112,7 +112,7 @@ class RfAnalysisGUI(QWidget, Ui_rfAnalysis):
             del self.exportDataGUI
             self.exportDataGUI = ExportDataGUI()
             self.exportDataGUI.dataFrame = self.dataFrame
-            self.exportDataGUI.lastGui = self.lastGui
+            self.exportDataGUI.lastGui = self
             self.exportDataGUI.show()
             self.hide()
 
@@ -123,6 +123,7 @@ class RfAnalysisGUI(QWidget, Ui_rfAnalysis):
             self.dataFrame = self.dataFrame.append(self.newData, ignore_index=True)
 
     def backToLastScreen(self):
+        self.lastGui.dataFrame = self.dataFrame
         self.lastGui.show()
         self.hide()
 

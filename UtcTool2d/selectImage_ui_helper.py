@@ -51,6 +51,7 @@ class SelectImageGUI_UtcTool2d(Ui_selectImage, QWidget):
         self.backButton.clicked.connect(self.backToWelcomeScreen)
 
     def backToWelcomeScreen(self):
+        self.welcomeGui.utc2dRfData = self.dataFrame
         self.welcomeGui.show()
         self.hide()
 
