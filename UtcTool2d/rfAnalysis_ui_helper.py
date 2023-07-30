@@ -2,6 +2,7 @@ from UtcTool2d.roiSelection_ui import *
 from UtcTool2d.editImageDisplay_ui_helper import *
 from UtcTool2d.rfAnalysis_ui import *
 from Utils.roiFuncs import *
+from UtcTool2d.exportData_ui_helper import *
 
 import os
 import numpy as np
@@ -47,6 +48,9 @@ class RfAnalysisGUI(QWidget, Ui_rfAnalysis):
         self.refDataStruct = None
         self.refInfoStruct = None
         self.frame = None
+        self.dataFrame = None
+        self.exportDataGUI = None
+        self.newData
 
         self.axialWinSize = None
         self.lateralWinSize = None
@@ -100,11 +104,27 @@ class RfAnalysisGUI(QWidget, Ui_rfAnalysis):
         self.horizLayoutLeg.addWidget(self.canvasLeg)
         self.canvasLeg.draw()
         self.backButton.clicked.connect(self.backToLastScreen)
+        self.exportDataButton.clicked.connect(self.moveToExport)
+        self.saveDataButton.clicked.connect(self.saveData)
+
+    def moveToExport(self):
+        if len(self.dataFrame):
+            del self.exportDataGUI
+            self.exportDataGUI = ExportDataGUI()
+            self.exportDataGUI.dataFrame = self.dataFrame
+            self.exportDataGUI.lastGui = self.lastGui
+            self.exportDataGUI.show()
+            self.hide()
+
+    def saveData(self):
+        if self.newData is None:
+            self.newData = {"Patient": self.imagePathInput.text(), "Phantom": self.phantomPathInput.text(), \
+                    "Midband Fit (MBF)": np.average(mbf), "Spectral Slope (SS)": np.average(ss), "Spectral Intercept (SI)": np.average(si)}
+            self.dataFrame = self.dataFrame.append(self.newData, ignore_index=True)
 
     def backToLastScreen(self):
         self.lastGui.show()
         self.hide()
-        
 
     def changeContrast(self):
         self.editImageDisplayGUI.contrastValDisplay.setValue(int(self.editImageDisplayGUI.contrastVal.value()*10))
@@ -374,6 +394,7 @@ def onSelect(event): # Update ROI window selected after computation
     curDisp = "clear"
     updateWindows(event.inaxes)
     curDisp = temp
+    coloredROI = None
     # Find top window selected
     for i in range(len(roisLeft)-1, -1, -1): 
         p = matplotlib.path.Path([(roisLeft[i], roisBottom[i]), (roisLeft[i], roisTop[i]), (roisRight[i], roisTop[i]), (roisRight[i], roisBottom[i])])
@@ -420,7 +441,8 @@ def onSelect(event): # Update ROI window selected after computation
             else:
                 rect = matplotlib.patches.Rectangle((roisLeft[i], roisBottom[i]), (roisRight[i]-roisLeft[i]), (roisTop[i]-roisBottom[i]), linewidth=1, fill = True, color=cmap[int((255/(maxSI-minSI))*(si[i]-minSI))])
             event.inaxes.add_patch(rect)
-    event.inaxes.add_patch(coloredROI)
+    if coloredROI is not None:
+        event.inaxes.add_patch(coloredROI)
     event.inaxes.figure.canvas.draw()
 
 def updateWindows(curAx):

@@ -39,6 +39,7 @@ class SelectImageGUI_UtcTool2d(Ui_selectImage, QWidget):
         self.choosingIndividualFiles = False
         self.welcomeGui = None
         self.roiSelectionGUI = None
+        self.dataFrame = None
         
         self.selectIndFilesButton.clicked.connect(self.fileOptionSelected)
         # self.selectFoldersButton.clicked.connect(self.folderOptionSelected)
@@ -82,6 +83,7 @@ class SelectImageGUI_UtcTool2d(Ui_selectImage, QWidget):
             self.roiSelectionGUI.openImage(self.imagePathInput.text(), self.phantomPathInput.text())
             self.roiSelectionGUI.show()
             self.roiSelectionGUI.lastGui = self
+            self.roiSelectionGUI.dataFrame = self.dataFrame
             self.hide()
         
     def clearImagePath(self):

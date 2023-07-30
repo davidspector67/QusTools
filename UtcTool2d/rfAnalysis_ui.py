@@ -216,7 +216,7 @@ class Ui_rfAnalysis(object):
 "}")
         self.editImageDisplayButton = QPushButton(rfAnalysis)
         self.editImageDisplayButton.setObjectName(u"editImageDisplayButton")
-        self.editImageDisplayButton.setGeometry(QRect(990, 700, 181, 41))
+        self.editImageDisplayButton.setGeometry(QRect(560, 700, 181, 41))
         self.editImageDisplayButton.setStyleSheet(u"QPushButton {\n"
 "	color: white;\n"
 "	font-size: 12px;\n"
@@ -379,6 +379,36 @@ class Ui_rfAnalysis(object):
         self.imDisplayFrame.setGeometry(QRect(400, 180, 721, 501))
         self.imDisplayFrame.setFrameShape(QFrame.StyledPanel)
         self.imDisplayFrame.setFrameShadow(QFrame.Raised)
+        self.saveDataButton = QPushButton(rfAnalysis)
+        self.saveDataButton.setObjectName(u"saveDataButton")
+        self.saveDataButton.setGeometry(QRect(770, 700, 181, 41))
+        self.saveDataButton.setStyleSheet(u"QPushButton {\n"
+"	color: white;\n"
+"	font-size: 12px;\n"
+"	background: rgb(90, 37, 255);\n"
+"	border-radius: 15px;\n"
+"}\n"
+"QPushButton:checked {\n"
+"	color:white; \n"
+"	font-size: 12px;\n"
+"	background: rgb(45, 0, 110);\n"
+"	border-radius: 15px;\n"
+"}")
+        self.exportDataButton = QPushButton(rfAnalysis)
+        self.exportDataButton.setObjectName(u"exportDataButton")
+        self.exportDataButton.setGeometry(QRect(980, 700, 181, 41))
+        self.exportDataButton.setStyleSheet(u"QPushButton {\n"
+"	color: white;\n"
+"	font-size: 12px;\n"
+"	background: rgb(90, 37, 255);\n"
+"	border-radius: 15px;\n"
+"}\n"
+"QPushButton:checked {\n"
+"	color:white; \n"
+"	font-size: 12px;\n"
+"	background: rgb(45, 0, 110);\n"
+"	border-radius: 15px;\n"
+"}")
 
         self.retranslateUi(rfAnalysis)
 
@@ -418,5 +448,7 @@ class Ui_rfAnalysis(object):
         self.chooseWindowButton.setText(QCoreApplication.translate("rfAnalysis", u"Choose Window to Analyze", None))
         self.constructRoiLabel.setText(QCoreApplication.translate("rfAnalysis", u"Radio Frequency Analysis:", None))
         self.backButton.setText(QCoreApplication.translate("rfAnalysis", u"Back", None))
+        self.saveDataButton.setText(QCoreApplication.translate("rfAnalysis", u"Save Data", None))
+        self.exportDataButton.setText(QCoreApplication.translate("rfAnalysis", u"Export Data", None))
     # retranslateUi
 

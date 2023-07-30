@@ -53,6 +53,7 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
         self.samplingFreqVal = None
         self.analysisParamsGUI = None
         self.maskCoverImg = None
+        self.dataFrame = None
 
         self.scatteredPoints = []
 
@@ -245,8 +246,8 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
             self.clipFactorVal = 95
             self.minFreqVal = 7
             self.maxFreqVal = 17
-            self.axWinSizeVal = 0.5#1480/40000000*5000 # must be at least 10 times wavelength
-            self.latWinSizeVal = 1.5#self.axialWinSize * 6 # must be at least 10 times wavelength
+            self.axWinSizeVal = 3.5#1480/40000000*5000 # must be at least 10 times wavelength
+            self.latWinSizeVal = 3.5#self.axialWinSize * 6 # must be at least 10 times wavelength
             self.samplingFreqVal = 40
 
         elif imageFilePath.endswith(".dcm"):
@@ -371,10 +372,11 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
             self.analysisParamsGUI.finalSplineY = self.xSpline
             self.analysisParamsGUI.frame = self.frame
             self.analysisParamsGUI.imArray = self.imArray
+            self.analysisParamsGUI.dataFrame = self.dataFrame
             self.analysisParamsGUI.setFilenameDisplays(self.imagePathInput.text().split('/')[-1], self.phantomPathInput.text().split('/')[-1])
             self.analysisParamsGUI.show()
             self.analysisParamsGUI.lastGui = self
-            # self.hide()
+            self.hide()
 
 def calculateSpline(xpts, ypts): # 2D spline interpolation
     cv = []
