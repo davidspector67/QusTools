@@ -15,7 +15,6 @@ def selectImageHelper(pathInput):
 
 class SelectImageGUI_UtcTool2dIQ(Ui_selectImage, QWidget):
     def __init__(self):
-        # self.selectImage = QWidget()
         super().__init__()
         self.setupUi(self)
         self.chooseImageFileButton.setHidden(True)
@@ -39,9 +38,9 @@ class SelectImageGUI_UtcTool2dIQ(Ui_selectImage, QWidget):
         self.choosingIndividualFiles = False
         self.welcomeGui = None
         self.roiSelectionGUI = None
+        self.dataFrame = None
         
         self.selectIndFilesButton.clicked.connect(self.fileOptionSelected)
-        # self.selectFoldersButton.clicked.connect(self.folderOptionSelected)
         self.chooseImageFileButton.clicked.connect(self.selectImageFile)
         self.choosePhantomFileButton.clicked.connect(self.selectPhantomFile)
         self.clearImagePathButton.clicked.connect(self.clearImagePath)
@@ -50,6 +49,7 @@ class SelectImageGUI_UtcTool2dIQ(Ui_selectImage, QWidget):
         self.backButton.clicked.connect(self.backToWelcomeScreen)
 
     def backToWelcomeScreen(self):
+        self.welcomeGui.utc2dIqData = self.dataFrame
         self.welcomeGui.show()
         self.hide()
 
@@ -81,6 +81,7 @@ class SelectImageGUI_UtcTool2dIQ(Ui_selectImage, QWidget):
             self.roiSelectionGUI.setFilenameDisplays(self.imagePathInput.text().split('/')[-1], self.phantomPathInput.text().split('/')[-1])
             self.roiSelectionGUI.openImage(self.imagePathInput.text(), self.phantomPathInput.text())
             self.roiSelectionGUI.show()
+            self.roiSelectionGUI.dataFrame = self.dataFrame
             self.roiSelectionGUI.lastGui = self
             self.hide()
         
@@ -110,17 +111,6 @@ class SelectImageGUI_UtcTool2dIQ(Ui_selectImage, QWidget):
 
         self.choosingIndividualFiles = True
 
-    # def folderOptionSelected(self): 
-    #     # Move user to screen to select folders to find compatible files to generate image
-    #     self.chooseImagePrep()
-    #     self.selectDataLabel.setHidden(False)
-    #     self.chooseImageFolderButton.setHidden(False)
-    #     self.choosePhantomFolderButton.setHidden(False)
-    #     self.imagePathFolderLabel.setHidden(False)
-    #     self.phantomPathFolderLabel.setHidden(False)
-
-    #     self.validPairs = []
-
     def selectImageFile(self):
         if not self.choosingIndividualFiles:
             return
@@ -145,8 +135,6 @@ class SelectImageGUI_UtcTool2dIQ(Ui_selectImage, QWidget):
 if __name__ == "__main__":
     import sys
     app = QApplication(sys.argv)
-    # selectWindow = QWidget()
     ui = SelectImageGUI_UtcTool2dIQ()
-    # ui.selectImage.show()
     ui.show()
     sys.exit(app.exec_())

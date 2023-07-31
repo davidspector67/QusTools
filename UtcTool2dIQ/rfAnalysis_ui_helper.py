@@ -2,6 +2,7 @@ from UtcTool2dIQ.roiSelection_ui import *
 from UtcTool2dIQ.editImageDisplay_ui_helper import *
 from UtcTool2dIQ.rfAnalysis_ui import *
 from Utils.roiFuncs import *
+from UtcTool2dIQ.exportData_ui_helper import *
 
 import os
 import numpy as np
@@ -46,6 +47,8 @@ class RfAnalysisGUI(QWidget, Ui_rfAnalysis):
         self.imgInfoStruct = None
         self.refDataStruct = None
         self.refInfoStruct = None
+        self.dataFrame = None
+        self.exportDataGUI = None
 
         self.axialWinSize = None
         self.lateralWinSize = None
@@ -56,6 +59,7 @@ class RfAnalysisGUI(QWidget, Ui_rfAnalysis):
         self.maxFrequency = None
         self.samplingFreq = None
         self.lastGui = None
+        self.newData = None
 
         self.indMbfVal.setText("")
         self.indSiVal.setText("")
@@ -99,11 +103,28 @@ class RfAnalysisGUI(QWidget, Ui_rfAnalysis):
         self.horizLayoutLeg.addWidget(self.canvasLeg)
         self.canvasLeg.draw()
         self.backButton.clicked.connect(self.backToLastScreen)
+        self.exportDataButton.clicked.connect(self.moveToExport)
+        self.saveDataButton.clicked.connect(self.saveData)
+
+    def moveToExport(self):
+        if len(self.dataFrame):
+            del self.exportDataGUI
+            self.exportDataGUI = ExportDataGUI()
+            self.exportDataGUI.dataFrame = self.dataFrame
+            self.exportDataGUI.lastGui = self
+            self.exportDataGUI.show()
+            self.hide()
+
+    def saveData(self):
+        if self.newData is None:
+            self.newData = {"Patient": self.imagePathInput.text(), "Phantom": self.phantomPathInput.text(), \
+                    "Midband Fit (MBF)": np.average(mbf), "Spectral Slope (SS)": np.average(ss), "Spectral Intercept (SI)": np.average(si)}
+            self.dataFrame = self.dataFrame.append(self.newData, ignore_index=True)
 
     def backToLastScreen(self):
+        self.lastGui.dataFrame = self.dataFrame
         self.lastGui.show()
         self.hide()
-        
 
     def changeContrast(self):
         self.editImageDisplayGUI.contrastValDisplay.setValue(int(self.editImageDisplayGUI.contrastVal.value()*10))

@@ -214,15 +214,6 @@ class Ui_rfAnalysis(object):
 "	background: rgb(45, 0, 110);\n"
 "	border-radius: 15px;\n"
 "}")
-        self.editImageDisplayButton = QPushButton(rfAnalysis)
-        self.editImageDisplayButton.setObjectName(u"editImageDisplayButton")
-        self.editImageDisplayButton.setGeometry(QRect(990, 700, 181, 41))
-        self.editImageDisplayButton.setStyleSheet(u"QPushButton {\n"
-"	color: white;\n"
-"	font-size: 12px;\n"
-"	background: rgb(90, 37, 255);\n"
-"	border-radius: 15px;\n"
-"}")
         self.avMbfLabel = QLabel(rfAnalysis)
         self.avMbfLabel.setObjectName(u"avMbfLabel")
         self.avMbfLabel.setGeometry(QRect(720, 0, 81, 51))
@@ -379,6 +370,45 @@ class Ui_rfAnalysis(object):
         self.imDisplayFrame.setGeometry(QRect(400, 180, 721, 501))
         self.imDisplayFrame.setFrameShape(QFrame.StyledPanel)
         self.imDisplayFrame.setFrameShadow(QFrame.Raised)
+        self.saveDataButton = QPushButton(rfAnalysis)
+        self.saveDataButton.setObjectName(u"saveDataButton")
+        self.saveDataButton.setGeometry(QRect(770, 700, 181, 41))
+        self.saveDataButton.setStyleSheet(u"QPushButton {\n"
+"	color: white;\n"
+"	font-size: 12px;\n"
+"	background: rgb(90, 37, 255);\n"
+"	border-radius: 15px;\n"
+"}\n"
+"QPushButton:checked {\n"
+"	color:white; \n"
+"	font-size: 12px;\n"
+"	background: rgb(45, 0, 110);\n"
+"	border-radius: 15px;\n"
+"}")
+        self.exportDataButton = QPushButton(rfAnalysis)
+        self.exportDataButton.setObjectName(u"exportDataButton")
+        self.exportDataButton.setGeometry(QRect(980, 700, 181, 41))
+        self.exportDataButton.setStyleSheet(u"QPushButton {\n"
+"	color: white;\n"
+"	font-size: 12px;\n"
+"	background: rgb(90, 37, 255);\n"
+"	border-radius: 15px;\n"
+"}\n"
+"QPushButton:checked {\n"
+"	color:white; \n"
+"	font-size: 12px;\n"
+"	background: rgb(45, 0, 110);\n"
+"	border-radius: 15px;\n"
+"}")
+        self.editImageDisplayButton = QPushButton(rfAnalysis)
+        self.editImageDisplayButton.setObjectName(u"editImageDisplayButton")
+        self.editImageDisplayButton.setGeometry(QRect(560, 700, 181, 41))
+        self.editImageDisplayButton.setStyleSheet(u"QPushButton {\n"
+"	color: white;\n"
+"	font-size: 12px;\n"
+"	background: rgb(90, 37, 255);\n"
+"	border-radius: 15px;\n"
+"}")
 
         self.retranslateUi(rfAnalysis)
 
@@ -402,7 +432,6 @@ class Ui_rfAnalysis(object):
         self.displayMbfButton.setText(QCoreApplication.translate("rfAnalysis", u"Display Midband Fit (MBF)", None))
         self.displaySsButton.setText(QCoreApplication.translate("rfAnalysis", u"Display Spectral Slope (SS)", None))
         self.displaySiButton.setText(QCoreApplication.translate("rfAnalysis", u"Display Spectral Intercept (SI)", None))
-        self.editImageDisplayButton.setText(QCoreApplication.translate("rfAnalysis", u"Edit Image Display", None))
         self.avMbfLabel.setText(QCoreApplication.translate("rfAnalysis", u"Av.  MBF", None))
         self.avSsLabel.setText(QCoreApplication.translate("rfAnalysis", u"Av.  SS (1e-6)", None))
         self.avSiLabel.setText(QCoreApplication.translate("rfAnalysis", u"Av.  SI", None))
@@ -418,5 +447,8 @@ class Ui_rfAnalysis(object):
         self.chooseWindowButton.setText(QCoreApplication.translate("rfAnalysis", u"Choose Window to Analyze", None))
         self.constructRoiLabel.setText(QCoreApplication.translate("rfAnalysis", u"Radio Frequency Analysis:", None))
         self.backButton.setText(QCoreApplication.translate("rfAnalysis", u"Back", None))
+        self.saveDataButton.setText(QCoreApplication.translate("rfAnalysis", u"Save Data", None))
+        self.exportDataButton.setText(QCoreApplication.translate("rfAnalysis", u"Export Data", None))
+        self.editImageDisplayButton.setText(QCoreApplication.translate("rfAnalysis", u"Edit Image Display", None))
     # retranslateUi
 

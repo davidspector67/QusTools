@@ -1,4 +1,4 @@
-from UtcTool2d.exportData_ui import *
+from UtcTool2dIQ.exportData_ui import *
 from openpyxl import load_workbook, Workbook
 from openpyxl.utils.dataframe import dataframe_to_rows
 import os
@@ -81,7 +81,7 @@ class ExportDataGUI(Ui_exportData, QWidget):
 
     def createNewFile(self):
         if os.path.exists(self.newFolderPathInput.text()):
-            if not (self.newFileNameInput.text().endswith(".xlsx") and (not bool(re.search(r"\s", self.newFileNameInput.text())))):
+            if not (self.newFileNameInput.text().endswith(".xlsx") and (self.newFileNameInput.text() != ".xlsx") and (not bool(re.search(r"\s", self.newFileNameInput.text())))):
                 self.fileNameWarningLabel.setHidden(True)
                 self.fileNameErrorLabel.setHidden(False)
                 return

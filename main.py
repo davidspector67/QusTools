@@ -32,6 +32,7 @@ class QusGui(Ui_qusPage, QWidget):
     def moveToUtc2dIQ(self):
         del self.nextPage
         self.nextPage = SelectImageGUI_UtcTool2dIQ()
+        self.nextPage.dataFrame = self.utc2dIqData
         self.nextPage.show()
         self.nextPage.welcomeGui = self
         self.hide()

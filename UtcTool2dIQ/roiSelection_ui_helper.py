@@ -28,6 +28,7 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.figure = plt.figure()
         self.canvas = FigureCanvas(self.figure)
+        self.ax = self.figure.add_subplot(111)
         self.horizontalLayout.addWidget(self.canvas)
 
         self.editImageDisplayGUI = EditImageDisplayGUI()
@@ -38,6 +39,8 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
         self.analysisParamsGUI = AnalysisParamsGUI()
 
         self.scatteredPoints = []
+        self.dataFrame = None
+        self.lastGui = None
 
         self.redrawRoiButton.setHidden(True)
         
@@ -47,6 +50,12 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
         self.closeRoiButton.clicked.connect(self.closeInterpolation)
         self.redrawRoiButton.clicked.connect(self.restartROI)
         self.acceptRoiButton.clicked.connect(self.acceptROI)
+        self.backButton.clicked.connect(self.backToWelcomeScreen)
+
+    def backToWelcomeScreen(self):
+        self.lastGui.dataFrame = self.dataFrame
+        self.lastGui.show()
+        self.hide()
 
     def changeContrast(self):
         self.editImageDisplayGUI.contrastValDisplay.setValue(int(self.editImageDisplayGUI.contrastVal.value()*10))
@@ -73,9 +82,9 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
         self.phantomPathInput.setText(phantomName)
     
     def plotOnCanvas(self): # Plot current image on GUI
-        self.ax = self.figure.add_subplot(111)
+        self.ax.clear()
         im = plt.imread(os.path.join("Junk", "bModeIm.png"))
-        plt.imshow(im, cmap='Greys_r')
+        self.ax.imshow(im, cmap='Greys_r')
 
         if len(pointsPlottedX) > 0:
             self.scatteredPoints.append(self.ax.scatter(pointsPlottedX[-1], pointsPlottedY[-1], marker="o", s=0.5, c="red", zorder=500))
@@ -199,24 +208,17 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
             self.canvas.draw()
 
     def restartROI(self): # Remove previously drawn roi and prepare user to draw a new one
-        self.ax.clear()
-        im = plt.imread(os.path.join("Junk", "bModeIm.png"))
-        plt.imshow(im, cmap='Greys_r')
         global pointsPlottedX, pointsPlottedY, finalSplineX, finalSplineY
         finalSplineX = []
         finalSplineY = []
         pointsPlottedX = []
         pointsPlottedY = []
         self.drawRoiButton.setChecked(False)
-        image, = self.ax.plot([], [], marker="o", markersize=3, markerfacecolor="red")
-        image.figure.canvas.mpl_disconnect(self.cid)
-        self.figure.subplots_adjust(left=0,right=1, bottom=0,top=1, hspace=0.2,wspace=0.2)
-        plt.tick_params(bottom=False, left=False)
-        self.canvas.draw()
         self.drawRoiButton.setCheckable(True)
         self.closeRoiButton.setHidden(False)
         self.redrawRoiButton.setHidden(True)
         self.undoLastPtButton.clicked.connect(self.undoLastPt)
+        self.plotOnCanvas()
 
     def updateBModeSettings(self): # Updates background photo when image settings are modified
         self.cvIm = Image.open(os.path.join("Junk", "bModeImRaw.png"))
@@ -251,6 +253,7 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
             self.analysisParamsGUI.finalSplineX = finalSplineX
             self.analysisParamsGUI.finalSplineY = finalSplineY
             self.analysisParamsGUI.lastGui = self
+            self.analysisParamsGUI.dataFrame = self.dataFrame
             self.analysisParamsGUI.setFilenameDisplays(self.imagePathInput.text().split('/')[-1], self.phantomPathInput.text().split('/')[-1])
             self.analysisParamsGUI.show()
             self.editImageDisplayGUI.hide()
