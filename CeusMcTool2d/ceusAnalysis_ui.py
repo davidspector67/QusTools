@@ -432,6 +432,36 @@ class Ui_ceusAnalysis(object):
 "}")
         self.curSliceTotal.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
         self.curSliceTotal.setTextInteractionFlags(Qt.NoTextInteraction)
+        self.saveDataButton = QPushButton(ceusAnalysis)
+        self.saveDataButton.setObjectName(u"saveDataButton")
+        self.saveDataButton.setGeometry(QRect(150, 640, 181, 41))
+        self.saveDataButton.setStyleSheet(u"QPushButton {\n"
+"	color: white;\n"
+"	font-size: 12px;\n"
+"	background: rgb(90, 37, 255);\n"
+"	border-radius: 15px;\n"
+"}\n"
+"QPushButton:checked {\n"
+"	color:white; \n"
+"	font-size: 12px;\n"
+"	background: rgb(45, 0, 110);\n"
+"	border-radius: 15px;\n"
+"}")
+        self.exportDataButton = QPushButton(ceusAnalysis)
+        self.exportDataButton.setObjectName(u"exportDataButton")
+        self.exportDataButton.setGeometry(QRect(150, 690, 181, 41))
+        self.exportDataButton.setStyleSheet(u"QPushButton {\n"
+"	color: white;\n"
+"	font-size: 12px;\n"
+"	background: rgb(90, 37, 255);\n"
+"	border-radius: 15px;\n"
+"}\n"
+"QPushButton:checked {\n"
+"	color:white; \n"
+"	font-size: 12px;\n"
+"	background: rgb(45, 0, 110);\n"
+"	border-radius: 15px;\n"
+"}")
 
         self.retranslateUi(ceusAnalysis)
 
@@ -482,5 +512,7 @@ class Ui_ceusAnalysis(object):
         self.mttVal.setText(QCoreApplication.translate("ceusAnalysis", u"0", None))
         self.aucLabel.setText(QCoreApplication.translate("ceusAnalysis", u"AUC", None))
         self.curSliceTotal.setText(QCoreApplication.translate("ceusAnalysis", u"0", None))
+        self.saveDataButton.setText(QCoreApplication.translate("ceusAnalysis", u"Save Data", None))
+        self.exportDataButton.setText(QCoreApplication.translate("ceusAnalysis", u"Export Data", None))
     # retranslateUi
 

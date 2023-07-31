@@ -1,4 +1,4 @@
-from UtcTool2dIQ.exportData_ui import *
+from CeusMcTool2d.exportData_ui import *
 from openpyxl import load_workbook, Workbook
 from openpyxl.utils.dataframe import dataframe_to_rows
 import os
@@ -44,11 +44,13 @@ class ExportDataGUI(Ui_exportData, QWidget):
     def clearNewFolder(self):
         self.newFolderPathInput.clear()
 
-    def setFilenameDisplays(self, imageName, phantomName):
+    def setFilenameDisplays(self, imageName):
         self.imagePathInput.setHidden(False)
-        self.phantomPathInput.setHidden(False)
-        self.imagePathInput.setText(imageName)
-        self.phantomPathInput.setText(phantomName)
+        
+        imFile = imageName.split('/')[-1]
+
+        self.imagePathInput.setText(imFile)
+        self.inputTextPath = imageName
     
     def clearNewFile(self):
         self.appendFilePath.clear()

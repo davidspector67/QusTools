@@ -43,6 +43,12 @@ class ExportDataGUI(Ui_exportData, QWidget):
     
     def clearNewFolder(self):
         self.newFolderPathInput.clear()
+
+    def setFilenameDisplays(self, imageName, phantomName):
+        self.imagePathInput.setHidden(False)
+        self.phantomPathInput.setHidden(False)
+        self.imagePathInput.setText(imageName)
+        self.phantomPathInput.setText(phantomName)
     
     def clearNewFile(self):
         self.appendFilePath.clear()

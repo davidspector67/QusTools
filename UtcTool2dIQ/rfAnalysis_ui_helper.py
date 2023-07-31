@@ -112,6 +112,7 @@ class RfAnalysisGUI(QWidget, Ui_rfAnalysis):
             self.exportDataGUI = ExportDataGUI()
             self.exportDataGUI.dataFrame = self.dataFrame
             self.exportDataGUI.lastGui = self
+            self.exportDataGUI.setFilenameDisplays(self.imagePathInput.text(), self.phantomPathInput.text())
             self.exportDataGUI.show()
             self.hide()
 

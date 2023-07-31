@@ -40,6 +40,7 @@ class TicAnalysisGUI(Ui_ticEditor, QWidget):
         self.y0_CE = None
         self.w_CE = None
         self.h_CE = None
+        self.dataFrame = None
 
 
         self.bmodeCoverPixmap = QPixmap(231, 211)
@@ -72,6 +73,7 @@ class TicAnalysisGUI(Ui_ticEditor, QWidget):
         self.acceptT0Button.clicked.connect(self.acceptT0)
 
     def backToLastScreen(self):
+        self.lastGui.dataFrame = self.dataFrame
         self.lastGui.show()
         self.hide()
 
@@ -227,6 +229,12 @@ class TicAnalysisGUI(Ui_ticEditor, QWidget):
         self.ceusAnalysisGui.mttVal.setText(str(np.around(params[3], decimals=2)))
         self.ceusAnalysisGui.tmppvVal.setText(str(np.around(tmppv, decimals=1)))
         self.ceusAnalysisGui.voiVolumeVal.setText(str(np.around(self.roiArea, decimals=1)))
+        self.ceusAnalysisGui.auc = params[1]
+        self.ceusAnalysisGui.pe = params[0]
+        self.ceusAnalysisGui.tp = params[2]
+        self.ceusAnalysisGui.mtt = params[3]
+        self.ceusAnalysisGui.tmppv = tmppv
+        self.ceusAnalysisGui.roiArea = self.roiArea
         self.ceusAnalysisGui.mcResultsBmode = self.mcResultsBmode
         self.ceusAnalysisGui.mcResultsCE = self.mcResultsCE
         self.ceusAnalysisGui.curFrameIndex = self.curFrameIndex
@@ -234,6 +242,7 @@ class TicAnalysisGUI(Ui_ticEditor, QWidget):
         self.ceusAnalysisGui.yCur = self.yCur
         self.ceusAnalysisGui.x = self.x
         self.ceusAnalysisGui.y = self.y
+        self.ceusAnalysisGui.dataFrame = self.dataFrame
         self.ceusAnalysisGui.sliceArray = self.sliceArray
         self.ceusAnalysisGui.x0_bmode = self.x0_bmode
         self.ceusAnalysisGui.y0_bmode = self.y0_bmode

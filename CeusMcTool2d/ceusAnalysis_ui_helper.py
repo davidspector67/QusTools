@@ -1,4 +1,5 @@
 from CeusMcTool2d.ceusAnalysis_ui import *
+from CeusMcTool2d.exportData_ui_helper import *
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -25,6 +26,15 @@ class CeusAnalysisGUI(Ui_ceusAnalysis, QWidget):
         self.y0_CE = None
         self.w_CE = None
         self.h_CE = None
+        self.dataFrame = None
+        self.exportDataGUI = None
+        self.auc = None
+        self.pe = None
+        self.tp = None
+        self.mtt = None
+        self.tmppv = None
+        self.roiArea = None
+        self.newData = None
 
         self.bmodeCoverPixmap = QPixmap(381, 351)
         self.bmodeCoverPixmap.fill(Qt.transparent)
@@ -51,8 +61,29 @@ class CeusAnalysisGUI(Ui_ceusAnalysis, QWidget):
         self.curSliceSlider.valueChanged.connect(self.curSliceSliderValueChanged)
         self.curSliceSpinBox.valueChanged.connect(self.curSliceSpinBoxValueChanged)
         self.backButton.clicked.connect(self.backToLastScreen)
+        self.exportDataButton.clicked.connect(self.moveToExport)
+        self.saveDataButton.clicked.connect(self.saveData)
+
+    def moveToExport(self):
+        if len(self.dataFrame):
+            del self.exportDataGUI
+            self.exportDataGUI = ExportDataGUI()
+            self.exportDataGUI.dataFrame = self.dataFrame
+            self.exportDataGUI.lastGui = self
+            self.exportDataGUI.setFilenameDisplays(self.imagePathInput.text())
+            self.exportDataGUI.show()
+            self.hide()
+
+    def saveData(self):
+        if self.newData is None:
+            self.newData = {"Patient": self.imagePathInput.text(), "Area Under Curve (AUC)": self.auc, \
+                            "Peak Enhancement (PE)": self.pe, "Time to Peak (TP)": self.tp, \
+                            "Mean Transit Time (MTT)": self.mtt, "TMPPV": self.tmppv, "ROI Area (mm^2)": self.roiArea}
+            self.dataFrame = self.dataFrame.append(self.newData, ignore_index=True)
+
 
     def backToLastScreen(self):
+        self.lastGui.dataFrame = self.dataFrame
         self.lastGui.show()
         self.hide()
 

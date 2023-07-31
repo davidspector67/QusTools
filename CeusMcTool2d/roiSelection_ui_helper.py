@@ -25,6 +25,7 @@ class RoiSelectionGUI(Ui_constructRoi, QWidget):
         self.undoRoiButton.setHidden(True)
         self.roiFitNoteLabel.setHidden(True)
         self.df = None
+        self.dataFrame = None
 
         self.curFrameIndex= 0
         self.curAlpha = 255
@@ -55,6 +56,7 @@ class RoiSelectionGUI(Ui_constructRoi, QWidget):
         self.backButton.clicked.connect(self.backToLastScreen)
 
     def backToLastScreen(self):
+        self.lastGui.dataFrame = self.dataFrame
         self.lastGui.show()
         self.hide()
 
@@ -710,6 +712,7 @@ class RoiSelectionGUI(Ui_constructRoi, QWidget):
     def moveToTic(self):
         self.ticAnalysisGui.timeLine = None
         self.computeTic()
+        self.ticAnalysisGui.dataFrame = self.dataFrame
         self.ticAnalysisGui.curFrameIndex = self.curFrameIndex
         self.ticAnalysisGui.mcResultsBmode = self.mcResultsBmode
         self.ticAnalysisGui.mcResultsCE = self.mcResultsCE
