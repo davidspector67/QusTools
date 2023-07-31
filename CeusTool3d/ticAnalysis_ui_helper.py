@@ -21,6 +21,7 @@ class TicAnalysisGUI(Ui_ticEditor, QWidget):
         self.t0Slider.setValue(0)
 
         self.data4dImg = None
+        self.dataFrame = None
         self.curSliceIndex = None
         self.newXVal = None
         self.newYVal = None
@@ -98,6 +99,8 @@ class TicAnalysisGUI(Ui_ticEditor, QWidget):
         self.lastGui.tmppvVal.setHidden(True)
         self.lastGui.voiVolumeLabel.setHidden(True)
         self.lastGui.voiVolumeVal.setHidden(True)
+        self.lastGui.exportDataButton.setHidden(True)
+        self.lastGui.saveDataButton.setHidden(True)
 
         self.lastGui.constructVoiLabel.setHidden(False)
         self.lastGui.drawRoiButton.setHidden(True)
@@ -119,6 +122,7 @@ class TicAnalysisGUI(Ui_ticEditor, QWidget):
 "}")
 
         self.lastGui.curAlpha = 255
+        self.lastGui.dataFrame = self.dataFrame
         self.lastGui.show()
         self.hide()
     

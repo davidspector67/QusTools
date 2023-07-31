@@ -395,6 +395,21 @@ class Ui_constructVoi(object):
 "	font-weight: bold;\n"
 "}")
         self.ticAnalysisLabel.setAlignment(Qt.AlignCenter)
+        self.saveDataButton = QPushButton(self.sidebar)
+        self.saveDataButton.setObjectName(u"saveDataButton")
+        self.saveDataButton.setGeometry(QRect(150, 640, 181, 41))
+        self.saveDataButton.setStyleSheet(u"QPushButton {\n"
+"	color: white;\n"
+"	font-size: 12px;\n"
+"	background: rgb(90, 37, 255);\n"
+"	border-radius: 15px;\n"
+"}\n"
+"QPushButton:checked {\n"
+"	color:white; \n"
+"	font-size: 12px;\n"
+"	background: rgb(45, 0, 110);\n"
+"	border-radius: 15px;\n"
+"}")
         self.analysisParamsSidebar = QFrame(constructVoi)
         self.analysisParamsSidebar.setObjectName(u"analysisParamsSidebar")
         self.analysisParamsSidebar.setGeometry(QRect(0, 240, 341, 121))
@@ -638,6 +653,21 @@ class Ui_constructVoi(object):
         self.voiAdviceLabel.setScaledContents(False)
         self.voiAdviceLabel.setAlignment(Qt.AlignCenter)
         self.voiAdviceLabel.setWordWrap(True)
+        self.exportDataButton = QPushButton(constructVoi)
+        self.exportDataButton.setObjectName(u"exportDataButton")
+        self.exportDataButton.setGeometry(QRect(150, 690, 181, 41))
+        self.exportDataButton.setStyleSheet(u"QPushButton {\n"
+"	color: white;\n"
+"	font-size: 12px;\n"
+"	background: rgb(90, 37, 255);\n"
+"	border-radius: 15px;\n"
+"}\n"
+"QPushButton:checked {\n"
+"	color:white; \n"
+"	font-size: 12px;\n"
+"	background: rgb(45, 0, 110);\n"
+"	border-radius: 15px;\n"
+"}")
 
         self.retranslateUi(constructVoi)
 
@@ -680,6 +710,7 @@ class Ui_constructVoi(object):
         self.rfAnalysisLabel.setText(QCoreApplication.translate("constructVoi", u"Export Results", None))
         self.ticAnalysisLabel.setText(QCoreApplication.translate("constructVoi", u"Contrast-Enhanced Ultrasound\n"
 "(CEUS) Analysis", None))
+        self.saveDataButton.setText(QCoreApplication.translate("constructVoi", u"Save Data", None))
         self.analysisParamsLabel.setText(QCoreApplication.translate("constructVoi", u"TIC Modification", None))
         self.axialPlane.setText("")
         self.maskLayerAx.setText("")
@@ -706,6 +737,7 @@ class Ui_constructVoi(object):
         self.tmppvLabel.setText(QCoreApplication.translate("constructVoi", u"TMPPV:", None))
         self.backButton.setText(QCoreApplication.translate("constructVoi", u"Back", None))
         self.restartVoiButton.setText(QCoreApplication.translate("constructVoi", u"Restart VOI", None))
-        self.voiAdviceLabel.setText(QCoreApplication.translate("constructVoi", u"For best results, draw 1 ROI in each plane before interpolating", None))
+        self.voiAdviceLabel.setText(QCoreApplication.translate("constructVoi", u"For best results,  draw 1 ROI in each plane before interpolating", None))
+        self.exportDataButton.setText(QCoreApplication.translate("constructVoi", u"Export Data", None))
     # retranslateUi
 

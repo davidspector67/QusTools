@@ -14,9 +14,7 @@ def data_fit(TIC,normalizer):
     sigma = popt[2]
     mtt = np.exp(mu+(sigma**2/2))
     wholeCurve = lognormal(TIC[0], auc, mu, sigma)
-    print("brute force auc:", sklearn.metrics.auc(TIC[0], wholeCurve))
-    print("mu:", mu)
-    print("sigma:",sigma)
+    # print("brute force auc:", sklearn.metrics.auc(TIC[0], wholeCurve))
     tp = np.exp(mu - (sigma**2))
     pe = np.max(wholeCurve)
     params = np.array(np.around(np.array([pe, auc, tp, mtt, 0]), decimals=1))

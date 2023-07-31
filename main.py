@@ -40,6 +40,7 @@ class QusGui(Ui_qusPage, QWidget):
     def moveToCeus3d(self):
         del self.nextPage
         self.nextPage = SelectImageGUI_CeusTool3d()
+        self.nextPage.dataFrame = self.ceus3dData
         self.nextPage.show()
         self.nextPage.welcomeGui = self
         self.hide()

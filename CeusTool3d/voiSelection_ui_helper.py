@@ -1,6 +1,6 @@
 from CeusTool3d.voiSelection_ui import *
 from CeusTool3d.ticAnalysis_ui_helper import *
-
+from CeusTool3d.exportData_ui_helper import *
 
 import nibabel as nib
 import numpy as np
@@ -46,9 +46,18 @@ class VoiSelectionGUI(Ui_constructVoi, QWidget):
         self.voiVolumeLabel.setHidden(True)
         self.voiVolumeVal.setHidden(True)
         self.restartVoiButton.setHidden(True)
+        self.exportDataButton.setHidden(True)
+        self.saveDataButton.setHidden(True)
 
         self.sliceSpinBoxChanged = False
         self.sliceSliderChanged = False
+        self.newData = None
+        self.auc = None
+        self.pe = None
+        self.tp = None
+        self.mtt = None
+        self.tmppv = None
+        self.dataFrame = None
 
         self.voiAlphaSpinBox.setMinimum(0)
         self.voiAlphaSpinBox.setMaximum(255)
@@ -67,6 +76,7 @@ class VoiSelectionGUI(Ui_constructVoi, QWidget):
         self.planesDrawn = []
         self.painted = "none"
         self.lastGui = None
+        self.exportDataGUI = None
 
         self.horizLayout = QHBoxLayout(self.ticDisplay)
         self.fig = plt.figure()
@@ -97,11 +107,32 @@ class VoiSelectionGUI(Ui_constructVoi, QWidget):
         self.corCoverPixmap.fill(Qt.transparent)
         self.corCoverLabel.setPixmap(self.corCoverPixmap)
         self.backButton.clicked.connect(self.backToLastScreen)
+        self.exportDataButton.clicked.connect(self.moveToExport)
+        self.saveDataButton.clicked.connect(self.saveData)
+
+    def moveToExport(self):
+        if len(self.dataFrame):
+            del self.exportDataGUI
+            self.exportDataGUI = ExportDataGUI()
+            self.exportDataGUI.dataFrame = self.dataFrame
+            self.exportDataGUI.lastGui = self
+            self.exportDataGUI.setFilenameDisplays(self.imagePathInput.text())
+            self.exportDataGUI.show()
+            self.hide()
+
+    def saveData(self):
+        if self.newData is None:
+            self.newData = {"Patient": self.imagePathInput.text(), "Area Under Curve (AUC)": self.auc, \
+                            "Peak Enhancement (PE)": self.pe, "Time to Peak (TP)": self.tp, \
+                            "Mean Transit Time (MTT)": self.mtt, "TMPPV": self.tmppv, "VOI Volume (mm^3)": self.voxelScale}
+            self.dataFrame = self.dataFrame.append(self.newData, ignore_index=True)
 
     def backToLastScreen(self):
         if not self.tpVal.isHidden():
+            self.ticAnalysisGui.dataFrame = self.dataFrame
             self.ticAnalysisGui.show()
         else:
+            self.lastGui.dataFrame = self.dataFrame
             self.lastGui.show()
         self.hide()
 
@@ -632,6 +663,7 @@ class VoiSelectionGUI(Ui_constructVoi, QWidget):
     def moveToTic(self):
         self.ticAnalysisGui.timeLine = None
         self.computeTic()
+        self.ticAnalysisGui.dataFrame = self.dataFrame
         self.ticAnalysisGui.data4dImg = self.data4dImg
         self.ticAnalysisGui.curSliceIndex = self.curSliceIndex
         self.ticAnalysisGui.newXVal = self.newXVal
@@ -704,74 +736,75 @@ class VoiSelectionGUI(Ui_constructVoi, QWidget):
             self.update()
 
     def voi3dInterpolation(self):
-        if len(self.planesDrawn):
-            if len(self.planesDrawn) >= 3:
-                points = calculateSpline3D(list(chain.from_iterable(self.pointsPlotted)))
-            else:
-                points = set()
-                for group in np.array(self.pointsPlotted):
-                    for point in group:
-                        points.add(tuple(point))
+        if len(self.pointsPlotted) == len(self.planesDrawn):
+            if len(self.planesDrawn):
+                if len(self.planesDrawn) >= 3:
+                    points = calculateSpline3D(list(chain.from_iterable(self.pointsPlotted)))
+                else:
+                    points = set()
+                    for group in np.array(self.pointsPlotted):
+                        for point in group:
+                            points.add(tuple(point))
 
-            self.pointsPlotted = []
-            self.maskCoverImg.fill(0)
-            
-            for point in points:
-                if max(self.data4dImg[tuple(point)]) != 0:
-                    self.maskCoverImg[tuple(point)] = [0,0,255,int(self.curAlpha)]
-                    self.pointsPlotted.append(tuple(point))
-            if len(self.pointsPlotted) == 0:
-                print("VOI not in US image.\nDraw new VOI over US image")
+                self.pointsPlotted = []
                 self.maskCoverImg.fill(0)
-                self.changeAxialSlices()
-                self.changeSagSlices()
-                self.changeCorSlices()
-                return
-        
-        mask = np.zeros((self.maskCoverImg.shape[0], self.maskCoverImg.shape[1], self.maskCoverImg.shape[2]))
+                
+                for point in points:
+                    if max(self.data4dImg[tuple(point)]) != 0:
+                        self.maskCoverImg[tuple(point)] = [0,0,255,int(self.curAlpha)]
+                        self.pointsPlotted.append(tuple(point))
+                if len(self.pointsPlotted) == 0:
+                    print("VOI not in US image.\nDraw new VOI over US image")
+                    self.maskCoverImg.fill(0)
+                    self.changeAxialSlices()
+                    self.changeSagSlices()
+                    self.changeCorSlices()
+                    return
+            
+            mask = np.zeros((self.maskCoverImg.shape[0], self.maskCoverImg.shape[1], self.maskCoverImg.shape[2]))
 
-        for point in self.pointsPlotted:
-            mask[point] = 1
-        for i in range(mask.shape[2]):
-            border = np.where(mask[:,:,i] == 1)
-            if (not len(border[0])) or (max(border[0]) == min(border[0])) or (max(border[1]) == min(border[1])):
-                continue
-            border = np.array(border).T
-            hull = ConvexHull(border)
-            vertices = border[hull.vertices]
-            shape = vertices.shape
-            vertices = np.reshape(np.append(vertices, vertices[0]), (shape[0]+1, shape[1]))
+            for point in self.pointsPlotted:
+                mask[point] = 1
+            for i in range(mask.shape[2]):
+                border = np.where(mask[:,:,i] == 1)
+                if (not len(border[0])) or (max(border[0]) == min(border[0])) or (max(border[1]) == min(border[1])):
+                    continue
+                border = np.array(border).T
+                hull = ConvexHull(border)
+                vertices = border[hull.vertices]
+                shape = vertices.shape
+                vertices = np.reshape(np.append(vertices, vertices[0]), (shape[0]+1, shape[1]))
 
-            # Linear interpolation of 2d convex hull
-            tck, u_ = interpolate.splprep(vertices.T, s=0.0, k=1)
-            splineX, splineY = np.array(interpolate.splev(np.linspace(0, 1, 1000), tck))
+                # Linear interpolation of 2d convex hull
+                tck, u_ = interpolate.splprep(vertices.T, s=0.0, k=1)
+                splineX, splineY = np.array(interpolate.splev(np.linspace(0, 1, 1000), tck))
 
-            mask[:,:,i] = np.zeros((mask.shape[0], mask.shape[1]))
-            for j in range(len(splineX)):
-                mask[int(splineX[j]), int(splineY[j]), i] = 1
-            filledMask = binary_fill_holes(mask[:,:,i])
-            maskPoints = np.array(np.where(filledMask == True))
-            for j in range(len(maskPoints[0])):
-                self.maskCoverImg[maskPoints[0][j], maskPoints[1][j], i] = [0,0,255,int(self.curAlpha)]
-                self.pointsPlotted.append((maskPoints[0][j], maskPoints[1][j], i))
-        self.changeAxialSlices()
-        self.changeSagSlices()
-        self.changeCorSlices()
-        self.interpolateVoiButton.setHidden(True)
-        self.continueButton.setHidden(False)
-        
-        self.drawRoiButton.setHidden(True)
-        self.undoLastPtButton.setHidden(True)
-        self.redrawRoiButton.setHidden(True)
-        self.voiAdviceLabel.setHidden(True)
+                mask[:,:,i] = np.zeros((mask.shape[0], mask.shape[1]))
+                for j in range(len(splineX)):
+                    mask[int(splineX[j]), int(splineY[j]), i] = 1
+                filledMask = binary_fill_holes(mask[:,:,i])
+                maskPoints = np.array(np.where(filledMask == True))
+                for j in range(len(maskPoints[0])):
+                    self.maskCoverImg[maskPoints[0][j], maskPoints[1][j], i] = [0,0,255,int(self.curAlpha)]
+                    self.pointsPlotted.append((maskPoints[0][j], maskPoints[1][j], i))
+            self.changeAxialSlices()
+            self.changeSagSlices()
+            self.changeCorSlices()
+            self.interpolateVoiButton.setHidden(True)
+            self.continueButton.setHidden(False)
+            
+            self.drawRoiButton.setHidden(True)
+            self.undoLastPtButton.setHidden(True)
+            self.redrawRoiButton.setHidden(True)
+            self.voiAdviceLabel.setHidden(True)
 
-        self.voiAlphaLabel.setHidden(False)
-        self.voiAlphaOfLabel.setHidden(False)
-        self.voiAlphaSpinBox.setHidden(False)
-        self.voiAlphaStatus.setHidden(False)
-        self.voiAlphaTotal.setHidden(False)
-        self.restartVoiButton.setHidden(False)
-        self.restartVoiButton.clicked.connect(self.restartVoi)
+            self.voiAlphaLabel.setHidden(False)
+            self.voiAlphaOfLabel.setHidden(False)
+            self.voiAlphaSpinBox.setHidden(False)
+            self.voiAlphaStatus.setHidden(False)
+            self.voiAlphaTotal.setHidden(False)
+            self.restartVoiButton.setHidden(False)
+            self.restartVoiButton.clicked.connect(self.restartVoi)
 
     def acceptTIC(self):
         self.ticDisplay.setHidden(False)
@@ -788,6 +821,8 @@ class VoiSelectionGUI(Ui_constructVoi, QWidget):
         self.tmppvVal.setHidden(False)
         self.voiVolumeLabel.setHidden(False)
         self.voiVolumeVal.setHidden(False)
+        self.exportDataButton.setHidden(False)
+        self.saveDataButton.setHidden(False)
 
         self.analysisParamsSidebar.setStyleSheet(u"QFrame {\n"
 "	background-color: rgb(99, 0, 174);\n"
@@ -850,6 +885,12 @@ class VoiSelectionGUI(Ui_constructVoi, QWidget):
         self.mttVal.setText(str(np.around(params[3], decimals=2)))
         self.tmppvVal.setText(str(np.around(tmppv, decimals=1)))
         self.voiVolumeVal.setText(str(np.around(self.voxelScale, decimals=1)))
+        self.auc = params[1]
+        self.pe = params[0]
+        self.tp = params[2]
+        self.mtt = params[3]
+        self.tmppv = tmppv
+        self.dataFrame = self.ticAnalysisGui.dataFrame
 
         self.ticAnalysisGui.hide()
         self.curSliceSlider.setValue(self.ticAnalysisGui.curSliceIndex)

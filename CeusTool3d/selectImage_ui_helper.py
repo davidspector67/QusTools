@@ -40,10 +40,11 @@ class SelectImageGUI_CeusTool3d(Ui_selectImage, QWidget):
 
         self.voiSelectionGui = None
         self.welcomeGui = None
+        self.dataFrame = None
 
         self.selectNiftiImageOptionButton.clicked.connect(self.selectNiftiImageOption)
         self.selectXmlFolderImageOptionButton.clicked.connect(self.selectXmlImageOption)
-        self.generateImageButton.clicked.connect(self.moveToRoiSelection)
+        self.generateImageButton.clicked.connect(self.moveToVoiSelection)
         self.chooseXmlImageFolderButton.clicked.connect(self.getXmlImageDestinationPath)
         self.chooseNiftiImageFileButton.clicked.connect(self.getNiftiImagePath)
         self.niftiImageDestinationButton.clicked.connect(self.getNiftiImageDestinationPath)
@@ -53,6 +54,7 @@ class SelectImageGUI_CeusTool3d(Ui_selectImage, QWidget):
         self.backButton.clicked.connect(self.backToWelcomeScreen)
 
     def backToWelcomeScreen(self):
+        self.welcomeGui.ceus3dData = self.dataFrame
         self.welcomeGui.show()
         self.hide()
 
@@ -146,7 +148,7 @@ class SelectImageGUI_CeusTool3d(Ui_selectImage, QWidget):
         self.imageNifti = 2 # NIFTI image doesn't exist yet
 
 
-    def moveToRoiSelection(self):
+    def moveToVoiSelection(self):
         if self.imageNifti:
             imagePath = ""
             if self.imageNifti == 1 and os.path.exists(self.niftiImagePathInput.text()):
@@ -156,6 +158,7 @@ class SelectImageGUI_CeusTool3d(Ui_selectImage, QWidget):
             if imagePath != "":
                 del self.voiSelectionGui
                 self.voiSelectionGui = VoiSelectionGUI()
+                self.voiSelectionGui.dataFrame = self.dataFrame
                 self.voiSelectionGui.setFilenameDisplays(imagePath)
                 self.voiSelectionGui.openImage()
                 self.voiSelectionGui.lastGui = self
