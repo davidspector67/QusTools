@@ -24,8 +24,15 @@ class RoiSelectionGUI(Ui_constructRoi, QWidget):
         self.acceptGeneratedRoiButton.setHidden(True)
         self.undoRoiButton.setHidden(True)
         self.roiFitNoteLabel.setHidden(True)
+        self.drawRoiButton.setHidden(True)
+        self.undoLastPtButton.setHidden(True)
+        self.redrawRoiButton.setHidden(True)
+        self.fitToRoiButton.setHidden(True)
+        self.roiFitNoteLabel.setHidden(True)
+        self.closeRoiButton.setHidden(True)
         self.df = None
         self.dataFrame = None
+        self.niftiSegPath = None
 
         self.curFrameIndex= 0
         self.curAlpha = 255
@@ -54,6 +61,38 @@ class RoiSelectionGUI(Ui_constructRoi, QWidget):
         self.setMouseTracking(True)
 
         self.backButton.clicked.connect(self.backToLastScreen)
+        self.newRoiButton.clicked.connect(self.drawNewRoi)
+        self.loadRoiButton.clicked.connect(self.loadRoi)
+
+    def loadRoi(self):
+        self.niftiSegPath = self.df.loc[self.index, 'nifti_segmentation_path']
+        mask = nib.load(os.path.join(self.xcel_dir, self.niftiSegPath), mmap=False).get_fdata().astype(np.uint8)
+        mask = np.transpose(mask)
+        maskPoints = np.where(mask > 0)
+        maskPoints = np.transpose(maskPoints)
+        # self.maskCoverImg[maskPoints] = [0,0,255,255]
+        for point in maskPoints:
+            self.maskCoverImg[point[1], point[2]] = [0,0,255,255]
+            self.pointsPlotted.append((point[1], point[2]))
+        self.curFrameIndex = maskPoints[0,0]
+        self.curSliceSlider.setValue(self.curFrameIndex)
+        self.curSecondLabel.setText(str(self.sliceArray[self.curFrameIndex]))
+        self.curSliceSpinBox.setValue(self.curFrameIndex)
+        self.perform_MC()
+
+        self.newRoiButton.setHidden(True)
+        self.loadRoiButton.setHidden(True)
+        self.undoRoiButton.setHidden(False)
+        self.acceptGeneratedRoiButton.setHidden(False)
+
+    def drawNewRoi(self):
+        self.newRoiButton.setHidden(True)
+        self.loadRoiButton.setHidden(True)
+        self.drawRoiButton.setHidden(False)
+        self.undoLastPtButton.setHidden(False)
+        self.redrawRoiButton.setHidden(False)
+        self.fitToRoiButton.setHidden(False)
+        self.closeRoiButton.setHidden(False)
 
     def backToLastScreen(self):
         self.lastGui.dataFrame = self.dataFrame
@@ -383,18 +422,25 @@ class RoiSelectionGUI(Ui_constructRoi, QWidget):
         self.update()
 
     def restartRoi(self):
-        self.mcResultsArray = []
-        self.mcResultsBmode = []
-        self.mcResultsCE = []
-        self.mcBmodeDisplayLabel.clear()
-        self.mcCeDisplayLabel.clear()
-        self.drawRoiButton.setHidden(False)
-        self.undoLastPtButton.setHidden(False)
-        self.redrawRoiButton.setHidden(False)
-        self.fitToRoiButton.setHidden(False)
-        self.acceptGeneratedRoiButton.setHidden(True)
-        self.undoRoiButton.setHidden(True)
-        self.roiFitNoteLabel.setHidden(False)
+        if self.niftiSegPath is None:
+            self.mcResultsArray = []
+            self.mcResultsBmode = []
+            self.mcResultsCE = []
+            self.mcBmodeDisplayLabel.clear()
+            self.mcCeDisplayLabel.clear()
+            self.drawRoiButton.setHidden(False)
+            self.undoLastPtButton.setHidden(False)
+            self.redrawRoiButton.setHidden(False)
+            self.fitToRoiButton.setHidden(False)
+            self.acceptGeneratedRoiButton.setHidden(True)
+            self.undoRoiButton.setHidden(True)
+            self.roiFitNoteLabel.setHidden(False)
+        else:
+            self.acceptGeneratedRoiButton.setHidden(True)
+            self.undoRoiButton.setHidden(True)
+            self.loadRoiButton.setHidden(False)
+            self.newRoiButton.setHidden(False)
+            self.maskCoverImg.fill(0)
         self.updateBmode()
         self.updateCE()
         self.update()
@@ -428,6 +474,7 @@ class RoiSelectionGUI(Ui_constructRoi, QWidget):
         self.CE_side = self.df.loc[index, 'CE_window_left(l)_or_right(r)']
         self.cineRate = self.df.loc[index, 'CineRate']
         self.index = index
+        self.xcel_dir = xcel_dir
         
         pickle_full_path = os.path.join(xcel_dir, self.df.loc[index, 'pickle_bmode_CE_gray_path'])
 
@@ -649,8 +696,6 @@ class RoiSelectionGUI(Ui_constructRoi, QWidget):
             self.roiFitNoteLabel.setHidden(False)
             self.drawRoiButton.setChecked(False)
             self.drawRoiButton.setCheckable(False)
-            self.updateBmode()
-            self.updateCE()
             self.fitToRoiButton.clicked.connect(self.perform_MC)
 
             

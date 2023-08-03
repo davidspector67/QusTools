@@ -986,6 +986,62 @@ frame as reference</string>
     <bool>false</bool>
    </property>
   </widget>
+  <widget class="QPushButton" name="newRoiButton">
+   <property name="geometry">
+    <rect>
+     <x>780</x>
+     <y>600</y>
+     <width>171</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton {
+	color: white;
+	font-size: 16px;
+	background: rgb(90, 37, 255);
+	border-radius: 15px;
+}
+</string>
+   </property>
+   <property name="text">
+    <string>New ROI</string>
+   </property>
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="loadRoiButton">
+   <property name="geometry">
+    <rect>
+     <x>970</x>
+     <y>600</y>
+     <width>171</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton {
+	color: white;
+	font-size: 16px;
+	background: rgb(90, 37, 255);
+	border-radius: 15px;
+}
+</string>
+   </property>
+   <property name="text">
+    <string>Load ROI</string>
+   </property>
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

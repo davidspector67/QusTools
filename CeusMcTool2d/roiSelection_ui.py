@@ -404,6 +404,30 @@ class Ui_constructRoi(object):
 "")
         self.undoRoiButton.setCheckable(True)
         self.undoRoiButton.setChecked(False)
+        self.newRoiButton = QPushButton(constructRoi)
+        self.newRoiButton.setObjectName(u"newRoiButton")
+        self.newRoiButton.setGeometry(QRect(780, 600, 171, 41))
+        self.newRoiButton.setStyleSheet(u"QPushButton {\n"
+"	color: white;\n"
+"	font-size: 16px;\n"
+"	background: rgb(90, 37, 255);\n"
+"	border-radius: 15px;\n"
+"}\n"
+"")
+        self.newRoiButton.setCheckable(True)
+        self.newRoiButton.setChecked(False)
+        self.loadRoiButton = QPushButton(constructRoi)
+        self.loadRoiButton.setObjectName(u"loadRoiButton")
+        self.loadRoiButton.setGeometry(QRect(970, 600, 171, 41))
+        self.loadRoiButton.setStyleSheet(u"QPushButton {\n"
+"	color: white;\n"
+"	font-size: 16px;\n"
+"	background: rgb(90, 37, 255);\n"
+"	border-radius: 15px;\n"
+"}\n"
+"")
+        self.loadRoiButton.setCheckable(True)
+        self.loadRoiButton.setChecked(False)
 
         self.retranslateUi(constructRoi)
 
@@ -451,5 +475,7 @@ class Ui_constructRoi(object):
         self.bmodeCoverLabel.setText("")
         self.ceCoverLabel.setText("")
         self.undoRoiButton.setText(QCoreApplication.translate("constructRoi", u"Undo", None))
+        self.newRoiButton.setText(QCoreApplication.translate("constructRoi", u"New ROI", None))
+        self.loadRoiButton.setText(QCoreApplication.translate("constructRoi", u"Load ROI", None))
     # retranslateUi
 

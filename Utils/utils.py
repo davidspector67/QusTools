@@ -21,12 +21,10 @@ def paramap(img, xmask, ymask, zmask, res, time, tf, compressfactor, windSize_x,
     global windSize, voxelscale, compression, imgshape, timeconst, times, xlist, ylist, zlist, windows, typefit;
     windSize = (windSize_x, windSize_y, windSize_z);
     voxelscale = res[0]*res[1]*res[2];
-    compression = compressfactor; 
+    compression = compressfactor; # 24.9
     imgshape = img.shape;
     typefit = tf;
     #img = img - np.mean(img[:,0:4,:,:,:,:],axis=1);img[img < 1]=0;
-
-    # Make expected calculation time
 
     #1b. Creat time point and position lists
     timeconst = time;#time/(img.shape[1]+1);
@@ -37,7 +35,6 @@ def paramap(img, xmask, ymask, zmask, res, time, tf, compressfactor, windSize_x,
     ylist = np.arange(min(ymask), max(ymask)+windSize[1], windSize[1])
     zlist = np.arange(min(zmask), max(zmask)+windSize[2], windSize[2])
     final_map = np.empty([img.shape[0], img.shape[1], img.shape[2]], dtype=list)
-    first_loop = True
     for x_base in range(len(xlist)):
         for y_base in range(len(ylist)):
             for z_base in range(len(zlist)):
@@ -55,13 +52,16 @@ def paramap(img, xmask, ymask, zmask, res, time, tf, compressfactor, windSize_x,
                         cur_index.pop()
                     cur_index.pop()
                 sig_indices = False
+                numVoxels = 0
                 for i in indices:
                     if max(img[i[0],i[1],i[2]]) != 0:
                         cur_mask[i[0],i[1],i[2]] = 1
                         sig_indices = True
+                        numVoxels += 1
+                temp_voxelScale = voxelscale * numVoxels
                 if not sig_indices:
                     continue
-                cur_TIC = generate_TIC(img, cur_mask, times, 24.9,  voxelscale)
+                cur_TIC = generate_TIC(img, cur_mask, times, compression,  temp_voxelScale)
                 normalizer = np.max(cur_TIC[:,1]);
                 cur_TIC[:,1] = cur_TIC[:,1]/normalizer;
 
@@ -84,16 +84,7 @@ def paramap(img, xmask, ymask, zmask, res, time, tf, compressfactor, windSize_x,
                 for i in indices:
                     final_map[i[0], i[1],i[2]] = [popt[0], params[0], params[2], params[3]]
 
-                # if first_loop:
-                #     # first_loop_end_time = datetime.now()
-                #     # print("Estimated time till completion:")
-                #     # estimate = (first_loop_end_time.second-start_time.second)
-                #     # estimate = estimate*len(xlist)*len(ylist)*len(zlist)
-                #     # minutes = estimate/60
-                #     # print(str(str(int(minutes))+" minutes, " + str(estimate-(int(minutes)*60))+" seconds"))
-                #     first_loop = False
-
-    print('Paraloop ended:')#;print(str(datetime.now()));
+    print('Paraloop ended:')
     return final_map;
 
 def generate_TIC(window, mask, times, compression, voxelscale):
@@ -102,7 +93,7 @@ def generate_TIC(window, mask, times, compression, voxelscale):
     for t in range(0,window.shape[3]):
         tmpwin = window[:,:,:,t];      
         TIC.append(np.exp(tmpwin[bool_mask]/compression).mean()*voxelscale);
-        # TIC.append(np.around((tmpwin[bool_mask]/compression).mean()*voxelscale, decimals=1)); 
+        # TIC.append(np.around((tmpwin[bool_mask]/compression).mean()voxelscale, decimals=1)); 
     TICz = np.array([TICtime,TIC]).astype('float64'); TICz = TICz.transpose();
     TICz[:,1]=TICz[:,1]-np.mean(TICz[0:2,1]);#Substract noise in TIC before contrast.
     if TICz[np.nan_to_num(TICz)<0].any():#make the smallest number in the TIC 0.

@@ -166,6 +166,7 @@ class VoiSelectionGUI(Ui_constructVoi, QWidget):
         self.pointsPlotted = [*set(self.pointsPlotted)]
         print("Voxel volume:", self.voxelScale)
         self.voxelScale *= len(self.pointsPlotted)
+        self.voxelScale = 1
         print("Num voxels:", len(self.pointsPlotted))
         simplifiedMask = self.maskCoverImg[:,:,:,2]
         TIC = ut.generate_TIC(self.OGData4dImg, simplifiedMask, times, 24.09,  self.voxelScale)
@@ -783,10 +784,12 @@ class VoiSelectionGUI(Ui_constructVoi, QWidget):
                 for j in range(len(splineX)):
                     mask[int(splineX[j]), int(splineY[j]), i] = 1
                 filledMask = binary_fill_holes(mask[:,:,i])
+                mask[:,:,i] = binary_fill_holes(mask[:,:,i])
                 maskPoints = np.array(np.where(filledMask == True))
                 for j in range(len(maskPoints[0])):
                     self.maskCoverImg[maskPoints[0][j], maskPoints[1][j], i] = [0,0,255,int(self.curAlpha)]
                     self.pointsPlotted.append((maskPoints[0][j], maskPoints[1][j], i))
+
             self.changeAxialSlices()
             self.changeSagSlices()
             self.changeCorSlices()
