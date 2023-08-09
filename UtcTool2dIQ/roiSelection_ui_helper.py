@@ -2,6 +2,7 @@ from Parsers.iqMatParser import getImage
 from UtcTool2dIQ.roiSelection_ui import *
 from UtcTool2dIQ.editImageDisplay_ui_helper import *
 from UtcTool2dIQ.analysisParamsSelection_ui_helper import *
+from UtcTool2dIQ.loadRoi_ui_helper import *
 
 import pydicom
 import os
@@ -12,9 +13,6 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 import matplotlib
 import scipy.interpolate as interpolate
 
-pointsPlottedX = []
-pointsPlottedY = []
-
 
 class RoiSelectionGUI(QWidget, Ui_constructRoi):
     def __init__(self):
@@ -22,6 +20,19 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
         self.setupUi(self)
         self.imagePathInput.setHidden(True)
         self.phantomPathInput.setHidden(True)
+        self.drawRoiButton.setHidden(True)
+        self.closeRoiButton.setHidden(True)
+        self.undoLastPtButton.setHidden(True)
+        self.redrawRoiButton.setHidden(True)
+        self.acceptRoiButton.setHidden(True)
+        self.undoLoadedRoiButton.setHidden(True)
+        self.acceptLoadedRoiButton.setHidden(True)
+        self.acceptLoadedRoiButton.clicked.connect(self.acceptROI)
+        self.undoLoadedRoiButton.clicked.connect(self.undoRoiLoad)
+
+        self.loadRoiGUI = LoadRoiGUI()
+        self.pointsPlottedX = []
+        self.pointsPlottedY = []
 
         # Prepare B-Mode display plot
         self.horizontalLayout = QHBoxLayout(self.imDisplayFrame)
@@ -48,9 +59,32 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
         self.drawRoiButton.clicked.connect(self.recordDrawROIClicked)
         self.undoLastPtButton.clicked.connect(self.undoLastPt)
         self.closeRoiButton.clicked.connect(self.closeInterpolation)
-        self.redrawRoiButton.clicked.connect(self.restartROI)
+        self.redrawRoiButton.clicked.connect(self.undoLastRoi)
         self.acceptRoiButton.clicked.connect(self.acceptROI)
         self.backButton.clicked.connect(self.backToWelcomeScreen)
+        self.newRoiButton.clicked.connect(self.drawNewRoi)
+        self.loadRoiButton.clicked.connect(self.openLoadRoiWindow)
+    
+    def undoRoiLoad(self):
+        self.undoLoadedRoiButton.setHidden(True)
+        self.acceptLoadedRoiButton.setHidden(True)
+        self.loadRoiButton.setHidden(False)
+        self.newRoiButton.setHidden(False)
+
+        self.undoLastRoi()
+
+    def openLoadRoiWindow(self):
+        self.loadRoiGUI.chooseRoiGUI = self
+        self.hide()
+        self.loadRoiGUI.show()
+
+    def drawNewRoi(self):
+        self.newRoiButton.setHidden(True)
+        self.loadRoiButton.setHidden(True)
+        self.drawRoiButton.setHidden(False)
+        self.undoLastPtButton.setHidden(False)
+        self.closeRoiButton.setHidden(False)
+        self.acceptRoiButton.setHidden(False)
 
     def backToWelcomeScreen(self):
         self.lastGui.dataFrame = self.dataFrame
@@ -86,10 +120,10 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
         im = plt.imread(os.path.join("Junk", "bModeIm.png"))
         self.ax.imshow(im, cmap='Greys_r')
 
-        if len(pointsPlottedX) > 0:
-            self.scatteredPoints.append(self.ax.scatter(pointsPlottedX[-1], pointsPlottedY[-1], marker="o", s=0.5, c="red", zorder=500))
-            if len(pointsPlottedX) > 1:
-                xSpline, ySpline = calculateSpline(pointsPlottedX, pointsPlottedY)
+        if len(self.pointsPlottedX) > 0:
+            self.scatteredPoints.append(self.ax.scatter(self.pointsPlottedX[-1], self.pointsPlottedY[-1], marker="o", s=0.5, c="red", zorder=500))
+            if len(self.pointsPlottedX) > 1:
+                xSpline, ySpline = calculateSpline(self.pointsPlottedX, self.pointsPlottedY)
                 self.spline = self.ax.plot(xSpline, ySpline, color = "cyan", zorder=1, linewidth=0.75)
         self.figure.subplots_adjust(left=0,right=1, bottom=0,top=1, hspace=0.2,wspace=0.2)
         self.cursor = matplotlib.widgets.Cursor(self.ax, color="gold", linewidth=0.4, useblit=True)
@@ -166,35 +200,35 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
         self.canvas.draw()
 
     def undoLastPt(self): # When drawing ROI, undo last point plotted
-        if len(pointsPlottedX) > 0:
+        if len(self.pointsPlottedX) > 0:
             self.scatteredPoints[-1].remove()
             self.scatteredPoints.pop()
-            pointsPlottedX.pop()
-            pointsPlottedY.pop()
-            if len(pointsPlottedX) > 0:
-                global finalSplineX
-                global finalSplineY
+            self.pointsPlottedX.pop()
+            self.pointsPlottedY.pop()
+            if len(self.pointsPlottedX) > 0:
                 oldSpline = self.spline.pop(0)
                 oldSpline.remove()
-                if len(pointsPlottedX) > 1:
-                    finalSplineX, finalSplineY = calculateSpline(pointsPlottedX, pointsPlottedY)
-                    self.spline = self.ax.plot(finalSplineX, finalSplineY, color = "cyan", linewidth=0.75)
+                if len(self.pointsPlottedX) > 1:
+                    self.finalSplineX, self.finalSplineY = calculateSpline(self.pointsPlottedX, self.pointsPlottedY)
+                    self.spline = self.ax.plot(self.finalSplineX, self.finalSplineY, color = "cyan", linewidth=0.75)
             self.canvas.draw()
             self.drawRoiButton.setChecked(True)
             self.recordDrawROIClicked()
 
     def closeInterpolation(self): # Finish drawing ROI
-        if len(pointsPlottedX) > 2:
+        if len(self.pointsPlottedX) > 2:
             self.ax.clear()
             im = plt.imread(os.path.join("Junk", "bModeIm.png"))
             plt.imshow(im, cmap='Greys_r')
-            pointsPlottedX.append(pointsPlottedX[0])
-            pointsPlottedY.append(pointsPlottedY[0])
-            global finalSplineX, finalSplineY
-            finalSplineX, finalSplineY = calculateSpline(pointsPlottedX, pointsPlottedY)
-            self.ax.plot(finalSplineX, finalSplineY, color = "cyan", linewidth=0.75)
-            image, =self.ax.plot([], [], marker="o",markersize=3, markerfacecolor="red")
-            image.figure.canvas.mpl_disconnect(self.cid)
+            self.pointsPlottedX.append(self.pointsPlottedX[0])
+            self.pointsPlottedY.append(self.pointsPlottedY[0])
+            self.finalSplineX, self.finalSplineY = calculateSpline(self.pointsPlottedX, self.pointsPlottedY)
+            self.ax.plot(self.finalSplineX, self.finalSplineY, color = "cyan", linewidth=0.75)
+            try:
+                image, =self.ax.plot([], [], marker="o",markersize=3, markerfacecolor="red")
+                image.figure.canvas.mpl_disconnect(self.cid)
+            except:
+                image = 0 # do nothing. Means we're loading ROI
             self.figure.subplots_adjust(left=0,right=1, bottom=0,top=1, hspace=0.2,wspace=0.2)
             plt.tick_params(bottom=False, left=False)
             self.canvas.draw()
@@ -207,12 +241,11 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
             self.undoLastPtButton.clicked.disconnect()
             self.canvas.draw()
 
-    def restartROI(self): # Remove previously drawn roi and prepare user to draw a new one
-        global pointsPlottedX, pointsPlottedY, finalSplineX, finalSplineY
-        finalSplineX = []
-        finalSplineY = []
-        pointsPlottedX = []
-        pointsPlottedY = []
+    def undoLastRoi(self): # Remove previously drawn roi and prepare user to draw a new one
+        self.finalSplineX = []
+        self.finalSplineY = []
+        self.pointsPlottedX = []
+        self.pointsPlottedY = []
         self.drawRoiButton.setChecked(False)
         self.drawRoiButton.setCheckable(True)
         self.closeRoiButton.setHidden(False)
@@ -232,26 +265,28 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
         self.plotOnCanvas()
     
     def interpolatePoints(self, event): # Update ROI being drawn using spline using 2D interpolation
-        pointsPlottedX.append(int(event.xdata))
-        pointsPlottedY.append(int(event.ydata))
-        plottedPoints = len(pointsPlottedX)
+        self.pointsPlottedX.append(int(event.xdata))
+        self.pointsPlottedY.append(int(event.ydata))
+        plottedPoints = len(self.pointsPlottedX)
 
         if plottedPoints > 1:
             if plottedPoints > 2:
                 oldSpline = self.spline.pop(0)
                 oldSpline.remove()
 
-            xSpline, ySpline = calculateSpline(pointsPlottedX, pointsPlottedY)
+            xSpline, ySpline = calculateSpline(self.pointsPlottedX, self.pointsPlottedY)
             self.spline = self.ax.plot(xSpline, ySpline, color = "cyan", zorder=1, linewidth=0.75)
             plt.subplots_adjust(left=0,right=1, bottom=0,top=1, hspace=0.2,wspace=0.2)
             plt.tick_params(bottom=False, left=False)
-        self.scatteredPoints.append(self.ax.scatter(pointsPlottedX[-1], pointsPlottedY[-1], marker="o", s=0.5, c="red", zorder=500))
+        self.scatteredPoints.append(self.ax.scatter(self.pointsPlottedX[-1], self.pointsPlottedY[-1], marker="o", s=0.5, c="red", zorder=500))
         self.canvas.draw()
 
     def acceptROI(self):
-        if len(pointsPlottedX) > 1 and pointsPlottedX[0] == pointsPlottedX[-1]:
-            self.analysisParamsGUI.finalSplineX = finalSplineX
-            self.analysisParamsGUI.finalSplineY = finalSplineY
+        if len(self.pointsPlottedX) > 1 and self.pointsPlottedX[0] == self.pointsPlottedX[-1]:
+            self.analysisParamsGUI.finalSplineX = self.finalSplineX
+            self.analysisParamsGUI.finalSplineY = self.finalSplineY
+            self.analysisParamsGUI.curPointsPlottedX = self.pointsPlottedX[:-1]
+            self.analysisParamsGUI.curPointsPlottedY = self.pointsPlottedY[:-1]
             self.analysisParamsGUI.lastGui = self
             self.analysisParamsGUI.dataFrame = self.dataFrame
             self.analysisParamsGUI.setFilenameDisplays(self.imagePathInput.text().split('/')[-1], self.phantomPathInput.text().split('/')[-1])

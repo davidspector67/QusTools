@@ -3,6 +3,7 @@ from UtcTool2dIQ.editImageDisplay_ui_helper import *
 from UtcTool2dIQ.rfAnalysis_ui import *
 from Utils.roiFuncs import *
 from UtcTool2dIQ.exportData_ui_helper import *
+from UtcTool2dIQ.saveRoi_ui_helper import *
 
 import os
 import numpy as np
@@ -43,12 +44,15 @@ class RfAnalysisGUI(QWidget, Ui_rfAnalysis):
 
         self.splineX = splineX
         self.splineY = splineY
+        self.curPointsPlottedX = None
+        self.curPointsPlottedY = None
         self.imgDataStruct = None
         self.imgInfoStruct = None
         self.refDataStruct = None
         self.refInfoStruct = None
         self.dataFrame = None
         self.exportDataGUI = None
+        self.saveRoiGUI = SaveRoiGUI()
 
         self.axialWinSize = None
         self.lateralWinSize = None
@@ -105,6 +109,11 @@ class RfAnalysisGUI(QWidget, Ui_rfAnalysis):
         self.backButton.clicked.connect(self.backToLastScreen)
         self.exportDataButton.clicked.connect(self.moveToExport)
         self.saveDataButton.clicked.connect(self.saveData)
+        self.saveRoiButton.clicked.connect(self.saveRoi)
+
+    def saveRoi(self):
+        self.saveRoiGUI.rfAnalysisGUI = self
+        self.saveRoiGUI.show()
 
     def moveToExport(self):
         if len(self.dataFrame):

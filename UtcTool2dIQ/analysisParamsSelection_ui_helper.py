@@ -26,6 +26,8 @@ class AnalysisParamsGUI(Ui_analysisParams, QWidget):
         self.frame = None
         self.imArray = None
         self.dataFrame = None
+        self.curPointsPlottedX = None
+        self.curPointsPlottedY = None
 
         self.continueButton.clicked.connect(self.continueToRfAnalysis)
         self.backButton.clicked.connect(self.backToLastScreen)
@@ -48,6 +50,8 @@ class AnalysisParamsGUI(Ui_analysisParams, QWidget):
         self.rfAnalysisGUI.imgInfoStruct = self.lastGui.imgInfoStruct
         self.rfAnalysisGUI.refDataStruct = self.lastGui.refDataStruct
         self.rfAnalysisGUI.refInfoStruct = self.lastGui.refInfoStruct
+        self.rfAnalysisGUI.curPointsPlottedX = self.curPointsPlottedX
+        self.rfAnalysisGUI.curPointsPlottedY = self.curPointsPlottedY
         self.rfAnalysisGUI.dataFrame = self.dataFrame
         self.rfAnalysisGUI.axialWinSize = self.axWinSizeVal.value()
         self.rfAnalysisGUI.lateralWinSize = self.latWinSizeVal.value()

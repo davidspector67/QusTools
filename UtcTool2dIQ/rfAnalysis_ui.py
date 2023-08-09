@@ -149,6 +149,21 @@ class Ui_rfAnalysis(object):
 "	font-weight: bold;\n"
 "}")
         self.label_8.setAlignment(Qt.AlignCenter)
+        self.saveRoiButton = QPushButton(self.widget)
+        self.saveRoiButton.setObjectName(u"saveRoiButton")
+        self.saveRoiButton.setGeometry(QRect(150, 690, 181, 41))
+        self.saveRoiButton.setStyleSheet(u"QPushButton {\n"
+"	color: white;\n"
+"	font-size: 12px;\n"
+"	background: rgb(90, 37, 255);\n"
+"	border-radius: 15px;\n"
+"}\n"
+"QPushButton:checked {\n"
+"	color:white; \n"
+"	font-size: 12px;\n"
+"	background: rgb(45, 0, 110);\n"
+"	border-radius: 15px;\n"
+"}")
         self.frame_3 = QFrame(rfAnalysis)
         self.frame_3.setObjectName(u"frame_3")
         self.frame_3.setGeometry(QRect(0, 240, 341, 121))
@@ -428,6 +443,7 @@ class Ui_rfAnalysis(object):
         self.label_4.setText(QCoreApplication.translate("rfAnalysis", u"Region of Interest (ROI) Selection", None))
         self.label_7.setText(QCoreApplication.translate("rfAnalysis", u"Radio Frequency Data Analysis", None))
         self.label_8.setText(QCoreApplication.translate("rfAnalysis", u"Export Results", None))
+        self.saveRoiButton.setText(QCoreApplication.translate("rfAnalysis", u"Save ROI", None))
         self.label_6.setText(QCoreApplication.translate("rfAnalysis", u"Analysis Parameter Selection", None))
         self.displayMbfButton.setText(QCoreApplication.translate("rfAnalysis", u"Display Midband Fit (MBF)", None))
         self.displaySsButton.setText(QCoreApplication.translate("rfAnalysis", u"Display Spectral Slope (SS)", None))

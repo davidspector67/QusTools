@@ -262,6 +262,54 @@ class Ui_constructRoi(object):
 "	background: rgb(90, 37, 255);\n"
 "	border-radius: 15px;\n"
 "}")
+        self.undoLoadedRoiButton = QPushButton(constructRoi)
+        self.undoLoadedRoiButton.setObjectName(u"undoLoadedRoiButton")
+        self.undoLoadedRoiButton.setGeometry(QRect(420, 110, 271, 41))
+        self.undoLoadedRoiButton.setStyleSheet(u"QPushButton {\n"
+"	color: white;\n"
+"	font-size: 16px;\n"
+"	background: rgb(90, 37, 255);\n"
+"	border-radius: 15px;\n"
+"}\n"
+"")
+        self.undoLoadedRoiButton.setCheckable(True)
+        self.undoLoadedRoiButton.setChecked(False)
+        self.newRoiButton = QPushButton(constructRoi)
+        self.newRoiButton.setObjectName(u"newRoiButton")
+        self.newRoiButton.setGeometry(QRect(420, 110, 271, 41))
+        self.newRoiButton.setStyleSheet(u"QPushButton {\n"
+"	color: white;\n"
+"	font-size: 16px;\n"
+"	background: rgb(90, 37, 255);\n"
+"	border-radius: 15px;\n"
+"}\n"
+"")
+        self.newRoiButton.setCheckable(True)
+        self.newRoiButton.setChecked(False)
+        self.acceptLoadedRoiButton = QPushButton(constructRoi)
+        self.acceptLoadedRoiButton.setObjectName(u"acceptLoadedRoiButton")
+        self.acceptLoadedRoiButton.setGeometry(QRect(820, 110, 271, 41))
+        self.acceptLoadedRoiButton.setStyleSheet(u"QPushButton {\n"
+"	color: white;\n"
+"	font-size: 16px;\n"
+"	background: rgb(90, 37, 255);\n"
+"	border-radius: 15px;\n"
+"}\n"
+"")
+        self.acceptLoadedRoiButton.setCheckable(True)
+        self.acceptLoadedRoiButton.setChecked(False)
+        self.loadRoiButton = QPushButton(constructRoi)
+        self.loadRoiButton.setObjectName(u"loadRoiButton")
+        self.loadRoiButton.setGeometry(QRect(820, 110, 271, 41))
+        self.loadRoiButton.setStyleSheet(u"QPushButton {\n"
+"	color: white;\n"
+"	font-size: 16px;\n"
+"	background: rgb(90, 37, 255);\n"
+"	border-radius: 15px;\n"
+"}\n"
+"")
+        self.loadRoiButton.setCheckable(True)
+        self.loadRoiButton.setChecked(False)
 
         self.retranslateUi(constructRoi)
 
@@ -290,5 +338,9 @@ class Ui_constructRoi(object):
         self.closeRoiButton.setText(QCoreApplication.translate("constructRoi", u"Close ROI", None))
         self.redrawRoiButton.setText(QCoreApplication.translate("constructRoi", u"Redraw ROI", None))
         self.backButton.setText(QCoreApplication.translate("constructRoi", u"Back", None))
+        self.undoLoadedRoiButton.setText(QCoreApplication.translate("constructRoi", u"Undo", None))
+        self.newRoiButton.setText(QCoreApplication.translate("constructRoi", u"New ROI", None))
+        self.acceptLoadedRoiButton.setText(QCoreApplication.translate("constructRoi", u"Accept ROI", None))
+        self.loadRoiButton.setText(QCoreApplication.translate("constructRoi", u"Load ROI", None))
     # retranslateUi
 
