@@ -34,8 +34,11 @@ class LoadRoiGUI(Ui_loadRoi, QWidget):
                 for row in reader:
                     if line_count == 1:
                         imageName = row[0]
-                        self.chooseRoiGUI.curPointsPlottedX = row[1]
-                        self.chooseRoiGUI.curPointsPlottedY = row[2]
+                        self.chooseRoiGUI.curPointsPlottedX = row[1][1:-1].split(',')
+                        self.chooseRoiGUI.curPointsPlottedX = [int(num) for num in self.chooseRoiGUI.curPointsPlottedX]
+                        self.chooseRoiGUI.curPointsPlottedY = row[2][1:-1].split(',')
+                        self.chooseRoiGUI.curPointsPlottedY = [int(num) for num in self.chooseRoiGUI.curPointsPlottedY]
+                        self.chooseRoiGUI.frame = int(row[3])
                         break
                     line_count += 1
             if imageName != self.chooseRoiGUI.imagePathInput.text():
@@ -43,6 +46,15 @@ class LoadRoiGUI(Ui_loadRoi, QWidget):
                 self.chooseRoiGUI.curPointsPlottedY = []
                 print("Selected ROI for wrong image")
                 return
+            self.chooseRoiGUI.curFrameSlider.setValue(self.chooseRoiGUI.frame)
+            self.chooseRoiGUI.curFrameChanged()
             self.chooseRoiGUI.closeInterpolation()
+            self.chooseRoiGUI.acceptLoadedRoiButton.setHidden(False)
+            self.chooseRoiGUI.undoLoadedRoiButton.setHidden(False)
+            self.chooseRoiGUI.newRoiButton.setHidden(True)
+            self.chooseRoiGUI.loadRoiButton.setHidden(True)
+            self.chooseRoiGUI.drawRoiButton.setChecked(True)
+            self.chooseRoiGUI.drawRoiButton.setCheckable(True)
+            self.chooseRoiGUI.redrawRoiButton.setHidden(True)
             self.hide()
             self.chooseRoiGUI.show()

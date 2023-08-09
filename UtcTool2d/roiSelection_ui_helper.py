@@ -36,6 +36,10 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
         self.undoLastPtButton.setHidden(True)
         self.redrawRoiButton.setHidden(True)
         self.acceptRoiButton.setHidden(True)
+        self.undoLoadedRoiButton.setHidden(True)
+        self.acceptLoadedRoiButton.setHidden(True)
+        self.acceptLoadedRoiButton.clicked.connect(self.acceptROI)
+        self.undoLoadedRoiButton.clicked.connect(self.undoRoiLoad)
 
         self.loadRoiGUI = LoadRoiGUI()
 
@@ -70,6 +74,14 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
         self.backButton.clicked.connect(self.backToLastScreen)
         self.newRoiButton.clicked.connect(self.drawNewRoi)
         self.loadRoiButton.clicked.connect(self.openLoadRoiWindow)
+    
+    def undoRoiLoad(self):
+        self.undoLoadedRoiButton.setHidden(True)
+        self.acceptLoadedRoiButton.setHidden(True)
+        self.loadRoiButton.setHidden(False)
+        self.newRoiButton.setHidden(False)
+
+        self.undoLastRoi()
 
     def openLoadRoiWindow(self):
         self.loadRoiGUI.chooseRoiGUI = self

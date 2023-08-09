@@ -135,7 +135,7 @@ class Ui_saveRoi(object):
         self.chooseFolderButton.setText(QCoreApplication.translate("saveRoi", u"Choose Folder", None))
         self.clearFolderButton.setText(QCoreApplication.translate("saveRoi", u"Clear Folder", None))
         self.saveRoiButton.setText(QCoreApplication.translate("saveRoi", u"Save", None))
-        self.dataSavedSuccessfullyLabel.setText(QCoreApplication.translate("saveRoi", u"Data saved successfully!", None))
+        self.dataSavedSuccessfullyLabel.setText(QCoreApplication.translate("saveRoi", u"ROI saved successfully!", None))
         self.newFileNameLabel.setText(QCoreApplication.translate("saveRoi", u"Type name of new file:\n"
 "(no spaces,  must end in \".csv\")", None))
         self.fileNameErrorLabel.setText(QCoreApplication.translate("saveRoi", u"ERROR: Filename must not contain a space\n"

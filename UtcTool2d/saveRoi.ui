@@ -172,7 +172,7 @@
 }</string>
    </property>
    <property name="text">
-    <string>Data saved successfully!</string>
+    <string>ROI saved successfully!</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>

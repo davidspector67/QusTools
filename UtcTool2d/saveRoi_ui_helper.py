@@ -31,8 +31,8 @@ class SaveRoiGUI(Ui_saveRoi, QWidget):
                 return
             with open(os.path.join(self.newFolderPathInput.text(), self.newFileNameInput.text()), mode='w') as csvfile:
                 writer = csv.writer(csvfile, delimiter=',')
-                writer.writerow(["Image Name", "Spline x points", "Spline y points"])
-                writer.writerow([self.rfAnalysisGUI.imagePathInput.text(), self.rfAnalysisGUI.curPointsPlottedX, self.rfAnalysisGUI.curPointsPlottedY])
+                writer.writerow(["Image Name", "Spline x points", "Spline y points", "Frame"])
+                writer.writerow([self.rfAnalysisGUI.imagePathInput.text(), self.rfAnalysisGUI.curPointsPlottedX, self.rfAnalysisGUI.curPointsPlottedY, self.rfAnalysisGUI.frame])
             self.dataSavedSuccessfullyLabel.setHidden(False)
             self.newFileNameInput.setHidden(True)
             self.newFileNameLabel.setHidden(True)
