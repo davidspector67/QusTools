@@ -3,6 +3,7 @@ from UtcTool2d.editImageDisplay_ui_helper import *
 from UtcTool2d.rfAnalysis_ui import *
 from Utils.roiFuncs import *
 from UtcTool2d.exportData_ui_helper import *
+from UtcTool2d.saveRoi_ui_helper import *
 
 import os
 import numpy as np
@@ -51,6 +52,8 @@ class RfAnalysisGUI(QWidget, Ui_rfAnalysis):
         self.dataFrame = None
         self.exportDataGUI = None
         self.newData = None
+        self.curPointsPlottedX = None
+        self.curPointsPlottedY = None
 
         self.axialWinSize = None
         self.lateralWinSize = None
@@ -61,6 +64,7 @@ class RfAnalysisGUI(QWidget, Ui_rfAnalysis):
         self.maxFrequency = None
         self.samplingFreq = None
         self.lastGui = None
+        self.saveRoiGUI = SaveRoiGUI()
 
         self.indMbfVal.setText("")
         self.indSiVal.setText("")
@@ -106,6 +110,11 @@ class RfAnalysisGUI(QWidget, Ui_rfAnalysis):
         self.backButton.clicked.connect(self.backToLastScreen)
         self.exportDataButton.clicked.connect(self.moveToExport)
         self.saveDataButton.clicked.connect(self.saveData)
+        self.saveRoiButton.clicked.connect(self.saveRoi)
+
+    def saveRoi(self):
+        self.saveRoiGUI.rfAnalysisGUI = self
+        self.saveRoiGUI.show()
 
     def moveToExport(self):
         if len(self.dataFrame):

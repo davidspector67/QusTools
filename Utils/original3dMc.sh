@@ -88,15 +88,15 @@ mkdir -p $xfmdir
 outdir=reg_out
 mkdir -p $outdir
 
-# #Create master average of non-resampled images
-# orgavg=org_MASTER_avg.nii.gz
-# if [[ ! -f $orgavg ]];then
-# 	echo reg_average $orgavg -avg $splitdir/orgvol*
-#   reg_average $orgavg -avg $splitdir/orgvol*
+#Create master average of non-resampled images
+orgavg=org_MASTER_avg.nii.gz
+if [[ ! -f $orgavg ]];then
+	echo reg_average $orgavg -avg $splitdir/orgvol*
+  reg_average $orgavg -avg $splitdir/orgvol*
 
-# 	echo fslmaths $orgavg -nan $orgavg										### Command written to convert master average values from NaN to 0
-# 	fslmaths $orgavg -nan $orgavg
-# fi
+	echo fslmaths $orgavg -nan $orgavg										### Command written to convert master average values from NaN to 0
+	fslmaths $orgavg -nan $orgavg
+fi
 
 #Resample nifti images to voxel size 0.5 x 0.5 x 0.5
 pushd $splitdir
@@ -129,7 +129,7 @@ avg=res_MASTER_avg.nii.gz                        #Master average of resampled im
 
 if [[ ! -f $avg ]];then
 	echo reg_average $avg -avg $splitdir/orgres*
-	reg_average $avg $splitdir/orgres*
+	reg_average $avg -avg $splitdir/orgres*
 
 	echo fslmaths $avg -nan $avg
 	fslmaths $avg -nan $avg
@@ -242,7 +242,7 @@ do
   #Create window average of group
   if [[ ! -f $avgdiv ]]; then
 		fslsplit $orgdiv $tmpdir/divavg -t
-		reg_average $avgdiv $tmpdir/divavg*
+		reg_average $avgdiv -avg $tmpdir/divavg*
 		fslmaths $avgdiv -nan $avgdiv
 		rm $tmpdir/*
 	fi
@@ -282,7 +282,7 @@ do
   #Create window average of the aligned resampled images
   if [[ ! -f $final/window_avg_trans_${d}.nii.gz ]]; then
 		echo reg_average $final/window_avg_trans_${d}.nii.gz -avg $temporary/splitImg*
-		reg_average $final/window_avg_trans_${d}.nii.gz $temporary/splitImg*
+		reg_average $final/window_avg_trans_${d}.nii.gz -avg $temporary/splitImg*
 
 		echo fslmaths $final/window_avg_trans_${d}.nii.gz -nan $final/window_avg_trans_${d}.nii.gz
 		fslmaths $final/window_avg_trans_${d}.nii.gz -nan $final/window_avg_trans_${d}.nii.gz

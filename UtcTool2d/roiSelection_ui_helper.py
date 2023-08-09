@@ -1,6 +1,7 @@
 from UtcTool2d.roiSelection_ui import *
 from UtcTool2d.editImageDisplay_ui_helper import *
 from UtcTool2d.analysisParamsSelection_ui_helper import *
+from UtcTool2d.loadRoi_ui_helper import *
 from UtcTool2d.rfAnalysis_ui_helper import *
 import Parsers.philipsMatParser as matParser
 import Parsers.siemensRfdParser as rfdParser
@@ -23,8 +24,6 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
 
         self.curPointsPlottedX = []
         self.curPointsPlottedY = []
-        self.finalSplineX = []
-        self.finalSplineY = []
         self.oldSpline = []
         self.imagePathInput.setHidden(True)
         self.phantomPathInput.setHidden(True)
@@ -32,6 +31,13 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
         self.curFrameLabel.setHidden(True)
         self.totalFramesLabel.setHidden(True)
         self.curFrameSlider.setHidden(True)
+        self.drawRoiButton.setHidden(True)
+        self.closeRoiButton.setHidden(True)
+        self.undoLastPtButton.setHidden(True)
+        self.redrawRoiButton.setHidden(True)
+        self.acceptRoiButton.setHidden(True)
+
+        self.loadRoiGUI = LoadRoiGUI()
 
         self.editImageDisplayButton.setHidden(True)
 
@@ -56,14 +62,27 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
         self.dataFrame = None
 
         self.scatteredPoints = []
-
-        self.redrawRoiButton.setHidden(True)
         
         self.undoLastPtButton.clicked.connect(self.undoLastPt)
         self.closeRoiButton.clicked.connect(self.closeInterpolation)
         self.redrawRoiButton.clicked.connect(self.undoLastRoi)
         self.acceptRoiButton.clicked.connect(self.acceptROI)
         self.backButton.clicked.connect(self.backToLastScreen)
+        self.newRoiButton.clicked.connect(self.drawNewRoi)
+        self.loadRoiButton.clicked.connect(self.openLoadRoiWindow)
+
+    def openLoadRoiWindow(self):
+        self.loadRoiGUI.chooseRoiGUI = self
+        self.hide()
+        self.loadRoiGUI.show()
+
+    def drawNewRoi(self):
+        self.newRoiButton.setHidden(True)
+        self.loadRoiButton.setHidden(True)
+        self.drawRoiButton.setHidden(False)
+        self.undoLastPtButton.setHidden(False)
+        self.closeRoiButton.setHidden(False)
+        self.acceptRoiButton.setHidden(False)
 
     def backToLastScreen(self):
         self.lastGui.dataFrame = self.dataFrame
@@ -82,8 +101,6 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
                 plotX = self.yCur - 171
             else:
                 return
-            self.finalSplineX.append(self.actualX)
-            self.finalSplineY.append(self.actualY)
             self.curPointsPlottedX.append(plotX)
             self.curPointsPlottedY.append(plotY)
             self.updateSpline()
@@ -290,17 +307,10 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
             points = np.transpose(np.array([self.curPointsPlottedX, self.curPointsPlottedY]))
             points = removeDuplicates(points)
             [self.curPointsPlottedX, self.curPointsPlottedY] = np.transpose(points)
-            points = np.transpose(np.array([self.finalSplineX, self.finalSplineY]))
-            points = removeDuplicates(points)
-            [self.finalSplineX, self.finalSplineY] = np.transpose(points)
             self.curPointsPlottedX = list(self.curPointsPlottedX)
             self.curPointsPlottedY = list(self.curPointsPlottedY)
-            self.finalSplineX = list(self.finalSplineX)
-            self.finalSplineY = list(self.finalSplineY)
             self.curPointsPlottedX.append(self.curPointsPlottedX[0])
             self.curPointsPlottedY.append(self.curPointsPlottedY[0])
-            self.finalSplineX.append(self.finalSplineX[0])
-            self.finalSplineY.append(self.finalSplineY[0])
             self.maskCoverImg.fill(0)
 
             xSpline, ySpline = calculateSpline(self.curPointsPlottedX, self.curPointsPlottedY)
@@ -313,8 +323,6 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
             ySpline = np.clip(ySpline, a_min=0, a_max=720)
             for i in range(len(xSpline)):
                 self.maskCoverImg[xSpline[i]-1:xSpline[i]+2, ySpline[i]-1:ySpline[i]+2] = [0, 0, 255, 255]
-            self.curPointsPlottedX = []
-            self.curPointsPlottedY = []
             self.drawRoiButton.setChecked(False)
             self.drawRoiButton.setCheckable(False)
             self.redrawRoiButton.setHidden(False)
@@ -327,16 +335,12 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
                             self.curPointsPlottedY[-1]-2:self.curPointsPlottedY[-1]+3] = [0,0,0,0]
             self.curPointsPlottedX.pop()
             self.curPointsPlottedY.pop()
-            self.finalSplineX.pop()
-            self.finalSplineY.pop()
             self.updateSpline()
 
     def undoLastRoi(self):
         if not self.drawRoiButton.isCheckable():
             self.curPointsPlottedX = []
             self.curPointsPlottedY = []
-            self.finalSplineX = []
-            self.finalSplineY = []
             self.drawRoiButton.setCheckable(True)
             self.redrawRoiButton.setHidden(True)
             self.closeRoiButton.setHidden(False)
@@ -345,7 +349,7 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
             self.update()
 
     def acceptROI(self):
-        if len(self.finalSplineX):
+        if len(self.curPointsPlottedX) > 1 and self.curPointsPlottedX[-1] == self.curPointsPlottedX[0]:
             del self.analysisParamsGUI
 
             imData = np.array(self.imArray[self.frame]).reshape(self.arHeight, self.arWidth)
@@ -371,6 +375,8 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
             self.analysisParamsGUI.samplingFreqVal.setValue(self.samplingFreqVal)
             self.analysisParamsGUI.finalSplineX = self.ySpline
             self.analysisParamsGUI.finalSplineY = self.xSpline
+            self.analysisParamsGUI.curPointsPlottedX = self.curPointsPlottedX
+            self.analysisParamsGUI.curPointsPlottedY = self.curPointsPlottedY
             self.analysisParamsGUI.frame = self.frame
             self.analysisParamsGUI.imArray = self.imArray
             self.analysisParamsGUI.dataFrame = self.dataFrame

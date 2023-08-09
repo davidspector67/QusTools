@@ -436,7 +436,7 @@ def generate_TIC(window, bboxes, times, compression, pixelScale, refFrame):
                 bool_mask[x0+x_len-1,y] = True
             bool_mask = binary_fill_holes(bool_mask)
             numPoints = len(np.where(bool_mask == True)[0])
-            TIC.append(np.exp(tmpwin[bool_mask]/compression).mean()*pixelScale*numPoints)
+            TIC.append(np.exp(tmpwin[bool_mask]/compression).mean()*pixelScale)
             TICtime.append(times[t])
             areas.append(pixelScale*numPoints)
 

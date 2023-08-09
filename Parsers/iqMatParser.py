@@ -1,4 +1,4 @@
-from scipy.io import loadmat
+from mat73 import loadmat
 from scipy.signal import hilbert
 import numpy as np
 import matplotlib.pyplot as plt
@@ -191,7 +191,7 @@ def readFileImg(Info, input):
 
     # Do Hilbert Transform on each column
     for i in range(iqData.shape[1]):
-        bmode[:,i] = 20*np.log10(abs(hilbert(rfData[:,i])))
+        bmode[:,i] = 20*np.log10(abs(iqData[:,i]))
 
     bmode = np.clip(bmode, (0.95*np.amax(bmode)-55), 0.95*np.amax(bmode)).astype(np.float)
     # bmode -= np.amin(bmode)

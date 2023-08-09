@@ -230,7 +230,8 @@ def read3D(data, newres, cut):#=[[-1,-1,5,5],[-1,-1,25,5],[-1,-1,5,5]]):
     finalRes = res
     
     finalImi = []
-    prevX = -1
+    shapesFound = []
+    imArrays = []
     for xmlname in xmlnamedir:
         #imarray[0,xmlnamedir.index(xmlname),0,:,:,:], res, timelast, shapes, dateStr = read_xmlraw_image_func(xmlname)
         imi, res, timelast, shapes, dateStr = read_xmlraw_image_func(xmlname); 
@@ -284,16 +285,22 @@ def read3D(data, newres, cut):#=[[-1,-1,5,5],[-1,-1,25,5],[-1,-1,5,5]]):
             # reduce matrix size      
             imi=imi[N_lines_z_axis_cut[0]:sz[0]-N_lines_z_axis_cut[1],N_lines_y_axis_cut[0]:sz[1]- N_lines_y_axis_cut[1],N_lines_x_axis_cut[0]:sz[2]-N_lines_x_axis_cut[1]]
 
-        if prevX != -1 and prevX != imi.shape[0]:
-            print(imi.shape)
-            continue
-        prevX = imi.shape[0]
-        imarray.append(imi)
+        if not (tuple(imi.shape) in shapesFound):
+            shapesFound.append(tuple(imi.shape))
+            imArrays.append([imi])
+        else:
+            shape_index = -1
+            for i in range(len(shapesFound)):
+                if shapesFound[i] == tuple(imi.shape):
+                    shape_index = i
+            imArrays[shape_index].append(imi)
+
         finalImi = imi
         
-    if not len(finalImi) or not finalImi.shape[0] or not finalImi.shape[1] or not finalImi.shape[2]:
-        print("Inputted image uses 2d data. Cannot parse into 3d data")
-        exit(1)
+    for array in imArrays:
+        if len(array[0].shape) != 3:
+            print("Inputted image uses 2d data. Cannot parse into 3d data")
+            exit(1)
 
     time = timelast - timeinitial; #total time of cine in seconds.
     if newres!=0:
