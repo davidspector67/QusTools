@@ -121,60 +121,10 @@ class Ui_selectImage(object):
 "	background-color: rgba(255, 255, 255, 0);\n"
 "}")
         self.selectImageErrorMsg.setAlignment(Qt.AlignCenter)
-        self.imagePathFolderLabel = QLabel(selectImage)
-        self.imagePathFolderLabel.setObjectName(u"imagePathFolderLabel")
-        self.imagePathFolderLabel.setGeometry(QRect(440, 290, 271, 51))
-        self.imagePathFolderLabel.setStyleSheet(u"QLabel {\n"
-"	background-color: rgba(255, 255, 255, 0);\n"
-"	color: white;\n"
-"	font-size: 17px;\n"
-"}")
-        self.imagePathFolderLabel.setAlignment(Qt.AlignCenter)
-        self.imagePathFolderLabel.setTextInteractionFlags(Qt.NoTextInteraction)
-        self.phantomPathFolderLabel = QLabel(selectImage)
-        self.phantomPathFolderLabel.setObjectName(u"phantomPathFolderLabel")
-        self.phantomPathFolderLabel.setGeometry(QRect(790, 290, 271, 51))
-        self.phantomPathFolderLabel.setStyleSheet(u"QLabel {\n"
-"	background-color: rgba(255, 255, 255, 0);\n"
-"	color: white;\n"
-"	font-size: 17px;\n"
-"}")
-        self.phantomPathFolderLabel.setAlignment(Qt.AlignCenter)
-        self.phantomPathFolderLabel.setTextInteractionFlags(Qt.NoTextInteraction)
-        self.choosePhantomFolderButton = QPushButton(selectImage)
-        self.choosePhantomFolderButton.setObjectName(u"choosePhantomFolderButton")
-        self.choosePhantomFolderButton.setGeometry(QRect(790, 390, 131, 41))
-        self.choosePhantomFolderButton.setStyleSheet(u"QPushButton {\n"
-"	color: white;\n"
-"	font-size: 16px;\n"
-"	background: rgb(90, 37, 255);\n"
-"	border-radius: 15px;\n"
-"}")
-        self.chooseImageFolderButton = QPushButton(selectImage)
-        self.chooseImageFolderButton.setObjectName(u"chooseImageFolderButton")
-        self.chooseImageFolderButton.setGeometry(QRect(440, 390, 131, 41))
-        self.chooseImageFolderButton.setStyleSheet(u"QPushButton {\n"
-"	color: white;\n"
-"	font-size: 16px;\n"
-"	background: rgb(90, 37, 255);\n"
-"	border-radius: 15px;\n"
-"}")
-        self.selectImageMethodLabel = QLabel(selectImage)
-        self.selectImageMethodLabel.setObjectName(u"selectImageMethodLabel")
-        self.selectImageMethodLabel.setGeometry(QRect(540, 170, 431, 131))
-        self.selectImageMethodLabel.setStyleSheet(u"QLabel {\n"
-"	font-size: 29px;\n"
-"	color: rgb(255, 255, 255);\n"
-"	background-color: rgba(255, 255, 255, 0);\n"
-"}")
-        self.selectImageMethodLabel.setTextFormat(Qt.AutoText)
-        self.selectImageMethodLabel.setScaledContents(False)
-        self.selectImageMethodLabel.setAlignment(Qt.AlignCenter)
-        self.selectImageMethodLabel.setWordWrap(True)
-        self.selectIndFilesButton = QPushButton(selectImage)
-        self.selectIndFilesButton.setObjectName(u"selectIndFilesButton")
-        self.selectIndFilesButton.setGeometry(QRect(590, 370, 301, 51))
-        self.selectIndFilesButton.setStyleSheet(u"QPushButton {\n"
+        self.philipsButton = QPushButton(selectImage)
+        self.philipsButton.setObjectName(u"philipsButton")
+        self.philipsButton.setGeometry(QRect(590, 270, 301, 51))
+        self.philipsButton.setStyleSheet(u"QPushButton {\n"
 "	color: white;\n"
 "	font-size: 16px;\n"
 "	background: rgb(90, 37, 255);\n"
@@ -337,6 +287,36 @@ class Ui_selectImage(object):
 "	font-weight:bold;\n"
 "}")
         self.analysisParamsLabel.setAlignment(Qt.AlignCenter)
+        self.transducerBrandLabel = QLabel(selectImage)
+        self.transducerBrandLabel.setObjectName(u"transducerBrandLabel")
+        self.transducerBrandLabel.setGeometry(QRect(540, 70, 431, 131))
+        self.transducerBrandLabel.setStyleSheet(u"QLabel {\n"
+"	font-size: 29px;\n"
+"	color: rgb(255, 255, 255);\n"
+"	background-color: rgba(255, 255, 255, 0);\n"
+"}")
+        self.transducerBrandLabel.setTextFormat(Qt.AutoText)
+        self.transducerBrandLabel.setScaledContents(False)
+        self.transducerBrandLabel.setAlignment(Qt.AlignCenter)
+        self.transducerBrandLabel.setWordWrap(True)
+        self.siemensButton = QPushButton(selectImage)
+        self.siemensButton.setObjectName(u"siemensButton")
+        self.siemensButton.setGeometry(QRect(590, 390, 301, 51))
+        self.siemensButton.setStyleSheet(u"QPushButton {\n"
+"	color: white;\n"
+"	font-size: 16px;\n"
+"	background: rgb(90, 37, 255);\n"
+"	border-radius: 15px;\n"
+"}")
+        self.terasonButton = QPushButton(selectImage)
+        self.terasonButton.setObjectName(u"terasonButton")
+        self.terasonButton.setGeometry(QRect(590, 520, 301, 51))
+        self.terasonButton.setStyleSheet(u"QPushButton {\n"
+"	color: white;\n"
+"	font-size: 16px;\n"
+"	background: rgb(90, 37, 255);\n"
+"	border-radius: 15px;\n"
+"}")
 
         self.retranslateUi(selectImage)
 
@@ -358,15 +338,10 @@ class Ui_selectImage(object):
         self.selectImageErrorMsg.setText(QCoreApplication.translate("selectImage", u"ERROR: At least one dimension of phantom data\n"
 "smaller than corresponding dimension\n"
 "of image data", None))
-        self.imagePathFolderLabel.setText(QCoreApplication.translate("selectImage", u"Input Path to Image Folder", None))
-        self.phantomPathFolderLabel.setText(QCoreApplication.translate("selectImage", u"Input Path to Phantom Folder", None))
-        self.choosePhantomFolderButton.setText(QCoreApplication.translate("selectImage", u"Choose Folder", None))
-        self.chooseImageFolderButton.setText(QCoreApplication.translate("selectImage", u"Choose Folder", None))
-        self.selectImageMethodLabel.setText(QCoreApplication.translate("selectImage", u"Select Method of Image Lookup:", None))
 #if QT_CONFIG(tooltip)
-        self.selectIndFilesButton.setToolTip(QCoreApplication.translate("selectImage", u"<html><head/><body><p><br/></p></body></html>", None))
+        self.philipsButton.setToolTip(QCoreApplication.translate("selectImage", u"<html><head/><body><p><br/></p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
-        self.selectIndFilesButton.setText(QCoreApplication.translate("selectImage", u"Select Individual Files", None))
+        self.philipsButton.setText(QCoreApplication.translate("selectImage", u"Philips", None))
 #if QT_CONFIG(tooltip)
         self.sidebar.setToolTip(QCoreApplication.translate("selectImage", u"<html><head/><body><p><br/></p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
@@ -380,5 +355,14 @@ class Ui_selectImage(object):
         self.exportResultsLabel.setText(QCoreApplication.translate("selectImage", u"Export Results", None))
         self.backButton.setText(QCoreApplication.translate("selectImage", u"Back", None))
         self.analysisParamsLabel.setText(QCoreApplication.translate("selectImage", u"Analysis Parameter Selection", None))
+        self.transducerBrandLabel.setText(QCoreApplication.translate("selectImage", u"Select Transducer Brand:", None))
+#if QT_CONFIG(tooltip)
+        self.siemensButton.setToolTip(QCoreApplication.translate("selectImage", u"<html><head/><body><p><br/></p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.siemensButton.setText(QCoreApplication.translate("selectImage", u"Siemens", None))
+#if QT_CONFIG(tooltip)
+        self.terasonButton.setToolTip(QCoreApplication.translate("selectImage", u"<html><head/><body><p><br/></p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.terasonButton.setText(QCoreApplication.translate("selectImage", u"Terason", None))
     # retranslateUi
 

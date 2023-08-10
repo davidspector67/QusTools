@@ -183,9 +183,9 @@ def readFileInfo(filename, filepath, input):
 
 def readFileImg(Info, frame, input):
     echoData = input["rf_data_all_fund"]# indexing works by frame, angle, image
-    # while not(len(echoData[0].shape) > 1 and echoData[0].shape[0]>100 and echoData[0].shape[1]>100):
-    #     echoData = echoData[0]
-    # echoData = np.array(echoData[frame]).astype(np.int32)
+    while not(len(echoData[0].shape) > 1 and echoData[0].shape[0]>100 and echoData[0].shape[1]>100):
+        echoData = echoData[0]
+    echoData = np.array(echoData[frame]).astype(np.int32)
 
     # echoData = np.real(input["IQData"])
     # bmode = 20*np.log10(abs(input["IQData"]))
@@ -201,25 +201,25 @@ def readFileImg(Info, frame, input):
 
     ModeIM = echoData
 
-    # [scBmode, hCm1, wCm1, _] = scanConvert(bmode, Info.width1, Info.tilt1, Info.startDepth1, Info.endDepth1, Info.endHeight)
+    [scBmode, hCm1, wCm1, _] = scanConvert(bmode, Info.width1, Info.tilt1, Info.startDepth1, Info.endDepth1, Info.endHeight)
     # TODO: Left off here (line 23, philips_read_PhilipsImg.m). Was not able to check final outim, inIm_ind(x/y). If something's off, look here
-    # [_, hCm1, wCm1, scModeIM] = scanConvert(ModeIM, Info.width1, Info.tilt1, Info.startDepth1, Info.endDepth1, Info.endHeight)
+    [_, hCm1, wCm1, scModeIM] = scanConvert(ModeIM, Info.width1, Info.tilt1, Info.startDepth1, Info.endDepth1, Info.endHeight)
 
-    # Info.height = hCm1
-    # Info.width = wCm1
-    # Info.lateralRes = wCm1*10/scBmode.shape[1]
-    # Info.axialRes = hCm1*10/scBmode.shape[0]
-    # Info.maxval = np.amax(scBmode)
+    Info.height = hCm1
+    Info.width = wCm1
+    Info.lateralRes = wCm1*10/scBmode.shape[1]
+    Info.axialRes = hCm1*10/scBmode.shape[0]
+    Info.maxval = np.amax(scBmode)
 
     Data = DataOutputStruct()
-    # Data.scRF = scModeIM
-    # Data.scBmode = scBmode
+    Data.scRF = scModeIM
+    Data.scBmode = scBmode * (255/Info.maxval)
     Data.rf = ModeIM
-    Data.bMode = bmode
+    Data.bMode = bmode * (255/np.amax(bmode))
     
-    Data.scRF = ModeIM
-    Data.scBmode = bmode
-    Info.maxval = np.amax(bmode)
+    # Data.scRF = ModeIM
+    # Data.scBmode = bmode
+    # Info.maxval = np.amax(bmode)
 
     Info.height = 126.8344
     Info.width = Info.height*bmode.shape[0]/bmode.shape[1]

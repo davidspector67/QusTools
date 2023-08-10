@@ -25,6 +25,7 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
         self.curPointsPlottedX = []
         self.curPointsPlottedY = []
         self.oldSpline = []
+        self.multipleFrames = False
         self.imagePathInput.setHidden(True)
         self.phantomPathInput.setHidden(True)
         self.ofFramesLabel.setHidden(True)
@@ -165,7 +166,8 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
         self.phantomPathInput.setText(phantomName)
     
     def plotOnCanvas(self): # Plot current image on GUI
-        self.imData = np.array(self.imArray[self.frame]).reshape(self.arHeight, self.arWidth)
+        if self.multipleFrames:
+            self.imData = np.array(self.imArray[self.frame]).reshape(self.arHeight, self.arWidth)
         self.imData = np.require(self.imData,np.uint8,'C')
         self.bytesLine = self.imData.strides[0]
         self.arHeight = self.imData.shape[0]
@@ -180,17 +182,14 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
         self.qIm = QImage(self.imData, self.arWidth, self.arHeight, self.bytesLine, QImage.Format_Grayscale8)
         self.imDisplayFrame.setPixmap(QPixmap.fromImage(self.qIm).scaled(721, 501))
 
-    def openImage(self, imageFilePath, phantomFilePath): # Open initial image given data and phantom files previously inputted
-        # Assume inputted files are correct 
-        # TODO: implement this in image selection page
-        # For now, Canon .bin files are not supported
+    def openPhilipsImage(self, imageFilePath, phantomFilePath):
         tmpLocation = imageFilePath.split("/")
         dataFileName = tmpLocation[-1]
         dataFileLocation = imageFilePath[:len(imageFilePath)-len(dataFileName)]
         tmpPhantLocation = phantomFilePath.split("/")
         phantFileName = tmpPhantLocation[-1]
         phantFileLocation = phantomFilePath[:len(phantomFilePath)-len(phantFileName)]
-        if dataFileName[-3:] == ".rf": # Check binary signatures at start of .rf files
+        if dataFileName[-3:] == ".rf":
             dataFile = open(imageFilePath, 'rb')
             datasig = list(dataFile.read(8))
             if datasig != [0,0,0,0,255,255,0,0]: # Philips signature parameters
@@ -202,8 +201,7 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
             else: # Display Philips image and assign relevant default analysis
                 main_parser_stanford(imageFilePath) # parse image filee
 
-                dataFileName = str(dataFileName[:-3]+'.mat')
-
+                dataFileName = str(dataFileLocation[:-3]+'.mat')
         if phantFileName[-3:] == ".rf": # Check binary signatures at start of .rf files
             phantFile = open(phantomFilePath, 'rb')
             phantsig = list(phantFile.read(8))
@@ -218,92 +216,78 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
 
                 phantFileName = str(phantFileName[:-3]+'.mat')
 
-        if dataFileName[-4:] == ".mat" and phantFileName[-4:] == ".mat": # Display Philips image and assign relevant default analysis params
-            self.frame = 0
-            imArray, self.imgDataStruct, self.imgInfoStruct, self.refDataStruct, self.refInfoStruct = matParser.getImage(dataFileName, dataFileLocation, phantFileName, phantFileLocation, self.frame)
-            self.arHeight = imArray.shape[0]
-            self.arWidth = imArray.shape[1]
-            self.imData = np.array(imArray).reshape(self.arHeight, self.arWidth)
-            self.imData = np.flipud(self.imData) #flipud
-            self.imData = np.require(self.imData,np.uint8,'C')
-            self.bytesLine = self.imData.strides[0]
-            self.qIm = QImage(self.imData, self.arWidth, self.arHeight, self.bytesLine, QImage.Format_Grayscale8).scaled(721, 501)
+        # Display Philips image and assign relevant default analysis params
+        self.frame = 0
+        self.imArray, self.imgDataStruct, self.imgInfoStruct, self.refDataStruct, self.refInfoStruct = matParser.getImage(dataFileName, dataFileLocation, phantFileName, phantFileLocation, self.frame)
+        self.arHeight = self.imArray.shape[0]
+        self.arWidth = self.imArray.shape[1]
+        self.imData = np.array(self.imArray)
+        self.imData = np.require(self.imData,np.uint8,'C')
+        self.maskCoverImg = np.zeros([501, 721, 4]) # Hard-coded values match size of frame on GUI
+        self.bytesLine = self.imData.strides[0]
+        self.qIm = QImage(self.imData, self.arWidth, self.arHeight, self.bytesLine, QImage.Format_Grayscale8).scaled(721, 501)
 
-            self.qIm.mirrored().save(os.path.join("Junk", "bModeImRaw.png")) # Save as .png file
+        self.imDisplayFrame.setPixmap(QPixmap.fromImage(self.qIm).scaled(721, 501))
 
-            self.pixSizeAx = self.imgDataStruct.bMode.shape[0] #were both scBmode
-            self.pixSizeLat = self.imgDataStruct.bMode.shape[1]
+        self.pixSizeAx = self.imgDataStruct.bMode.shape[0] #were both scBmode
+        self.pixSizeLat = self.imgDataStruct.bMode.shape[1]
 
-            self.axWinSizeVal = 10#7#1#1480/20000000*10000 # must be at least 10 times wavelength
-            self.latWinSizeVal = 10#7#1#1480/20000000*10000 # must be at least 10 times wavelength
-            self.axOverlapVal = 50
-            self.latOverlapVal = 50
-            self.minFreqVal = 3
-            self.maxFreqVal = 4.5
-            self.startDepthVal = 0.04
-            self.endDepthVal = 0.16
-            self.clipFactorVal = 95
-            self.samplingFreqVal = 20
+        self.axWinSizeVal = 10#7#1#1480/20000000*10000 # must be at least 10 times wavelength
+        self.latWinSizeVal = 10#7#1#1480/20000000*10000 # must be at least 10 times wavelength
+        self.axOverlapVal = 50
+        self.latOverlapVal = 50
+        self.minFreqVal = 3
+        self.maxFreqVal = 4.5
+        self.startDepthVal = 0.04
+        self.endDepthVal = 0.16
+        self.clipFactorVal = 95
+        self.samplingFreqVal = 20
 
-        elif dataFileName[-4:] == ".rfd" and phantFileName[-4:] == ".rfd": # Display Philips image and assign relevant default analysis params
-            self.imArray, self.imgDataStruct, self.imgInfoStruct, self.refDataStruct, self.refInfoStruct = rfdParser.getImage(dataFileName, dataFileLocation, phantFileName, phantFileLocation)
-            self.frame = 0
-            self.imData = np.array(self.imArray[self.frame]).reshape(self.imArray.shape[1], self.imArray.shape[2])
-            self.imData = np.require(self.imData,np.uint8,'C')
-            self.maskCoverImg = np.zeros([501, 721, 4])
-            self.bytesLine = self.imData.strides[0]
-            self.arHeight = self.imData.shape[0]
-            self.arWidth = self.imData.shape[1]
-            self.qIm = QImage(self.imData, self.arWidth, self.arHeight, self.bytesLine, QImage.Format_Grayscale8)
+        self.plotOnCanvas()
 
-            self.imDisplayFrame.setPixmap(QPixmap.fromImage(self.qIm).scaled(721, 501))
+    def openSiemensImage(self, imageFilePath, phantomFilePath):
+        tmpLocation = imageFilePath.split("/")
+        dataFileName = tmpLocation[-1]
+        dataFileLocation = imageFilePath[:len(imageFilePath)-len(dataFileName)]
+        tmpPhantLocation = phantomFilePath.split("/")
+        phantFileName = tmpPhantLocation[-1]
+        phantFileLocation = phantomFilePath[:len(phantomFilePath)-len(phantFileName)]
 
-            self.pixSizeAx = self.imgDataStruct.bMode.shape[0] #were both scBmode
-            self.pixSizeLat = self.imgDataStruct.bMode.shape[1]
+        self.imArray, self.imgDataStruct, self.imgInfoStruct, self.refDataStruct, self.refInfoStruct = rfdParser.getImage(dataFileName, dataFileLocation, phantFileName, phantFileLocation)
+        self.frame = 0
+        self.imData = np.array(self.imArray[self.frame]).reshape(self.imArray.shape[1], self.imArray.shape[2])
+        self.imData = np.require(self.imData,np.uint8,'C')
+        self.maskCoverImg = np.zeros([501, 721, 4]) # Hard-coded values match size of frame on GUI
+        self.bytesLine = self.imData.strides[0]
+        self.arHeight = self.imData.shape[0]
+        self.arWidth = self.imData.shape[1]
+        self.qIm = QImage(self.imData, self.arWidth, self.arHeight, self.bytesLine, QImage.Format_Grayscale8)
 
-            self.ofFramesLabel.setHidden(False)
-            self.curFrameLabel.setHidden(False)
-            self.totalFramesLabel.setHidden(False)
-            self.curFrameSlider.setHidden(False)
-            self.curFrameSlider.setMaximum(self.imArray.shape[0]-1)
-            self.totalFramesLabel.setText(str(self.imArray.shape[0]-1))
-            self.curFrameSlider.valueChanged.connect(self.curFrameChanged)
+        self.imDisplayFrame.setPixmap(QPixmap.fromImage(self.qIm).scaled(721, 501))
 
-            self.axOverlapVal = 50
-            self.latOverlapVal = 50
-            self.startDepthVal = 0.04
-            self.endDepthVal = 0.16
-            self.clipFactorVal = 95
-            self.minFreqVal = 7
-            self.maxFreqVal = 17
-            self.axWinSizeVal = 3.5#1480/40000000*5000 # must be at least 10 times wavelength
-            self.latWinSizeVal = 3.5#self.axialWinSize * 6 # must be at least 10 times wavelength
-            self.samplingFreqVal = 40
+        self.pixSizeAx = self.imgDataStruct.bMode.shape[0] #were both scBmode
+        self.pixSizeLat = self.imgDataStruct.bMode.shape[1]
 
-        elif imageFilePath.endswith(".dcm"):
-            ds = pydicom.dcmread(imageFilePath)
-            imArray = ds.pixel_array
+        self.ofFramesLabel.setHidden(False)
+        self.curFrameLabel.setHidden(False)
+        self.totalFramesLabel.setHidden(False)
+        self.curFrameSlider.setHidden(False)
+        self.curFrameSlider.setMaximum(self.imArray.shape[0]-1)
+        self.totalFramesLabel.setText(str(self.imArray.shape[0]-1))
+        self.curFrameSlider.valueChanged.connect(self.curFrameChanged)
 
-            self.arHeight = imArray.shape[0]
-            self.arWidth = imArray.shape[1]
-            self.imData = np.array(imArray).reshape(self.arHeight, self.arWidth, 3)
-            self.imData = np.flipud(self.imData) #flipud
-            self.imData = np.require(self.imData,np.uint8,'C')
-            self.bytesLine = self.imData.strides[0]
-            self.qIm = QImage(self.imData, self.arWidth, self.arHeight, self.bytesLine, QImage.Format_RGB888) 
+        self.axOverlapVal = 50
+        self.latOverlapVal = 50
+        self.startDepthVal = 0.04
+        self.endDepthVal = 0.16
+        self.clipFactorVal = 95
+        self.minFreqVal = 7
+        self.maxFreqVal = 17
+        self.axWinSizeVal = 3.5#1480/40000000*5000 # must be at least 10 times wavelength
+        self.latWinSizeVal = 3.5#self.axialWinSize * 6 # must be at least 10 times wavelength
+        self.samplingFreqVal = 40
+        self.multipleFrames = True
 
-            self.qIm.mirrored().save(os.path.join("Junk", "bModeImRaw.png")) # Save as .png file
-
-            self.pixSizeAx = self.arHeight
-            self.pixSizeLat = self.arWidth
-
-            self.editImageDisplayGUI.contrastVal.setValue(1)
-            self.editImageDisplayGUI.brightnessVal.setValue(1)
-            self.editImageDisplayGUI.sharpnessVal.setValue(1)
-
-        else:
-            return
-        
         self.plotOnCanvas()
 
     def curFrameChanged(self):
@@ -350,7 +334,7 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
             self.updateSpline()
 
     def undoLastRoi(self):
-        if not self.drawRoiButton.isCheckable():
+        if not self.drawRoiButton.isCheckable() or self.drawRoiButton.isHidden():
             self.curPointsPlottedX = []
             self.curPointsPlottedY = []
             self.drawRoiButton.setCheckable(True)
@@ -364,8 +348,9 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
         if len(self.curPointsPlottedX) > 1 and self.curPointsPlottedX[-1] == self.curPointsPlottedX[0]:
             del self.analysisParamsGUI
 
-            imData = np.array(self.imArray[self.frame]).reshape(self.arHeight, self.arWidth)
-            imData = np.flipud(imData)
+            if self.multipleFrames:
+                imData = np.array(self.imArray[self.frame]).reshape(self.arHeight, self.arWidth)
+            imData = np.flipud(self.imData)
             imData = np.require(imData, np.uint8, 'C')
             bytesLine = imData.strides[0]
             arHeight = imData.shape[0]

@@ -280,17 +280,16 @@ def computeSpecWindows(
     for i in range(len(top)):
 
         # Make some adjustments and find the window to use
-        imgWindow = imgRF[frame,top[i]:bottom[i],left[i]:right[i]]
-        refWindow = refRF[frame,top[i]:bottom[i],left[i]:right[i]]
+        if frame is None:
+            imgWindow = imgRF[top[i]:bottom[i],left[i]:right[i]]
+            refWindow = refRF[top[i]:bottom[i],left[i]:right[i]]
+        else:
+            imgWindow = imgRF[frame,top[i]:bottom[i],left[i]:right[i]]
+            refWindow = refRF[frame,top[i]:bottom[i],left[i]:right[i]]
 
         [f, ps] = computePowerSpec(imgWindow, f0, f1, fs) # initially had round(img_gain), but since not used in function, we left it out
         [f, rPS] = computePowerSpec(refWindow, f0, f1, fs) # Same as above, except for round(ref_gain)
-        # [f, ps] = eng.computePowerSpec(matlab.double(np.ascontiguousarray(imgWindow)), matlab.double(f0), matlab.double(f1), matlab.double(fs), 0, nargout=2)
-        # [f, rPS] = eng.computePowerSpec(matlab.double(np.ascontiguousarray(refWindow)), matlab.double(f0), matlab.double(f1), matlab.double(fs), 0, nargout=2)
         nps = np.asarray(ps)-np.asarray(rPS) # SUBTRACTION method: log data
-        # fig = plt.figure()
-        # hi = fig.add_subplot()
-        # hi.plot(f,nps)
 
         # Get ready to send output
         for j in range(fRange):
