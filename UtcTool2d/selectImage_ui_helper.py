@@ -95,6 +95,8 @@ class SelectImageGUI_UtcTool2d(Ui_selectImage, QWidget):
                 self.roiSelectionGUI.openPhilipsImage(self.imagePathInput.text(), self.phantomPathInput.text())
             elif self.selectedMachine == "Siemens":
                 self.roiSelectionGUI.openSiemensImage(self.imagePathInput.text(), self.phantomPathInput.text())
+            elif self.selectedMachine == "Terason":
+                self.roiSelectionGUI.openTerasonImage(self.imagePathInput.text(), self.phantomPathInput.text())
             else:
                 print("ERROR: Machine not selected properly")
                 return

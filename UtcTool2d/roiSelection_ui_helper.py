@@ -5,6 +5,7 @@ from UtcTool2d.loadRoi_ui_helper import *
 from UtcTool2d.rfAnalysis_ui_helper import *
 import Parsers.philipsMatParser as matParser
 import Parsers.siemensRfdParser as rfdParser
+import Parsers.terasonRfParser as tera
 from Parsers.philipsRfParser import main_parser_stanford
 
 import pydicom
@@ -265,8 +266,8 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
 
         self.imDisplayFrame.setPixmap(QPixmap.fromImage(self.qIm).scaled(721, 501))
 
-        self.pixSizeAx = self.imgDataStruct.bMode.shape[0] #were both scBmode
-        self.pixSizeLat = self.imgDataStruct.bMode.shape[1]
+        self.pixSizeAx = self.imgDataStruct.bMode.shape[1] #were both scBmode
+        self.pixSizeLat = self.imgDataStruct.bMode.shape[2]
 
         self.ofFramesLabel.setHidden(False)
         self.curFrameLabel.setHidden(False)
@@ -289,6 +290,23 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
         self.multipleFrames = True
 
         self.plotOnCanvas()
+
+    def openTerasonImage(self, imageFilePath, phantomFilePath):
+        self.imArray, rfData = tera.getImage(imageFilePath, phantomFilePath)
+        self.arHeight = self.imArray.shape[0]
+        self.arWidth = self.imArray.shape[1]
+        self.imData = np.array(self.imArray)
+        self.imData = np.require(self.imData,np.uint8,'C')
+        self.maskCoverImg = np.zeros([501, 721, 4]) # Hard-coded values match size of frame on GUI
+        self.bytesLine = self.imData.strides[0]
+        self.qIm = QImage(self.imData, self.arWidth, self.arHeight, self.bytesLine, QImage.Format_Grayscale8).scaled(721, 501)
+
+        self.imDisplayFrame.setPixmap(QPixmap.fromImage(self.qIm).scaled(721, 501))
+
+        self.pixSizeAx = self.imArray.shape[0]
+        self.pixSizeLat = self.imArray.shape[1]
+        self.plotOnCanvas()
+        
 
     def curFrameChanged(self):
         self.frame = self.curFrameSlider.value()
