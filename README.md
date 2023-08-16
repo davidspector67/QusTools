@@ -27,8 +27,8 @@ cd ..
 ### Windows
 
 ```shell
-git clone https://github.com/davidspector67/2dUtcTool.git
-cd 2dUtcTool
+git clone https://github.com/davidspector67/QusTools.git
+cd QusTools
 pip install virtualenv
 python -m venv venv
 call \venv\scripts\activate.bat
