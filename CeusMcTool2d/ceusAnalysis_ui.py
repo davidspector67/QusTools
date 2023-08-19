@@ -297,7 +297,7 @@ class Ui_ceusAnalysis(object):
 "}")
         self.peVal = QLabel(ceusAnalysis)
         self.peVal.setObjectName(u"peVal")
-        self.peVal.setGeometry(QRect(1100, 560, 51, 51))
+        self.peVal.setGeometry(QRect(910, 590, 51, 51))
         font = QFont()
         font.setPointSize(14)
         self.peVal.setFont(font)
@@ -308,7 +308,7 @@ class Ui_ceusAnalysis(object):
         self.peVal.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
         self.tpLabel = QLabel(ceusAnalysis)
         self.tpLabel.setObjectName(u"tpLabel")
-        self.tpLabel.setGeometry(QRect(1040, 600, 91, 51))
+        self.tpLabel.setGeometry(QRect(820, 630, 121, 51))
         self.tpLabel.setFont(font)
         self.tpLabel.setStyleSheet(u"QLabel {\n"
 "	color: white;\n"
@@ -317,7 +317,7 @@ class Ui_ceusAnalysis(object):
         self.tpLabel.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
         self.voiVolumeVal = QLabel(ceusAnalysis)
         self.voiVolumeVal.setObjectName(u"voiVolumeVal")
-        self.voiVolumeVal.setGeometry(QRect(1100, 650, 151, 51))
+        self.voiVolumeVal.setGeometry(QRect(910, 690, 151, 31))
         self.voiVolumeVal.setFont(font)
         self.voiVolumeVal.setStyleSheet(u"QLabel {\n"
 "	color: white;\n"
@@ -326,7 +326,7 @@ class Ui_ceusAnalysis(object):
         self.voiVolumeVal.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
         self.mttLabel = QLabel(ceusAnalysis)
         self.mttLabel.setObjectName(u"mttLabel")
-        self.mttLabel.setGeometry(QRect(1040, 580, 81, 51))
+        self.mttLabel.setGeometry(QRect(820, 610, 111, 51))
         self.mttLabel.setFont(font)
         self.mttLabel.setStyleSheet(u"QLabel {\n"
 "	color: white;\n"
@@ -335,7 +335,7 @@ class Ui_ceusAnalysis(object):
         self.mttLabel.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
         self.tpVal = QLabel(ceusAnalysis)
         self.tpVal.setObjectName(u"tpVal")
-        self.tpVal.setGeometry(QRect(1100, 600, 51, 51))
+        self.tpVal.setGeometry(QRect(910, 630, 51, 51))
         self.tpVal.setFont(font)
         self.tpVal.setStyleSheet(u"QLabel {\n"
 "	color: white;\n"
@@ -344,7 +344,7 @@ class Ui_ceusAnalysis(object):
         self.tpVal.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
         self.voiVolumeLabel = QLabel(ceusAnalysis)
         self.voiVolumeLabel.setObjectName(u"voiVolumeLabel")
-        self.voiVolumeLabel.setGeometry(QRect(1040, 640, 71, 71))
+        self.voiVolumeLabel.setGeometry(QRect(820, 670, 101, 71))
         self.voiVolumeLabel.setFont(font)
         self.voiVolumeLabel.setStyleSheet(u"QLabel {\n"
 "	color: white;\n"
@@ -353,21 +353,16 @@ class Ui_ceusAnalysis(object):
         self.voiVolumeLabel.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
         self.tmppvLabel = QLabel(ceusAnalysis)
         self.tmppvLabel.setObjectName(u"tmppvLabel")
-        self.tmppvLabel.setGeometry(QRect(1040, 620, 71, 51))
+        self.tmppvLabel.setGeometry(QRect(820, 650, 101, 51))
         self.tmppvLabel.setFont(font)
         self.tmppvLabel.setStyleSheet(u"QLabel {\n"
 "	color: white;\n"
 "	background-color: rgba(0,0,0,0);\n"
 "}")
         self.tmppvLabel.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
-        self.ticDisplay = QFrame(ceusAnalysis)
-        self.ticDisplay.setObjectName(u"ticDisplay")
-        self.ticDisplay.setGeometry(QRect(620, 560, 401, 171))
-        self.ticDisplay.setFrameShape(QFrame.StyledPanel)
-        self.ticDisplay.setFrameShadow(QFrame.Raised)
         self.aucVal = QLabel(ceusAnalysis)
         self.aucVal.setObjectName(u"aucVal")
-        self.aucVal.setGeometry(QRect(1100, 540, 51, 51))
+        self.aucVal.setGeometry(QRect(910, 570, 51, 51))
         self.aucVal.setFont(font)
         self.aucVal.setStyleSheet(u"QLabel {\n"
 "	color: white;\n"
@@ -376,28 +371,16 @@ class Ui_ceusAnalysis(object):
         self.aucVal.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
         self.peLabel = QLabel(ceusAnalysis)
         self.peLabel.setObjectName(u"peLabel")
-        self.peLabel.setGeometry(QRect(1040, 560, 91, 51))
+        self.peLabel.setGeometry(QRect(820, 590, 121, 51))
         self.peLabel.setFont(font)
         self.peLabel.setStyleSheet(u"QLabel {\n"
 "	color: white;\n"
 "	background-color: rgba(0,0,0,0);\n"
 "}")
         self.peLabel.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
-        self.resultsLabel = QLabel(ceusAnalysis)
-        self.resultsLabel.setObjectName(u"resultsLabel")
-        self.resultsLabel.setGeometry(QRect(670, 510, 361, 51))
-        self.resultsLabel.setStyleSheet(u"QLabel {\n"
-"	font-size: 20px;\n"
-"	color: rgb(255, 255, 255);\n"
-"	background-color: rgba(255, 255, 255, 0);\n"
-"}")
-        self.resultsLabel.setTextFormat(Qt.AutoText)
-        self.resultsLabel.setScaledContents(False)
-        self.resultsLabel.setAlignment(Qt.AlignCenter)
-        self.resultsLabel.setWordWrap(True)
         self.tmppvVal = QLabel(ceusAnalysis)
         self.tmppvVal.setObjectName(u"tmppvVal")
-        self.tmppvVal.setGeometry(QRect(1100, 620, 71, 51))
+        self.tmppvVal.setGeometry(QRect(910, 650, 71, 51))
         self.tmppvVal.setFont(font)
         self.tmppvVal.setStyleSheet(u"QLabel {\n"
 "	color: white;\n"
@@ -406,7 +389,7 @@ class Ui_ceusAnalysis(object):
         self.tmppvVal.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
         self.mttVal = QLabel(ceusAnalysis)
         self.mttVal.setObjectName(u"mttVal")
-        self.mttVal.setGeometry(QRect(1100, 580, 51, 51))
+        self.mttVal.setGeometry(QRect(910, 610, 51, 51))
         self.mttVal.setFont(font)
         self.mttVal.setStyleSheet(u"QLabel {\n"
 "	color: white;\n"
@@ -415,7 +398,7 @@ class Ui_ceusAnalysis(object):
         self.mttVal.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
         self.aucLabel = QLabel(ceusAnalysis)
         self.aucLabel.setObjectName(u"aucLabel")
-        self.aucLabel.setGeometry(QRect(1040, 540, 81, 51))
+        self.aucLabel.setGeometry(QRect(820, 570, 121, 51))
         self.aucLabel.setFont(font)
         self.aucLabel.setStyleSheet(u"QLabel {\n"
 "	color: white;\n"
@@ -462,6 +445,183 @@ class Ui_ceusAnalysis(object):
 "	background: rgb(45, 0, 110);\n"
 "	border-radius: 15px;\n"
 "}")
+        self.displayTpButton = QPushButton(ceusAnalysis)
+        self.displayTpButton.setObjectName(u"displayTpButton")
+        self.displayTpButton.setGeometry(QRect(610, 660, 181, 31))
+        self.displayTpButton.setStyleSheet(u"QPushButton {\n"
+"	color: white;\n"
+"	font-size: 12px;\n"
+"	background: rgb(90, 37, 255);\n"
+"	border-radius: 15px;\n"
+"}\n"
+"QPushButton:checked {\n"
+"	color:white; \n"
+"	font-size: 12px;\n"
+"	background: rgb(45, 0, 110);\n"
+"	border-radius: 15px;\n"
+"}")
+        self.displayTmppvButton = QPushButton(ceusAnalysis)
+        self.displayTmppvButton.setObjectName(u"displayTmppvButton")
+        self.displayTmppvButton.setGeometry(QRect(610, 700, 181, 31))
+        self.displayTmppvButton.setStyleSheet(u"QPushButton {\n"
+"	color: white;\n"
+"	font-size: 12px;\n"
+"	background: rgb(90, 37, 255);\n"
+"	border-radius: 15px;\n"
+"}\n"
+"QPushButton:checked {\n"
+"	color:white; \n"
+"	font-size: 12px;\n"
+"	background: rgb(45, 0, 110);\n"
+"	border-radius: 15px;\n"
+"}")
+        self.displayMttButton = QPushButton(ceusAnalysis)
+        self.displayMttButton.setObjectName(u"displayMttButton")
+        self.displayMttButton.setGeometry(QRect(610, 620, 181, 31))
+        self.displayMttButton.setStyleSheet(u"QPushButton {\n"
+"	color: white;\n"
+"	font-size: 12px;\n"
+"	background: rgb(90, 37, 255);\n"
+"	border-radius: 15px;\n"
+"}\n"
+"QPushButton:checked {\n"
+"	color:white; \n"
+"	font-size: 12px;\n"
+"	background: rgb(45, 0, 110);\n"
+"	border-radius: 15px;\n"
+"}")
+        self.displayPeButton = QPushButton(ceusAnalysis)
+        self.displayPeButton.setObjectName(u"displayPeButton")
+        self.displayPeButton.setGeometry(QRect(610, 580, 181, 31))
+        self.displayPeButton.setStyleSheet(u"QPushButton {\n"
+"	color: white;\n"
+"	font-size: 12px;\n"
+"	background: rgb(90, 37, 255);\n"
+"	border-radius: 15px;\n"
+"}\n"
+"QPushButton:checked {\n"
+"	color:white; \n"
+"	font-size: 12px;\n"
+"	background: rgb(45, 0, 110);\n"
+"	border-radius: 15px;\n"
+"}")
+        self.displayAucButton = QPushButton(ceusAnalysis)
+        self.displayAucButton.setObjectName(u"displayAucButton")
+        self.displayAucButton.setGeometry(QRect(610, 540, 181, 31))
+        self.displayAucButton.setStyleSheet(u"QPushButton {\n"
+"	color: white;\n"
+"	font-size: 12px;\n"
+"	background: rgb(90, 37, 255);\n"
+"	border-radius: 15px;\n"
+"}\n"
+"QPushButton:checked {\n"
+"	color:white; \n"
+"	font-size: 12px;\n"
+"	background: rgb(45, 0, 110);\n"
+"	border-radius: 15px;\n"
+"}")
+        self.indMttLabel = QLabel(ceusAnalysis)
+        self.indMttLabel.setObjectName(u"indMttLabel")
+        self.indMttLabel.setGeometry(QRect(1010, 610, 111, 51))
+        self.indMttLabel.setFont(font)
+        self.indMttLabel.setStyleSheet(u"QLabel {\n"
+"	color: white;\n"
+"	background-color: rgba(0,0,0,0);\n"
+"}")
+        self.indMttLabel.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
+        self.indAucVal = QLabel(ceusAnalysis)
+        self.indAucVal.setObjectName(u"indAucVal")
+        self.indAucVal.setGeometry(QRect(1100, 570, 51, 51))
+        self.indAucVal.setFont(font)
+        self.indAucVal.setStyleSheet(u"QLabel {\n"
+"	color: white;\n"
+"	background-color: rgba(0,0,0,0);\n"
+"}")
+        self.indAucVal.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
+        self.indPeLabel = QLabel(ceusAnalysis)
+        self.indPeLabel.setObjectName(u"indPeLabel")
+        self.indPeLabel.setGeometry(QRect(1010, 590, 121, 51))
+        self.indPeLabel.setFont(font)
+        self.indPeLabel.setStyleSheet(u"QLabel {\n"
+"	color: white;\n"
+"	background-color: rgba(0,0,0,0);\n"
+"}")
+        self.indPeLabel.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
+        self.indPeVal = QLabel(ceusAnalysis)
+        self.indPeVal.setObjectName(u"indPeVal")
+        self.indPeVal.setGeometry(QRect(1100, 590, 51, 51))
+        self.indPeVal.setFont(font)
+        self.indPeVal.setStyleSheet(u"QLabel {\n"
+"	color: white;\n"
+"	background-color: rgba(0,0,0,0);\n"
+"}")
+        self.indPeVal.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
+        self.indMttVal = QLabel(ceusAnalysis)
+        self.indMttVal.setObjectName(u"indMttVal")
+        self.indMttVal.setGeometry(QRect(1100, 610, 51, 51))
+        self.indMttVal.setFont(font)
+        self.indMttVal.setStyleSheet(u"QLabel {\n"
+"	color: white;\n"
+"	background-color: rgba(0,0,0,0);\n"
+"}")
+        self.indMttVal.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
+        self.indTmppvVal = QLabel(ceusAnalysis)
+        self.indTmppvVal.setObjectName(u"indTmppvVal")
+        self.indTmppvVal.setGeometry(QRect(1100, 650, 71, 51))
+        self.indTmppvVal.setFont(font)
+        self.indTmppvVal.setStyleSheet(u"QLabel {\n"
+"	color: white;\n"
+"	background-color: rgba(0,0,0,0);\n"
+"}")
+        self.indTmppvVal.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
+        self.indTpVal = QLabel(ceusAnalysis)
+        self.indTpVal.setObjectName(u"indTpVal")
+        self.indTpVal.setGeometry(QRect(1100, 630, 51, 51))
+        self.indTpVal.setFont(font)
+        self.indTpVal.setStyleSheet(u"QLabel {\n"
+"	color: white;\n"
+"	background-color: rgba(0,0,0,0);\n"
+"}")
+        self.indTpVal.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
+        self.indAucLabel = QLabel(ceusAnalysis)
+        self.indAucLabel.setObjectName(u"indAucLabel")
+        self.indAucLabel.setGeometry(QRect(1010, 570, 121, 51))
+        self.indAucLabel.setFont(font)
+        self.indAucLabel.setStyleSheet(u"QLabel {\n"
+"	color: white;\n"
+"	background-color: rgba(0,0,0,0);\n"
+"}")
+        self.indAucLabel.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
+        self.indTpLabel = QLabel(ceusAnalysis)
+        self.indTpLabel.setObjectName(u"indTpLabel")
+        self.indTpLabel.setGeometry(QRect(1010, 630, 121, 51))
+        self.indTpLabel.setFont(font)
+        self.indTpLabel.setStyleSheet(u"QLabel {\n"
+"	color: white;\n"
+"	background-color: rgba(0,0,0,0);\n"
+"}")
+        self.indTpLabel.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
+        self.indTmppvLabel = QLabel(ceusAnalysis)
+        self.indTmppvLabel.setObjectName(u"indTmppvLabel")
+        self.indTmppvLabel.setGeometry(QRect(1010, 650, 101, 51))
+        self.indTmppvLabel.setFont(font)
+        self.indTmppvLabel.setStyleSheet(u"QLabel {\n"
+"	color: white;\n"
+"	background-color: rgba(0,0,0,0);\n"
+"}")
+        self.indTmppvLabel.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
+        self.resultsLabel = QLabel(ceusAnalysis)
+        self.resultsLabel.setObjectName(u"resultsLabel")
+        self.resultsLabel.setGeometry(QRect(800, 520, 361, 51))
+        self.resultsLabel.setStyleSheet(u"QLabel {\n"
+"	font-size: 20px;\n"
+"	color: rgb(255, 255, 255);\n"
+"	background-color: rgba(255, 255, 255, 0);\n"
+"}")
+        self.resultsLabel.setTextFormat(Qt.AutoText)
+        self.resultsLabel.setScaledContents(False)
+        self.resultsLabel.setAlignment(Qt.AlignCenter)
+        self.resultsLabel.setWordWrap(True)
 
         self.retranslateUi(ceusAnalysis)
 
@@ -498,21 +658,36 @@ class Ui_ceusAnalysis(object):
         self.bmodeCoverLabel.setText("")
         self.ceCoverLabel.setText("")
         self.peVal.setText(QCoreApplication.translate("ceusAnalysis", u"0", None))
-        self.tpLabel.setText(QCoreApplication.translate("ceusAnalysis", u"TP", None))
+        self.tpLabel.setText(QCoreApplication.translate("ceusAnalysis", u"Av.  TP", None))
         self.voiVolumeVal.setText(QCoreApplication.translate("ceusAnalysis", u"0", None))
-        self.mttLabel.setText(QCoreApplication.translate("ceusAnalysis", u"MTT", None))
+        self.mttLabel.setText(QCoreApplication.translate("ceusAnalysis", u"Av.  MTT", None))
         self.tpVal.setText(QCoreApplication.translate("ceusAnalysis", u"0", None))
         self.voiVolumeLabel.setText(QCoreApplication.translate("ceusAnalysis", u"ROI Area\n"
 "(mm^2)", None))
-        self.tmppvLabel.setText(QCoreApplication.translate("ceusAnalysis", u"TMPPV", None))
+        self.tmppvLabel.setText(QCoreApplication.translate("ceusAnalysis", u"Av.  TMPPV", None))
         self.aucVal.setText(QCoreApplication.translate("ceusAnalysis", u"0", None))
-        self.peLabel.setText(QCoreApplication.translate("ceusAnalysis", u"PE", None))
-        self.resultsLabel.setText(QCoreApplication.translate("ceusAnalysis", u"Results:", None))
+        self.peLabel.setText(QCoreApplication.translate("ceusAnalysis", u"Av.  PE", None))
         self.tmppvVal.setText(QCoreApplication.translate("ceusAnalysis", u"0", None))
         self.mttVal.setText(QCoreApplication.translate("ceusAnalysis", u"0", None))
-        self.aucLabel.setText(QCoreApplication.translate("ceusAnalysis", u"AUC", None))
+        self.aucLabel.setText(QCoreApplication.translate("ceusAnalysis", u"Av.  AUC", None))
         self.curSliceTotal.setText(QCoreApplication.translate("ceusAnalysis", u"0", None))
         self.saveDataButton.setText(QCoreApplication.translate("ceusAnalysis", u"Save Data", None))
         self.exportDataButton.setText(QCoreApplication.translate("ceusAnalysis", u"Export Data", None))
+        self.displayTpButton.setText(QCoreApplication.translate("ceusAnalysis", u"Display TP", None))
+        self.displayTmppvButton.setText(QCoreApplication.translate("ceusAnalysis", u"Display TMPPV", None))
+        self.displayMttButton.setText(QCoreApplication.translate("ceusAnalysis", u"Display MTT", None))
+        self.displayPeButton.setText(QCoreApplication.translate("ceusAnalysis", u"Display PE", None))
+        self.displayAucButton.setText(QCoreApplication.translate("ceusAnalysis", u"Display AUC", None))
+        self.indMttLabel.setText(QCoreApplication.translate("ceusAnalysis", u"Ind.  MTT", None))
+        self.indAucVal.setText(QCoreApplication.translate("ceusAnalysis", u"0", None))
+        self.indPeLabel.setText(QCoreApplication.translate("ceusAnalysis", u"Ind.  PE", None))
+        self.indPeVal.setText(QCoreApplication.translate("ceusAnalysis", u"0", None))
+        self.indMttVal.setText(QCoreApplication.translate("ceusAnalysis", u"0", None))
+        self.indTmppvVal.setText(QCoreApplication.translate("ceusAnalysis", u"0", None))
+        self.indTpVal.setText(QCoreApplication.translate("ceusAnalysis", u"0", None))
+        self.indAucLabel.setText(QCoreApplication.translate("ceusAnalysis", u"Ind.  AUC", None))
+        self.indTpLabel.setText(QCoreApplication.translate("ceusAnalysis", u"Ind.  TP", None))
+        self.indTmppvLabel.setText(QCoreApplication.translate("ceusAnalysis", u"Ind.  TMPPV", None))
+        self.resultsLabel.setText(QCoreApplication.translate("ceusAnalysis", u"Results", None))
     # retranslateUi
 

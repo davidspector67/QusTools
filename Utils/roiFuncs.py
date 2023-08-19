@@ -250,7 +250,8 @@ def computeSpecWindows(
     db6HighF = imgUpBandFreq #.txFrequency - 3000000, hardcoded
 
     # Frequency params
-    fs = imgSamplingFreq*2 # Not sure why multiply by two here, but it's the only way it works ~ Ahmed?
+    # fs = imgSamplingFreq*2 # Not sure why multiply by two here, but it's the only way it works ~ Ahmed?
+    fs = imgSamplingFreq
     """Look into this"""
     f0 = minFrequency  
     f1 = maxFrequency

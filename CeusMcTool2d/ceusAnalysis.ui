@@ -723,8 +723,8 @@
   <widget class="QLabel" name="peVal">
    <property name="geometry">
     <rect>
-     <x>1100</x>
-     <y>560</y>
+     <x>910</x>
+     <y>590</y>
      <width>51</width>
      <height>51</height>
     </rect>
@@ -750,9 +750,9 @@
   <widget class="QLabel" name="tpLabel">
    <property name="geometry">
     <rect>
-     <x>1040</x>
-     <y>600</y>
-     <width>91</width>
+     <x>820</x>
+     <y>630</y>
+     <width>121</width>
      <height>51</height>
     </rect>
    </property>
@@ -768,7 +768,7 @@
 }</string>
    </property>
    <property name="text">
-    <string>TP</string>
+    <string>Av.  TP</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -777,10 +777,10 @@
   <widget class="QLabel" name="voiVolumeVal">
    <property name="geometry">
     <rect>
-     <x>1100</x>
-     <y>650</y>
+     <x>910</x>
+     <y>690</y>
      <width>151</width>
-     <height>51</height>
+     <height>31</height>
     </rect>
    </property>
    <property name="font">
@@ -804,9 +804,9 @@
   <widget class="QLabel" name="mttLabel">
    <property name="geometry">
     <rect>
-     <x>1040</x>
-     <y>580</y>
-     <width>81</width>
+     <x>820</x>
+     <y>610</y>
+     <width>111</width>
      <height>51</height>
     </rect>
    </property>
@@ -822,7 +822,7 @@
 }</string>
    </property>
    <property name="text">
-    <string>MTT</string>
+    <string>Av.  MTT</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -831,8 +831,8 @@
   <widget class="QLabel" name="tpVal">
    <property name="geometry">
     <rect>
-     <x>1100</x>
-     <y>600</y>
+     <x>910</x>
+     <y>630</y>
      <width>51</width>
      <height>51</height>
     </rect>
@@ -858,9 +858,9 @@
   <widget class="QLabel" name="voiVolumeLabel">
    <property name="geometry">
     <rect>
-     <x>1040</x>
-     <y>640</y>
-     <width>71</width>
+     <x>820</x>
+     <y>670</y>
+     <width>101</width>
      <height>71</height>
     </rect>
    </property>
@@ -886,9 +886,9 @@
   <widget class="QLabel" name="tmppvLabel">
    <property name="geometry">
     <rect>
-     <x>1040</x>
-     <y>620</y>
-     <width>71</width>
+     <x>820</x>
+     <y>650</y>
+     <width>101</width>
      <height>51</height>
     </rect>
    </property>
@@ -904,33 +904,17 @@
 }</string>
    </property>
    <property name="text">
-    <string>TMPPV</string>
+    <string>Av.  TMPPV</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
    </property>
   </widget>
-  <widget class="QFrame" name="ticDisplay">
-   <property name="geometry">
-    <rect>
-     <x>620</x>
-     <y>560</y>
-     <width>401</width>
-     <height>171</height>
-    </rect>
-   </property>
-   <property name="frameShape">
-    <enum>QFrame::StyledPanel</enum>
-   </property>
-   <property name="frameShadow">
-    <enum>QFrame::Raised</enum>
-   </property>
-  </widget>
   <widget class="QLabel" name="aucVal">
    <property name="geometry">
     <rect>
-     <x>1100</x>
-     <y>540</y>
+     <x>910</x>
+     <y>570</y>
      <width>51</width>
      <height>51</height>
     </rect>
@@ -956,9 +940,9 @@
   <widget class="QLabel" name="peLabel">
    <property name="geometry">
     <rect>
-     <x>1040</x>
-     <y>560</y>
-     <width>91</width>
+     <x>820</x>
+     <y>590</y>
+     <width>121</width>
      <height>51</height>
     </rect>
    </property>
@@ -974,49 +958,17 @@
 }</string>
    </property>
    <property name="text">
-    <string>PE</string>
+    <string>Av.  PE</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
    </property>
   </widget>
-  <widget class="QLabel" name="resultsLabel">
-   <property name="geometry">
-    <rect>
-     <x>670</x>
-     <y>510</y>
-     <width>361</width>
-     <height>51</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">QLabel {
-	font-size: 20px;
-	color: rgb(255, 255, 255);
-	background-color: rgba(255, 255, 255, 0);
-}</string>
-   </property>
-   <property name="text">
-    <string>Results:</string>
-   </property>
-   <property name="textFormat">
-    <enum>Qt::AutoText</enum>
-   </property>
-   <property name="scaledContents">
-    <bool>false</bool>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignCenter</set>
-   </property>
-   <property name="wordWrap">
-    <bool>true</bool>
-   </property>
-  </widget>
   <widget class="QLabel" name="tmppvVal">
    <property name="geometry">
     <rect>
-     <x>1100</x>
-     <y>620</y>
+     <x>910</x>
+     <y>650</y>
      <width>71</width>
      <height>51</height>
     </rect>
@@ -1042,8 +994,8 @@
   <widget class="QLabel" name="mttVal">
    <property name="geometry">
     <rect>
-     <x>1100</x>
-     <y>580</y>
+     <x>910</x>
+     <y>610</y>
      <width>51</width>
      <height>51</height>
     </rect>
@@ -1069,9 +1021,9 @@
   <widget class="QLabel" name="aucLabel">
    <property name="geometry">
     <rect>
-     <x>1040</x>
-     <y>540</y>
-     <width>81</width>
+     <x>820</x>
+     <y>570</y>
+     <width>121</width>
      <height>51</height>
     </rect>
    </property>
@@ -1087,7 +1039,7 @@
 }</string>
    </property>
    <property name="text">
-    <string>AUC</string>
+    <string>Av.  AUC</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -1171,6 +1123,443 @@ QPushButton:checked {
    </property>
    <property name="text">
     <string>Export Data</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="displayTpButton">
+   <property name="geometry">
+    <rect>
+     <x>610</x>
+     <y>660</y>
+     <width>181</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton {
+	color: white;
+	font-size: 12px;
+	background: rgb(90, 37, 255);
+	border-radius: 15px;
+}
+QPushButton:checked {
+	color:white; 
+	font-size: 12px;
+	background: rgb(45, 0, 110);
+	border-radius: 15px;
+}</string>
+   </property>
+   <property name="text">
+    <string>Display TP</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="displayTmppvButton">
+   <property name="geometry">
+    <rect>
+     <x>610</x>
+     <y>700</y>
+     <width>181</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton {
+	color: white;
+	font-size: 12px;
+	background: rgb(90, 37, 255);
+	border-radius: 15px;
+}
+QPushButton:checked {
+	color:white; 
+	font-size: 12px;
+	background: rgb(45, 0, 110);
+	border-radius: 15px;
+}</string>
+   </property>
+   <property name="text">
+    <string>Display TMPPV</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="displayMttButton">
+   <property name="geometry">
+    <rect>
+     <x>610</x>
+     <y>620</y>
+     <width>181</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton {
+	color: white;
+	font-size: 12px;
+	background: rgb(90, 37, 255);
+	border-radius: 15px;
+}
+QPushButton:checked {
+	color:white; 
+	font-size: 12px;
+	background: rgb(45, 0, 110);
+	border-radius: 15px;
+}</string>
+   </property>
+   <property name="text">
+    <string>Display MTT</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="displayPeButton">
+   <property name="geometry">
+    <rect>
+     <x>610</x>
+     <y>580</y>
+     <width>181</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton {
+	color: white;
+	font-size: 12px;
+	background: rgb(90, 37, 255);
+	border-radius: 15px;
+}
+QPushButton:checked {
+	color:white; 
+	font-size: 12px;
+	background: rgb(45, 0, 110);
+	border-radius: 15px;
+}</string>
+   </property>
+   <property name="text">
+    <string>Display PE</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="displayAucButton">
+   <property name="geometry">
+    <rect>
+     <x>610</x>
+     <y>540</y>
+     <width>181</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton {
+	color: white;
+	font-size: 12px;
+	background: rgb(90, 37, 255);
+	border-radius: 15px;
+}
+QPushButton:checked {
+	color:white; 
+	font-size: 12px;
+	background: rgb(45, 0, 110);
+	border-radius: 15px;
+}</string>
+   </property>
+   <property name="text">
+    <string>Display AUC</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="indMttLabel">
+   <property name="geometry">
+    <rect>
+     <x>1010</x>
+     <y>610</y>
+     <width>111</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>14</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QLabel {
+	color: white;
+	background-color: rgba(0,0,0,0);
+}</string>
+   </property>
+   <property name="text">
+    <string>Ind.  MTT</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="indAucVal">
+   <property name="geometry">
+    <rect>
+     <x>1100</x>
+     <y>570</y>
+     <width>51</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>14</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QLabel {
+	color: white;
+	background-color: rgba(0,0,0,0);
+}</string>
+   </property>
+   <property name="text">
+    <string>0</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="indPeLabel">
+   <property name="geometry">
+    <rect>
+     <x>1010</x>
+     <y>590</y>
+     <width>121</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>14</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QLabel {
+	color: white;
+	background-color: rgba(0,0,0,0);
+}</string>
+   </property>
+   <property name="text">
+    <string>Ind.  PE</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="indPeVal">
+   <property name="geometry">
+    <rect>
+     <x>1100</x>
+     <y>590</y>
+     <width>51</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>14</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QLabel {
+	color: white;
+	background-color: rgba(0,0,0,0);
+}</string>
+   </property>
+   <property name="text">
+    <string>0</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="indMttVal">
+   <property name="geometry">
+    <rect>
+     <x>1100</x>
+     <y>610</y>
+     <width>51</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>14</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QLabel {
+	color: white;
+	background-color: rgba(0,0,0,0);
+}</string>
+   </property>
+   <property name="text">
+    <string>0</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="indTmppvVal">
+   <property name="geometry">
+    <rect>
+     <x>1100</x>
+     <y>650</y>
+     <width>71</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>14</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QLabel {
+	color: white;
+	background-color: rgba(0,0,0,0);
+}</string>
+   </property>
+   <property name="text">
+    <string>0</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="indTpVal">
+   <property name="geometry">
+    <rect>
+     <x>1100</x>
+     <y>630</y>
+     <width>51</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>14</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QLabel {
+	color: white;
+	background-color: rgba(0,0,0,0);
+}</string>
+   </property>
+   <property name="text">
+    <string>0</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="indAucLabel">
+   <property name="geometry">
+    <rect>
+     <x>1010</x>
+     <y>570</y>
+     <width>121</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>14</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QLabel {
+	color: white;
+	background-color: rgba(0,0,0,0);
+}</string>
+   </property>
+   <property name="text">
+    <string>Ind.  AUC</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="indTpLabel">
+   <property name="geometry">
+    <rect>
+     <x>1010</x>
+     <y>630</y>
+     <width>121</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>14</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QLabel {
+	color: white;
+	background-color: rgba(0,0,0,0);
+}</string>
+   </property>
+   <property name="text">
+    <string>Ind.  TP</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="indTmppvLabel">
+   <property name="geometry">
+    <rect>
+     <x>1010</x>
+     <y>650</y>
+     <width>101</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>14</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QLabel {
+	color: white;
+	background-color: rgba(0,0,0,0);
+}</string>
+   </property>
+   <property name="text">
+    <string>Ind.  TMPPV</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="resultsLabel">
+   <property name="geometry">
+    <rect>
+     <x>800</x>
+     <y>520</y>
+     <width>361</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QLabel {
+	font-size: 20px;
+	color: rgb(255, 255, 255);
+	background-color: rgba(255, 255, 255, 0);
+}</string>
+   </property>
+   <property name="text">
+    <string>Results</string>
+   </property>
+   <property name="textFormat">
+    <enum>Qt::AutoText</enum>
+   </property>
+   <property name="scaledContents">
+    <bool>false</bool>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
    </property>
   </widget>
  </widget>

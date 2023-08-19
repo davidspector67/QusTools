@@ -35,6 +35,7 @@ class CeusAnalysisGUI(Ui_ceusAnalysis, QWidget):
         self.tmppv = None
         self.roiArea = None
         self.newData = None
+        self.ticParamap = None
 
         self.bmodeCoverPixmap = QPixmap(381, 351)
         self.bmodeCoverPixmap.fill(Qt.transparent)
@@ -44,19 +45,6 @@ class CeusAnalysisGUI(Ui_ceusAnalysis, QWidget):
         self.ceCoverLabel.setPixmap(self.ceCoverPixmap)
 
         self.setMouseTracking(True)
-
-        self.fig = plt.figure()
-        self.canvas = FigureCanvas(self.fig)
-        self.horizLayout = QHBoxLayout(self.ticDisplay)
-        self.horizLayout.addWidget(self.canvas)
-        self.canvas.draw()
-        self.ax = self.fig.add_subplot(111)
-        self.ax.set_xlabel("Time (s)", fontsize=4, labelpad=0.5)
-        self.ax.set_ylabel("Signal Amplitude", fontsize=4, labelpad=0.5)
-        self.ax.set_title("Time Intensity Curve (TIC)", fontsize=5, pad=1.5)
-        self.ax.tick_params('both', pad=0.3, labelsize=3.6)
-        plt.xticks(fontsize=3)
-        plt.yticks(fontsize=3)
 
         self.curSliceSlider.valueChanged.connect(self.curSliceSliderValueChanged)
         self.curSliceSpinBox.valueChanged.connect(self.curSliceSpinBoxValueChanged)

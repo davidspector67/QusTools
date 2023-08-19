@@ -3,10 +3,10 @@ from UtcTool2dIQ.roiSelection_ui_helper import *
 import os
 import shutil
 
-def selectImageHelper(pathInput):
+def selectImageHelper(pathInput, fileExts):
     if not os.path.exists(pathInput.text()): # check if file path is manually typed
         # NOTE: .bin is currently not supported
-        fileName, _ = QFileDialog.getOpenFileName(None, 'Open File', filter = '*.mat')
+        fileName, _ = QFileDialog.getOpenFileName(None, 'Open File', filter = fileExts)
         if fileName != '': # If valid file is chosen
             pathInput.setText(fileName)
         else:
@@ -25,22 +25,24 @@ class SelectImageGUI_UtcTool2dIQ(Ui_selectImage, QWidget):
         self.clearPhantomPathButton.setHidden(True)
         self.selectImageErrorMsg.setHidden(True)
         self.generateImageButton.setHidden(True)
-        self.imagePathFolderLabel.setHidden(True)
-        self.phantomPathFolderLabel.setHidden(True)
         self.imagePathInput.setHidden(True)
         self.phantomPathInput.setHidden(True)
-        self.imagePathLabel.setHidden(True)
-        self.phantomPathLabel.setHidden(True)
         self.selectDataLabel.setHidden(True)
         self.imageFilenameDisplay.setHidden(True)
         self.phantomFilenameDisplay.setHidden(True)
+        self.imagePathLabelCanon.setHidden(True)
+        self.phantomPathLabelCanon.setHidden(True)
+        self.imagePathLabelVerasonics.setHidden(True)
+        self.phantomPathLabelVerasonics.setHidden(True)
 
-        self.choosingIndividualFiles = False
         self.welcomeGui = None
         self.roiSelectionGUI = None
         self.dataFrame = None
+        self.machine = None
+        self.fileExts = None
         
-        self.selectIndFilesButton.clicked.connect(self.fileOptionSelected)
+        self.canonButton.clicked.connect(self.canonClicked)
+        self.verasonicsButton.clicked.connect(self.verasonicsClicked)
         self.chooseImageFileButton.clicked.connect(self.selectImageFile)
         self.choosePhantomFileButton.clicked.connect(self.selectPhantomFile)
         self.clearImagePathButton.clicked.connect(self.clearImagePath)
@@ -79,8 +81,15 @@ class SelectImageGUI_UtcTool2dIQ(Ui_selectImage, QWidget):
             del self.roiSelectionGUI
             self.roiSelectionGUI = RoiSelectionGUI()
             self.roiSelectionGUI.setFilenameDisplays(self.imagePathInput.text().split('/')[-1], self.phantomPathInput.text().split('/')[-1])
-            self.roiSelectionGUI.openImage(self.imagePathInput.text(), self.phantomPathInput.text())
+            if self.machine == "Verasonics":
+                self.roiSelectionGUI.openImageVerasonics(self.imagePathInput.text(), self.phantomPathInput.text())
+            elif self.machine == "Canon":
+                self.roiSelectionGUI.openImageCanon(self.imagePathInput.text(), self.phantomPathInput.text())
+            else:
+                print("ERROR: Machine match not found")
+                return
             self.roiSelectionGUI.show()
+            self.roiSelectionGUI.machine = self.machine
             self.roiSelectionGUI.dataFrame = self.dataFrame
             self.roiSelectionGUI.lastGui = self
             self.hide()
@@ -92,41 +101,48 @@ class SelectImageGUI_UtcTool2dIQ(Ui_selectImage, QWidget):
         self.phantomPathInput.clear()
 
     def chooseImagePrep(self):
-        # self.selectFoldersButton.setHidden(True)
-        self.selectIndFilesButton.setHidden(True)
         self.imagePathInput.setHidden(False)
         self.phantomPathInput.setHidden(False)
         self.clearImagePathButton.setHidden(False)
         self.clearPhantomPathButton.setHidden(False)
         self.generateImageButton.setHidden(False)
         self.selectImageMethodLabel.setHidden(True)
+        self.canonButton.setHidden(True)
+        self.verasonicsButton.setHidden(True)
 
-    def fileOptionSelected(self): # Move user to screen to select individual files to generate image
+    def canonClicked(self): # Move user to screen to select individual files to generate image
         self.chooseImagePrep()
         self.selectDataLabel.setHidden(False)
-        self.imagePathLabel.setHidden(False)
-        self.phantomPathLabel.setHidden(False)
+        self.imagePathLabelCanon.setHidden(False)
+        self.phantomPathLabelCanon.setHidden(False)
         self.chooseImageFileButton.setHidden(False)
         self.choosePhantomFileButton.setHidden(False)
 
-        self.choosingIndividualFiles = True
+        self.machine = 'Canon'
+        self.fileExts = '*.bin'
+
+    def verasonicsClicked(self): # Move user to screen to select individual files to generate image
+        self.chooseImagePrep()
+        self.selectDataLabel.setHidden(False)
+        self.imagePathLabelVerasonics.setHidden(False)
+        self.phantomPathLabelVerasonics.setHidden(False)
+        self.chooseImageFileButton.setHidden(False)
+        self.choosePhantomFileButton.setHidden(False)
+
+        self.machine = 'Verasonics'
+        self.fileExts = '*.mat'
 
     def selectImageFile(self):
-        if not self.choosingIndividualFiles:
-            return
-
         # Create folder to store ROI drawings
         if os.path.exists("Junk"):
             shutil.rmtree("Junk")
         os.mkdir("Junk")
 
-        selectImageHelper(self.imagePathInput)
+        selectImageHelper(self.imagePathInput, self.fileExts)
         self.selectImageErrorMsg.setHidden(True)
 
     def selectPhantomFile(self):
-        if not self.choosingIndividualFiles:
-            return
-        selectImageHelper(self.phantomPathInput)
+        selectImageHelper(self.phantomPathInput, self.fileExts)
         self.selectImageErrorMsg.setHidden(True)
 
 

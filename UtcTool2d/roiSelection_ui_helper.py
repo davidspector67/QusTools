@@ -305,6 +305,18 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
 
         self.pixSizeAx = self.imArray.shape[0]
         self.pixSizeLat = self.imArray.shape[1]
+        self.axWinSizeVal = 10#7#1#1480/20000000*10000 # must be at least 10 times wavelength
+        self.latWinSizeVal = 10#7#1#1480/20000000*10000 # must be at least 10 times wavelength
+        self.axOverlapVal = 50
+        self.latOverlapVal = 50
+        self.minFreqVal = 3
+        self.maxFreqVal = 4.5
+        self.startDepthVal = 0.04
+        self.endDepthVal = 0.16
+        self.clipFactorVal = 95
+        self.samplingFreqVal = 20
+        self.frame = 0
+
         self.plotOnCanvas()
         
 

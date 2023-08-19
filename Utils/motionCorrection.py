@@ -9,14 +9,8 @@ Full paper: "A Comprehensive Motion Compensation Method for In-Plane and Out-of-
 import cv2
 import numpy as np
 import pickle
-import os
-from os.path import join, isfile, exists, isdir, dirname
+from scipy.optimize import curve_fit
 import nibabel as nib
-import pandas as pd
-import matplotlib.pyplot as plt
-from tqdm import tqdm
-from datetime import datetime
-from scipy.ndimage import binary_fill_holes
 
 
 def load_pickle(pickle_path):
@@ -113,338 +107,190 @@ def check_bbox_move(previous_all_lesion_bboxes, all_lesion_bboxes):
     
     return bbox_move
 
-
-def perform_MC(pickle_full_path, nifti_segmentation_path,
-              ROI_margin_suffix, frame_rate_suffix, set_quantile, threshold_decrease_per_step):
-    
-    if frame_rate_suffix == 'fullFrameRate':
-        step = 1
-    elif frame_rate_suffix == 'halfFrameRate':
-        step = 2
-    
-    full_array = load_pickle(pickle_full_path).astype(np.uint8)
-
-    full_h = full_array.shape[1]
-    search_margin = int((0.5/15)*full_h)
-
-    ref_frames, bboxes, masks = find_ref_frames_from_nifti(nifti_segmentation_path, ROI_margin_suffix, search_margin)    
-
-    #############################################################
-    #find initial correlation in the first run
-    min_x0 = min([e[0] for e in bboxes]) - search_margin
-    max_x1 = max([e[0]+e[2] for e in bboxes]) + search_margin
-    min_y0 = min([e[1] for e in bboxes]) - search_margin
-    max_y1 = max([e[1]+e[3] for e in bboxes]) + search_margin
-    bmode = full_array[:,
-                  min_y0:max_y1,
-                  min_x0:max_x1]
-    
-    ref_bmodes = []
-    for ri in range(ref_frames.shape[0]):
-        ref_f = ref_frames[ri]
-        ref_b = bboxes[ri]
-        ref_bmodes.append(full_array[ref_f,
-                                    ref_b[1]:ref_b[1]+ref_b[3],
-                                    ref_b[0]:ref_b[0]+ref_b[2]])
-    
-    corr_initial_run, threshold = find_correlation(bmode, ref_bmodes, set_quantile)
-    # print('initial threshold:', threshold)
-    ############################################################
-    
-    ref_patches = ref_bmodes[:]
-    
-    previous_all_lesion_bboxes = [None]*full_array.shape[0]
-    iteration = 1
-        
-    while True:
-        
-        out_array = np.zeros(list(full_array.shape)+[3], dtype=np.uint8)
-        
-        all_search_bboxes = [None]*full_array.shape[0]
-        all_lesion_bboxes = [None]*full_array.shape[0]
-        corr_with_ref = [None]*full_array.shape[0]
-    
-        for ref_idx in range(ref_frames.shape[0]):
-            ref_frame = ref_frames[ref_idx]
-            #print('ref_frame:', ref_frame)
-            ref_bbox = bboxes[ref_idx]
-
-            #show location of the ref_bbox
-            #commented out for now because it increase computation time
-            #if iteration == 1 and ref_idx==0:
-            #    img_bbox = cv2.rectangle(cv2.cvtColor(full_array[ref_frame], cv2.COLOR_GRAY2BGR),
-            #                                 (ref_bbox[0], ref_bbox[1]),
-            #                                 (ref_bbox[0] + ref_bbox[2], ref_bbox[1] + ref_bbox[3]),
-            #                                 (0, 255, 0), 5)
-            #    plt.imshow(img_bbox)
-            #    plt.show()
-
-            #compute the temporal segment the ref_frame is responsible for
-            #######################
-            if ref_idx == 0:
-                if ref_idx == ref_frames.shape[0] - 1:
-                    #There is only 1 ref_frame
-                    ref_begin = 0
-                    ref_end = full_array.shape[0]
-                else:
-                    #This is the first ref_frame. There are >1 ref frames.
-                    ref_begin = 0
-                    ref_end = int((ref_frames[ref_idx]+ref_frames[ref_idx+1])/2)
-            else:
-                if ref_idx == ref_frames.shape[0] - 1:
-                    #This is the last ref frame. There are >1 ref frames.
-                    ref_begin = int((ref_frames[ref_idx-1]+ref_frames[ref_idx])/2)
-                    ref_end = full_array.shape[0]
-                else:
-                    #These are ref frames in the middle. There are >1 ref frames.
-                    ref_begin = int((ref_frames[ref_idx-1]+ref_frames[ref_idx])/2)
-                    ref_end = int((ref_frames[ref_idx]+ref_frames[ref_idx+1])/2)
-            #######################
-
-            #forward tracking
-            ##############################################################
-            if ref_frame < ref_end-1:  #can forward track only if there are frames after the ref_frame
-                #print('forward tracking')
-
-                previous_bbox = ref_bbox
-
-                valid = True
-
-                for frame in range(ref_frame, ref_end, step):
-
-                    full_frame = full_array[frame]
-
-                    if valid:
-                        search_w = int(previous_bbox[2]+(2*search_margin))
-                        search_h = int(previous_bbox[3]+(2*search_margin))
-                        search_x0 = int(previous_bbox[0] - ((search_w - previous_bbox[2])/2))
-                        search_y0 = int(previous_bbox[1] - ((search_h - previous_bbox[3])/2))
-                        search_bbox = (search_x0, search_y0, search_w, search_h)
-                        search_region = full_frame[search_y0:search_y0+search_h,
-                                                  search_x0:search_x0+search_w]
-
-                        all_search_bboxes[frame] = search_bbox
-
-                    else:
-
-                        all_search_x0 = [b[0] for b in all_search_bboxes[ref_frame+1:ref_end] if not(b is None)]
-                        median_x0 = np.median(all_search_x0)
-                        IQR_x0 = np.quantile(all_search_x0, 0.75) - np.quantile(all_search_x0, 0.25)
-                        all_search_x0 = [x for x in all_search_x0 if (x>=median_x0-(1.5*IQR_x0)) and (x<=median_x0+(1.5*IQR_x0))]
-                        min_search_x0 = min(all_search_x0)
-                        max_search_x0 = max(all_search_x0)
-
-                        all_search_y0 = [b[1] for b in all_search_bboxes[ref_frame+1:ref_end] if not(b is None)]
-                        median_y0 = np.median(all_search_y0)
-                        IQR_y0 = np.quantile(all_search_y0, 0.75) - np.quantile(all_search_y0, 0.25)
-                        all_search_y0 = [y for y in all_search_y0 if (y>=median_y0-(1.5*IQR_y0)) and (y<=median_y0+(1.5*IQR_y0))]
-                        min_search_y0 = min(all_search_y0)
-                        max_search_y0 = max(all_search_y0)
-
-                        search_x0 = min_search_x0
-                        search_y0 = min_search_y0
-                        search_w = (max_search_x0-min_search_x0) + int(ref_bbox[2]+(2*search_margin))
-                        search_h = (max_search_y0-min_search_y0) + int(previous_bbox[3]+(2*search_margin))
-                        search_bbox = (search_x0, search_y0, search_w, search_h)
-                        search_region = full_frame[search_y0:search_y0+search_h,
-                                                      search_x0:search_x0+search_w]    
-
-                        
-                    mean_corr, max_loc = compute_similarity_map(search_region, ref_patches, ref_idx)
-                    corr_with_ref[frame] = mean_corr
-                    
-
-                    if mean_corr >= threshold:
-                        valid = True
-                        current_w = ref_bbox[2]
-                        current_h = ref_bbox[3]
-                        current_x0 = search_x0 + max_loc[0]
-                        current_y0 = search_y0 + max_loc[1]
-                        current_bbox = (current_x0, current_y0, current_w, current_h)
-
-                        img_bbox = cv2.rectangle(cv2.cvtColor(full_frame, cv2.COLOR_GRAY2BGR),
-                                                     (search_x0, search_y0),
-                                                     (search_x0+search_w, search_y0+search_h),
-                                                     (255, 255, 255), 2)
-                        img_bbox = cv2.rectangle(img_bbox,
-                                                     (current_bbox[0], current_bbox[1]),
-                                                     (current_bbox[0] + current_bbox[2], current_bbox[1] + current_bbox[3]),
-                                                     (0, 255, 0), 2)
-                        img_bbox = cv2.putText(img_bbox, 'frame: '+str(frame), (25,25), cv2.FONT_HERSHEY_SIMPLEX,  
-                                       1, (0,255,0), 2, cv2.LINE_AA) 
-                        img_bbox = cv2.putText(img_bbox, 'corr: '+str(mean_corr), (25,50), cv2.FONT_HERSHEY_SIMPLEX,  
-                                       1, (0,255,0), 2, cv2.LINE_AA) 
-
-                        out_array[frame] = img_bbox
-
-                        #####################################
-                        all_lesion_bboxes[frame] = current_bbox[:]
-                        previous_bbox = current_bbox[:]
-                        
-
-                    else:
-                        valid = False
-                        img_bbox = cv2.rectangle(cv2.cvtColor(full_frame, cv2.COLOR_GRAY2BGR),
-                                                     (search_x0, search_y0),
-                                                     (search_x0+search_w, search_y0+search_h),
-                                                     (0, 0, 255), 2)
-                        img_bbox = cv2.putText(img_bbox, 'frame: '+str(frame), (25,25), cv2.FONT_HERSHEY_SIMPLEX,  
-                                       1, (0,0,255), 2, cv2.LINE_AA) 
-                        img_bbox = cv2.putText(img_bbox, 'corr: '+str(mean_corr), (25,50), cv2.FONT_HERSHEY_SIMPLEX,  
-                                       1, (0,0,255), 2, cv2.LINE_AA) 
-
-                        out_array[frame] = img_bbox
-            #########################################################
-            
-            
-            #backward tracking
-            ##############################################################
-            if ref_frame > ref_begin:  
-                #print('backward tracking')
-
-                previous_bbox = ref_bbox
-
-                valid = True
-
-                for frame in range(ref_frame-1, ref_begin-1, -step):
-
-                    full_frame = full_array[frame]
-
-                    if valid:
-                        search_w = int(previous_bbox[2]+(2*search_margin))
-                        search_h = int(previous_bbox[3]+(2*search_margin))
-                        search_x0 = int(previous_bbox[0] - ((search_w - previous_bbox[2])/2))
-                        search_y0 = int(previous_bbox[1] - ((search_h - previous_bbox[3])/2))
-                        search_bbox = (search_x0, search_y0, search_w, search_h)
-                        search_region = full_frame[search_y0:search_y0+search_h,
-                                                  search_x0:search_x0+search_w]
-
-                        all_search_bboxes[frame] = search_bbox
-
-                    else:
-
-                        all_search_x0 = [b[0] for b in all_search_bboxes[ref_begin:ref_frame] if not(b is None)]
-                        median_x0 = np.median(all_search_x0)
-                        IQR_x0 = np.quantile(all_search_x0, 0.75) - np.quantile(all_search_x0, 0.25)
-                        all_search_x0 = [x for x in all_search_x0 if (x>=median_x0-(1.5*IQR_x0)) and (x<=median_x0+(1.5*IQR_x0))]
-                        min_search_x0 = min(all_search_x0)
-                        max_search_x0 = max(all_search_x0)
-
-                        all_search_y0 = [b[1] for b in all_search_bboxes[ref_begin:ref_frame] if not(b is None)]
-                        median_y0 = np.median(all_search_y0)
-                        IQR_y0 = np.quantile(all_search_y0, 0.75) - np.quantile(all_search_y0, 0.25)
-                        all_search_y0 = [y for y in all_search_y0 if (y>=median_y0-(1.5*IQR_y0)) and (y<=median_y0+(1.5*IQR_y0))]
-                        min_search_y0 = min(all_search_y0)
-                        max_search_y0 = max(all_search_y0)
-
-                        search_x0 = min_search_x0
-                        search_y0 = min_search_y0
-                        search_w = (max_search_x0-min_search_x0) + int(ref_bbox[2]+(2*search_margin))
-                        search_h = (max_search_y0-min_search_y0) + int(previous_bbox[3]+(2*search_margin))
-                        search_bbox = (search_x0, search_y0, search_w, search_h)
-                        search_region = full_frame[search_y0:search_y0+search_h,
-                                                      search_x0:search_x0+search_w]    
-
-                        
-                    mean_corr, max_loc = compute_similarity_map(search_region, ref_patches, ref_idx)
-                    corr_with_ref[frame] = mean_corr
-                    
-
-                    if mean_corr >= threshold:
-                        valid = True
-                        current_w = ref_bbox[2]
-                        current_h = ref_bbox[3]
-                        current_x0 = search_x0 + max_loc[0]
-                        current_y0 = search_y0 + max_loc[1]
-                        current_bbox = (current_x0, current_y0, current_w, current_h)
-
-                        img_bbox = cv2.rectangle(cv2.cvtColor(full_frame, cv2.COLOR_GRAY2BGR),
-                                                     (search_x0, search_y0),
-                                                     (search_x0+search_w, search_y0+search_h),
-                                                     (255, 255, 255), 2)
-                        img_bbox = cv2.rectangle(img_bbox,
-                                                     (current_bbox[0], current_bbox[1]),
-                                                     (current_bbox[0] + current_bbox[2], current_bbox[1] + current_bbox[3]),
-                                                     (0, 255, 0), 2)
-                        img_bbox = cv2.putText(img_bbox, 'frame: '+str(frame), (25,25), cv2.FONT_HERSHEY_SIMPLEX,  
-                                       1, (0,255,0), 2, cv2.LINE_AA) 
-                        img_bbox = cv2.putText(img_bbox, 'corr: '+str(mean_corr), (25,50), cv2.FONT_HERSHEY_SIMPLEX,  
-                                       1, (0,255,0), 2, cv2.LINE_AA) 
-
-                        out_array[frame] = img_bbox
-
-                        #####################################
-                        all_lesion_bboxes[frame] = current_bbox[:]
-                        previous_bbox = current_bbox[:]
-                        
-
-                    else:
-                        valid = False
-                        img_bbox = cv2.rectangle(cv2.cvtColor(full_frame, cv2.COLOR_GRAY2BGR),
-                                                     (search_x0, search_y0),
-                                                     (search_x0+search_w, search_y0+search_h),
-                                                     (0, 0, 255), 2)
-                        img_bbox = cv2.putText(img_bbox, 'frame: '+str(frame), (25,25), cv2.FONT_HERSHEY_SIMPLEX,  
-                                       1, (0,0,255), 2, cv2.LINE_AA) 
-                        img_bbox = cv2.putText(img_bbox, 'corr: '+str(mean_corr), (25,50), cv2.FONT_HERSHEY_SIMPLEX,  
-                                       1, (0,0,255), 2, cv2.LINE_AA) 
-
-                        out_array[frame] = img_bbox
-            #########################################################
-            
-
-        #check if lesion bbox in any frame move in this iteration
-        #####################
-        bbox_move = check_bbox_move(previous_all_lesion_bboxes, all_lesion_bboxes)
-        if bbox_move or (threshold < min([e for e in corr_with_ref if not(e is None)])):
-            break
-        #####################
-
-        previous_threshold = threshold
-        previous_all_lesion_bboxes = all_lesion_bboxes[:]
-        previous_out_array = out_array.copy()
-        previous_corr_with_ref = corr_with_ref.copy()
-        threshold -= threshold_decrease_per_step
-        iteration += 1
-
-                
-    # print('iteration:', iteration-1)
-    # print('threshold:', previous_threshold)
-
-    out_array = previous_out_array.copy()
-    ########################################################
-   
-    # export_video(out_array, mp4_path, CineRate=10)
-    
-    
-    return full_array, previous_all_lesion_bboxes, ref_frames, bboxes, masks
-    
-def generate_TIC(window, bboxes, times, compression, pixelScale, refFrame):
-    TICtime = []
-    TIC = []
-    areas = []
-    for t in range(0, window.shape[0]):
-        if bboxes[t] != None:
-            tmpwin = window[t]
-            bool_mask = np.zeros(tmpwin.shape, dtype=bool)
-            x0, y0, x_len, y_len = bboxes[t]
-            for x in range(x_len):
-                bool_mask[x,y0] = True
-                bool_mask[x,y0+y_len] = True
-            for y in range(y_len):
-                bool_mask[x0,y] = True
-                bool_mask[x0+x_len-1,y] = True
-            bool_mask = binary_fill_holes(bool_mask)
-            numPoints = len(np.where(bool_mask == True)[0])
-            TIC.append(np.exp(tmpwin[bool_mask]/compression).mean()*pixelScale)
-            TICtime.append(times[t])
-            areas.append(pixelScale*numPoints)
-
-    TICz = np.array([TICtime, TIC]).astype('float64')
-    TICz = TICz.transpose()
-    TICz[:,1]=TICz[:,1]-np.mean(TICz[0:2,1])#Subtract noise in TIC before contrast
-    if TICz[np.nan_to_num(TICz)<0].any():#make the smallest number in TIC 0
-        TICz[:,1]=TICz[:,1]+np.abs(np.min(TICz[:,1]))
+def getIndTIC(intensities, mode, availableFrames, pixelScale, times):
+    if mode == 'ori':
+        nFrames = intensities.shape[0]
+        availableFrames = np.arange(nFrames)
+        availableIntensities = intensities
+    elif mode == 'mc':
+        availableIntensities = intensities[availableFrames]
     else:
-        TICz[:,1]=TICz[:,1]-np.min(TICz[:,1])
-    return TICz, np.round(np.mean(areas), decimals=2)
+        print("ERROR: Invalid Mode Selected. Must be \"ori\" or \"mc\"")
+        return
+    availableIntensities *= pixelScale
+    availableFrames = times[availableFrames]
+    
+    tic = np.concatenate([availableFrames[:, np.newaxis], \
+                        availableIntensities[:, np.newaxis]], \
+                        axis=1)
+    
+    return tic
+
+def getAllTICs(ceMcRoi, pixelScale, times):
+    availableFrames = np.argwhere(np.sum(ceMcRoi, axis=(1,2))>0).flatten()
+    ticArray = np.zeros((ceMcRoi.shape[1], ceMcRoi.shape[2], len(availableFrames), 2))
+    for x in range(ceMcRoi.shape[1]):
+        for y in range(ceMcRoi.shape[2]):
+            ticArray[x,y] = getIndTIC(ceMcRoi[:,x,y], 'mc', availableFrames, pixelScale, times)
+    return ticArray
+
+def dataFit(tic):
+    tmppv = max(tic[:,1])
+    tic[:,1] /= tmppv
+    normalizedLogParams, normalizedLogParamCov = curve_fit(lognormal, tic[:,0], tic[:,1], \
+                                                           p0=(1.0,0.0,1.0), bounds=([0.,0.,0.],\
+                                                           [np.inf,np.inf,np.inf]),method='trf')
+    
+    auc = normalizedLogParams[0]
+    mu = normalizedLogParams[1]
+    sigma = normalizedLogParams[2]
+    mtt = np.exp(mu+(sigma**2/2))
+    tp = np.exp(mu - (sigma**2))
+    wholeCurve = lognormal(tic[:,0], auc, mu, sigma)
+    pe = np.max(wholeCurve)
+    return [auc, pe, mtt, tp, tmppv]
+
+def lognormal(x, auc, mu, sigma):      
+    curve_fit=(auc/(2.5066*sigma*x))*np.exp((-1/2)*(((np.log(x)-mu)/sigma)**2)) 
+    return np.nan_to_num(curve_fit)
+
+def generateParamap(ticArray):
+    paramap = np.zeros((ticArray.shape[0], ticArray.shape[1], 5))
+    for x in range(ticArray.shape[0]):
+        for y in range(ticArray.shape[1]):
+            try:
+                paramap[x,y] = dataFit(ticArray[x,y].copy())
+            except:
+                paramap[x,y] = [-1,-1,-1,-1,max(ticArray[x,y,:,1])]
+    return paramap
+
+def resize_mc_bboxes(bboxes):
+    #resize bboxes to minimum width and height
+    
+    min_w = min([b[2] for b in bboxes if not(b is None)])
+    min_h = min([b[3] for b in bboxes if not(b is None)])
+    
+    for i in range(len(bboxes)):
+        if bboxes[i] is None:
+            continue
+        x0, y0, w, h = bboxes[i]
+        new_w = min_w
+        new_h = min_h
+        new_x0 = x0 + int((w-new_w)/2)
+        new_y0 = y0 + int((h-new_h)/2)
+        bboxes[i] = (new_x0, new_y0, new_w, new_h)
+        
+    return bboxes
+
+def remove_outlier_bboxes(bboxes):
+    
+    all_x0 = [b[0] for b in bboxes if not(b is None)]
+    q1_x0 = np.quantile(all_x0, 0.25)
+    q3_x0 = np.quantile(all_x0, 0.75)
+    IQR_x0 = q3_x0 - q1_x0
+    
+    all_y0 = [b[1] for b in bboxes if not(b is None)]
+    q1_y0 = np.quantile(all_y0, 0.25)
+    q3_y0 = np.quantile(all_y0, 0.75)
+    IQR_y0 = q3_y0 - q1_y0
+    
+    out_bboxes = [None]*len(bboxes)
+    outliers = [None]*len(bboxes)
+    for i,b in enumerate(bboxes):
+        if not(b is None):
+            if (b[0]>=q1_x0-(1.5*IQR_x0)) and (b[0]<=q3_x0+(1.5*IQR_x0)) and \
+            (b[1]>=q1_y0-(1.5*IQR_y0)) and (b[1]<=q3_y0+(1.5*IQR_y0)):
+                out_bboxes[i] = b[:]
+            else:
+                outliers[i] = b[:]
+                
+    # print('usable bboxes:', len([b for b in out_bboxes if not(b is None)]))
+    # print('outlier bboxes:', len([b for b in outliers if not(b is None)]))
+    
+    return out_bboxes
+
+def create_ce_mc_bboxes(bmode_bboxes, x0_bmode, x0_CE, CE_side):
+    
+    CE_bboxes = [None] * len(bmode_bboxes)
+    
+    for i in range(len(bmode_bboxes)):
+        if bmode_bboxes[i] is None:
+            continue
+        x0, y0, w, h = bmode_bboxes[i]
+        
+        if CE_side == 'r':
+            new_x0 = x0 + (x0_CE-x0_bmode)
+        elif CE_side == 'l':
+            new_x0 = x0 - (x0_bmode-x0_CE)
+        else:
+            print('error!')
+            quit()
+            
+        CE_bboxes[i] = (new_x0, y0, w, h)
+    
+    return CE_bboxes
+    
+def cut_ROI200(full_array, bboxes, window_loc):
+    
+    min_w = min([b[2] for b in bboxes if not(b is None)])
+    min_h = min([b[3] for b in bboxes if not(b is None)])
+    
+    window_x0, window_y0, window_w, window_h = window_loc
+    
+    cut_h = int(max(0.4*window_h, min_h, min_w))
+    cut_w = cut_h
+    
+    ROI = np.zeros((full_array.shape[0], cut_h, cut_w))
+    
+    for frame in range(full_array.shape[0]):
+        bbox = bboxes[frame]
+        if bbox is None:  #skip MC frames without bbox (due to out-of-frame motion)
+            continue
+        x0,y0,w,h = bbox
+        x_center = x0 + int(w/2)
+        y_center = y0 + int(h/2)
+        valid_w = min(int(x_center+cut_w/2),window_x0+window_w) - max(int(x_center-cut_w/2),window_x0)
+        valid_h = min(int(y_center+cut_h/2),window_y0+window_h) - max(int(y_center-cut_h/2),window_y0)
+        center_ROI = int(cut_h/2)
+
+        try:
+            ROI[frame, int(center_ROI-valid_h/2):int(center_ROI+valid_h/2), int(center_ROI-valid_w/2):int(center_ROI+valid_w/2)] = full_array[frame, 
+                                    max(int(y_center-cut_h/2),window_y0):min(int(y_center+cut_h/2),window_y0+window_h), 
+                                    max(int(x_center-cut_w/2),window_x0):min(int(x_center+cut_w/2),window_x0+window_w)]
+        except:
+            ROI[frame, int(center_ROI-valid_h/2):int(center_ROI+valid_h/2), int(center_ROI-valid_w/2):int(center_ROI+valid_w/2)] = full_array[frame, 
+                                    max(int(y_center-cut_h/2+1),window_y0):min(int(y_center+cut_h/2),window_y0+window_h), 
+                                    max(int(x_center-cut_w/2+1),window_x0):min(int(x_center+cut_w/2),window_x0+window_w)]
+    
+    return ROI
+    
+    
+# def generate_TIC(window, bboxes, times, compression, pixelScale, refFrame):
+#     TICtime = []
+#     TIC = []
+#     areas = []
+#     for t in range(0, window.shape[0]):
+#         if bboxes[t] != None:
+#             tmpwin = window[t]
+#             bool_mask = np.zeros(tmpwin.shape, dtype=bool)
+#             x0, y0, x_len, y_len = bboxes[t]
+#             for x in range(x_len):
+#                 bool_mask[x,y0] = True
+#                 bool_mask[x,y0+y_len] = True
+#             for y in range(y_len):
+#                 bool_mask[x0,y] = True
+#                 bool_mask[x0+x_len-1,y] = True
+#             bool_mask = binary_fill_holes(bool_mask)
+#             numPoints = len(np.where(bool_mask == True)[0])
+#             TIC.append(np.exp(tmpwin[bool_mask]/compression).mean()*pixelScale)
+#             TICtime.append(times[t])
+#             areas.append(pixelScale*numPoints)
+
+#     TICz = np.array([TICtime, TIC]).astype('float64')
+#     TICz = TICz.transpose()
+#     TICz[:,1]=TICz[:,1]-np.mean(TICz[0:2,1])#Subtract noise in TIC before contrast
+#     if TICz[np.nan_to_num(TICz)<0].any():#make the smallest number in TIC 0
+#         TICz[:,1]=TICz[:,1]+np.abs(np.min(TICz[:,1]))
+#     else:
+#         TICz[:,1]=TICz[:,1]-np.min(TICz[:,1])
+#     return TICz, np.round(np.mean(areas), decimals=2)

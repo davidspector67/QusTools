@@ -1,12 +1,13 @@
 from CeusMcTool2d.ticAnalysis_ui import *
 from CeusMcTool2d.ceusAnalysis_ui_helper import *
+import Utils.motionCorrection as mc
 
 import matplotlib.pyplot as plt
 from matplotlib.widgets import RectangleSelector
 import numpy as np
 import Utils.lognormalFunctions as lf
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-
+import matplotlib.pyplot as plt
 
 class TicAnalysisGUI(Ui_ticEditor, QWidget):
     def __init__(self):
@@ -41,6 +42,8 @@ class TicAnalysisGUI(Ui_ticEditor, QWidget):
         self.w_CE = None
         self.h_CE = None
         self.dataFrame = None
+        self.ticArray = None
+        self.pixelScale = None
 
 
         self.bmodeCoverPixmap = QPixmap(231, 211)
@@ -70,7 +73,7 @@ class TicAnalysisGUI(Ui_ticEditor, QWidget):
         self.prevLine = None
         self.timeLine = None
         self.backButton.clicked.connect(self.backToLastScreen)
-        self.acceptT0Button.clicked.connect(self.acceptT0)
+        self.acceptT0Button.clicked.connect(self.selectT0)
 
     def backToLastScreen(self):
         self.lastGui.dataFrame = self.dataFrame
@@ -190,6 +193,75 @@ class TicAnalysisGUI(Ui_ticEditor, QWidget):
         self.imagePathInput.setText(imFile)
         self.inputTextPath = imageName
 
+    def selectT0(self):
+        if self.t0Index == -1:
+            for i in range(len(self.ticX[:,0])):
+                if self.ticX[:,1][i] > self.t0Slider.value():
+                    break
+            self.t0Index = i
+        t0 = self.ticX[self.t0Index,0]
+
+        ticArray = self.ticArray[:,:,self.t0Index:,:]
+        ticParamap = mc.generateParamap(ticArray)
+        aucParamap = convertArToCmap('viridis', ticParamap[:,:,0])
+        aucCmap = plt.get_cmap('viridis')
+        peCmap = plt.get_cmap('plasma')
+        mttCmap = plt.get_cmap('autumn')
+        tpCmap = plt.get_cmap('winter')
+        tmppvCmap = plt.get_cmap('autumn')
+        del self.ceusAnalysisGui
+        self.ceusAnalysisGui = CeusAnalysisGUI()
+        self.ceusAnalysisGui.show()
+        self.ceusAnalysisGui.ticParamap = ticParamap
+        avAuc = np.mean(ticParamap[:,:,0].flatten())
+        avPe = np.mean(ticParamap[:,:,1].flatten())
+        avMtt = np.mean(ticParamap[:,:,2].flatten())
+        avTp = np.mean(ticParamap[:,:,3].flatten())
+        avTmppv = np.mean(ticParamap[:,:,4].flatten())
+        self.ceusAnalysisGui.setFilenameDisplays(self.imagePathInput.text())
+        self.ceusAnalysisGui.aucVal.setText(str(np.around(avAuc, decimals=3)))
+        self.ceusAnalysisGui.peVal.setText(str(np.around(avPe, decimals=3)))
+        self.ceusAnalysisGui.tpVal.setText(str(np.around(avTp, decimals=2)))
+        self.ceusAnalysisGui.mttVal.setText(str(np.around(avMtt, decimals=2)))
+        self.ceusAnalysisGui.tmppvVal.setText(str(np.around(avTmppv, decimals=1)))
+        self.ceusAnalysisGui.voiVolumeVal.setText(str(np.around(self.pixelScale*(ticParamap.shape[0]+ticParamap.shape[1]), decimals=1)))
+        self.ceusAnalysisGui.auc = avAuc
+        self.ceusAnalysisGui.pe = avPe
+        self.ceusAnalysisGui.tp = avTp
+        self.ceusAnalysisGui.mtt = avMtt
+        self.ceusAnalysisGui.tmppv = avTmppv
+        self.ceusAnalysisGui.roiArea = self.roiArea
+        self.ceusAnalysisGui.mcResultsBmode = self.mcResultsBmode
+        self.ceusAnalysisGui.mcResultsCE = self.mcResultsCE
+        self.ceusAnalysisGui.curFrameIndex = self.curFrameIndex
+        self.ceusAnalysisGui.xCur = self.xCur
+        self.ceusAnalysisGui.yCur = self.yCur
+        self.ceusAnalysisGui.x = self.x
+        self.ceusAnalysisGui.y = self.y
+        self.ceusAnalysisGui.dataFrame = self.dataFrame
+        self.ceusAnalysisGui.sliceArray = self.sliceArray
+        self.ceusAnalysisGui.x0_bmode = self.x0_bmode
+        self.ceusAnalysisGui.y0_bmode = self.y0_bmode
+        self.ceusAnalysisGui.w_bmode = self.w_bmode
+        self.ceusAnalysisGui.h_bmode = self.h_bmode
+        self.ceusAnalysisGui.x0_CE = self.x0_CE
+        self.ceusAnalysisGui.y0_CE = self.y0_CE
+        self.ceusAnalysisGui.w_CE = self.w_CE
+        self.ceusAnalysisGui.h_CE = self.h_CE
+        self.ceusAnalysisGui.curSliceSpinBox.setValue(self.sliceArray[self.curFrameIndex])
+        self.ceusAnalysisGui.curSliceSlider.setValue(self.curFrameIndex)
+        self.ceusAnalysisGui.curSliceTotal.setText(str(self.mcResultsBmode.shape[0]-1))
+        self.ceusAnalysisGui.totalSecondsLabel.setText(str(self.sliceArray[-1]))
+        self.ceusAnalysisGui.curSliceSlider.setMaximum(self.mcResultsBmode.shape[0]-1)
+        self.ceusAnalysisGui.curSliceSpinBox.setMaximum(self.mcResultsBmode.shape[0]-1)
+
+        self.ceusAnalysisGui.updateBmode()
+        self.ceusAnalysisGui.updateCE()
+        self.ceusAnalysisGui.show()
+        self.ceusAnalysisGui.curSliceSlider.setValue(self.curFrameIndex)
+        self.ceusAnalysisGui.lastGui = self
+        self.hide()
+
     def acceptTIC(self):
         del self.ceusAnalysisGui
         self.ceusAnalysisGui = CeusAnalysisGUI()
@@ -265,7 +337,6 @@ class TicAnalysisGUI(Ui_ticEditor, QWidget):
         self.ceusAnalysisGui.curSliceSlider.setValue(self.curFrameIndex)
         self.ceusAnalysisGui.lastGui = self
         self.hide()
-
 
     def acceptT0(self):
         self.t0Slider.setHidden(True)
@@ -388,3 +459,18 @@ if __name__ == "__main__":
     ui.show()
     ui.graph(test_ticX, test_ticY)
     sys.exit(app.exec_())
+
+def convertArToCmap(cmapName, intensities):
+    cmap = plt.get_cmap(cmapName)
+    successfulPixels = np.argwhere(intensities>=0)
+    maxIntensity = np.amax(intensities[successfulPixels])
+    minIntensity = np.amin(intensities[successfulPixels])
+    cmapArray = np.zeros(intensities.shape[0], intensities.shape[1], 5)
+    if maxIntensity == minIntensity:
+        cmapArray[successfulPixels] = cmapArray[125] + [255]
+        return cmapArray
+    else:
+        for pixel in successfulPixels:
+            cmapArray[pixel] = cmap[int(255*(intensities[pixel] - minIntensity)/(maxIntensity - minIntensity))] + [255]
+
+    return cmapArray

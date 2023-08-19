@@ -1,7 +1,8 @@
-from mat73 import loadmat
+# from mat73 import loadmat
+from scipy.io import loadmat
 from scipy.signal import hilbert
 import numpy as np
-import matplotlib.pyplot as plt
+from Utils.parserTools import iqToRf
 
 class AnalysisParamsStruct():
     def __init__(self):
@@ -181,17 +182,13 @@ def readFileInfo(filename, filepath, input):
 
 def readFileImg(Info, input):
     iqData = np.array(input["IQData"])
-    fs_int = 7813000 # get frequency from Preset.Trans.frequency (times 1000000 since stored in MHz)
-    rfData = np.zeros(iqData.shape)
-    t = [i*(1/fs_int) for i in range(iqData.shape[0])]
-    for i in range(iqData.shape[1]):
-        rfData[:,i] = np.real(np.multiply(iqData[:,i], np.exp(1j*(2*np.pi*np.transpose(t)))))
+    rfData = iqToRf(iqData, 7813000) # get frequency from Preset.Trans.frequency (times 1000000 since stored in MHz)
 
     bmode = np.zeros(iqData.shape).astype(np.int32)
 
     # Do Hilbert Transform on each column
     for i in range(iqData.shape[1]):
-        bmode[:,i] = 20*np.log10(abs(iqData[:,i]))
+        bmode[:,i] = 20*np.log10(abs(hilbert(rfData[:,i])))
 
     bmode = np.clip(bmode, (0.95*np.amax(bmode)-55), 0.95*np.amax(bmode)).astype(np.float)
     # bmode -= np.amin(bmode)

@@ -1,20 +1,64 @@
-from scipy.io import loadmat
-from scipy.signal import hilbert
+import struct
 import numpy as np
-from Utils.parserTools import scanConvert
+from Utils.parserTools import scanConvert, iqToRf
+from scipy.signal import hilbert
 
-class AnalysisParamsStruct():
-    def __init__(self, frame):
-        self.frame = frame
-        self.t_tilt= 0
-        self.t_width = 70
-        self.startDepth = 0.04
-        self.endDepth = 0.16
-        self.endHeight = 500
-        self.clip_fact = 0.95
-        self.dyn_range = 55
-        self.depth = 0.16
-        self.width = 0.265
+
+def readIQ(filename):
+    headersize = 16
+
+    file_obj = open(filename, 'rb')
+    hdr = [int.from_bytes(file_obj.read(2), byteorder='little', signed=False) for i in range(2)]
+    numAcquiredRxBeams = hdr[0]
+
+    hdr = [int.from_bytes(file_obj.read(2), byteorder='little', signed=False) for i in range(2)]
+    numParallelAcquisitions = hdr[1]
+
+    hdr = [int.from_bytes(file_obj.read(2), byteorder='little', signed=False) for i in range(2)]
+    numSamplesDrOut = hdr[0]
+    numSamplesRbfOut = hdr[1]
+
+    hdr = [int.from_bytes(file_obj.read(1), byteorder='little', signed=False) for i in range(4)]
+    isPhaseInvertEn = hdr[0]
+
+    hdr = [struct.unpack('f', file_obj.read(4))[0] for i in range(5)]
+    decimationFactor = hdr[0]
+    rbfDecimationFactor = hdr[1]
+    rbfBeMixerFrequency = hdr[2]
+    propagationVelCmPerSec = hdr[3]
+    digitizingRateHz = hdr[4]
+
+    # read IQ data
+    file_obj.seek(0)
+    numSamplesIQAcq = numSamplesDrOut*2
+    dataA = np.zeros((numSamplesDrOut*2, numAcquiredRxBeams))
+    dataB = np.zeros((numSamplesDrOut*2, numAcquiredRxBeams))
+    allData = np.zeros((numSamplesDrOut*2, numAcquiredRxBeams*(1+isPhaseInvertEn)))
+
+    # IQ Acquisition, following parameter always zero
+    isPhaseInvertEn = 0
+    isRxFreqCompoundEn = 0
+    isDiffplusEn = 0
+
+    for ii in range(int(numAcquiredRxBeams/numParallelAcquisitions)):
+        for jj in range(numParallelAcquisitions):
+            hdr = [int.from_bytes(file_obj.read(4), byteorder='little', signed=False) for i in range(headersize)]
+            allData[:headersize, (ii*numParallelAcquisitions) + jj] = hdr
+
+            dat = np.array([int.from_bytes(file_obj.read(4), byteorder='little', signed=False) for i in range(numSamplesIQAcq)])
+            dat[dat >= (2**23)] -= (2**24)
+
+            dataA[:,ii*numParallelAcquisitions+jj] = dat[:numSamplesDrOut*2]
+
+            allData[headersize:headersize+(numSamplesDrOut*2)+1, \
+                    ii*numParallelAcquisitions+jj] = dat[:min(numSamplesDrOut*2, allData.shape[0]-headersize)]
+            
+            
+
+    iq = dataA[np.arange(0, numSamplesDrOut*2, 2)] + 1j*dataA[np.arange(1,numSamplesDrOut*2,2)]
+    bmode = 20*np.log10(abs(iq))
+
+    return bmode, iq
 
 class FileStruct():
     def __init__(self, filedirectory, filename):
@@ -92,29 +136,26 @@ class InfoStruct():
 
 
 
-def getImage(filename, filedirectory, refname, refdirectory, frame):
-    AnalysisParams = AnalysisParamsStruct(frame)
+def getImage(filename, filedirectory, refname, refdirectory):
     Files = FileStruct(filedirectory, filename)
     RefFiles = FileStruct(refdirectory, refname)
 
-    [ImgInfo, RefInfo, ImgData, RefData] = getData(Files, RefFiles, AnalysisParams)
+    [ImgInfo, RefInfo, ImgData, RefData] = getData(Files, RefFiles)
     
     return ImgData.scBmode, ImgData, ImgInfo, RefData, RefInfo
 
 
 
-def getData(Files, RefFiles, AnalysisParams):
-    input = loadmat(str(Files.directory + Files.name))
-    ImgInfo = readFileInfo(Files.name, Files.directory, input)
-    [ImgData, ImgInfo] = readFileImg(ImgInfo, AnalysisParams.frame, input)
+def getData(Files, RefFiles):
+    ImgInfo = readFileInfo(Files.name, Files.directory)
+    [ImgData, ImgInfo] = readFileImg(ImgInfo, str(Files.directory + Files.name))
 
-    input = loadmat(str(RefFiles.directory + RefFiles.name))
-    RefInfo = readFileInfo(RefFiles.name, RefFiles.directory, input)
-    [RefData, RefInfo] = readFileImg(RefInfo, AnalysisParams.frame, input)
+    RefInfo = readFileInfo(RefFiles.name, RefFiles.directory)
+    [RefData, RefInfo] = readFileImg(RefInfo, str(RefFiles.directory + RefFiles.name))
 
     return [ImgInfo, RefInfo, ImgData, RefData]
 
-def readFileInfo(filename, filepath, input):    
+def readFileInfo(filename, filepath):    
     studyID = filename[:-4]
     studyEXT = filename[-4:]
 
@@ -173,25 +214,10 @@ def readFileInfo(filename, filepath, input):
 
     return Info
 
-def readFileImg(Info, frame, input):
-    echoData = input["rf_data_all_fund"]# indexing works by frame, angle, image
-    while not(len(echoData[0].shape) > 1 and echoData[0].shape[0]>100 and echoData[0].shape[1]>100):
-        echoData = echoData[0]
-    echoData = np.array(echoData[frame]).astype(np.int32)
-
-    # echoData = np.real(input["IQData"])
-    # bmode = 20*np.log10(abs(input["IQData"]))
-    # bmode = np.clip(bmode, (0.95*np.amax(bmode)-55), 0.95*np.amax(bmode)).astype(np.float)
-    # bmode -= np.amin(bmode)
-    # bmode *= (255/np.amax(bmode))
-
-    bmode = np.zeros(echoData.shape).astype(np.int32)
-
-    # Do Hilbert Transform on each column
-    for i in range(echoData.shape[1]):
-        bmode[:,i] = 20*np.log10(abs(hilbert(echoData[:,i])))
-
-    ModeIM = echoData
+def readFileImg(Info, filePath):
+    bmode, iqData = readIQ(filePath)
+    rfData = iqToRf(iqData, Info.rxFrequency)
+    ModeIM = rfData
 
     [scBmode, hCm1, wCm1, _] = scanConvert(bmode, Info.width1, Info.tilt1, Info.startDepth1, Info.endDepth1, Info.endHeight)
     # TODO: Left off here (line 23, philips_read_PhilipsImg.m). Was not able to check final outim, inIm_ind(x/y). If something's off, look here
@@ -220,5 +246,8 @@ def readFileImg(Info, frame, input):
 
     return Data, Info
 
+
 if __name__ == "__main__":
-    getImage('FatQuantData1.mat', '/Users/davidspector/Documents/MATLAB/Data/', 'FatQuantPhantom1.mat', '/Users/davidspector/Documents/MATLAB/Data/', 0)
+    readIQ("/Users/davidspector/Home/Stanford/Project_Data/Misc Data/20220110145409_IQ.bin")
+
+

@@ -33,16 +33,16 @@ class Ui_selectImage(object):
         self.selectDataLabel.setScaledContents(False)
         self.selectDataLabel.setAlignment(Qt.AlignCenter)
         self.selectDataLabel.setWordWrap(True)
-        self.phantomPathLabel = QLabel(selectImage)
-        self.phantomPathLabel.setObjectName(u"phantomPathLabel")
-        self.phantomPathLabel.setGeometry(QRect(790, 290, 271, 51))
-        self.phantomPathLabel.setStyleSheet(u"QLabel {\n"
+        self.phantomPathLabelVerasonics = QLabel(selectImage)
+        self.phantomPathLabelVerasonics.setObjectName(u"phantomPathLabelVerasonics")
+        self.phantomPathLabelVerasonics.setGeometry(QRect(790, 290, 271, 51))
+        self.phantomPathLabelVerasonics.setStyleSheet(u"QLabel {\n"
 "	background-color: rgba(255, 255, 255, 0);\n"
 "	color: white;\n"
 "	font-size: 17px;\n"
 "}")
-        self.phantomPathLabel.setAlignment(Qt.AlignCenter)
-        self.phantomPathLabel.setTextInteractionFlags(Qt.NoTextInteraction)
+        self.phantomPathLabelVerasonics.setAlignment(Qt.AlignCenter)
+        self.phantomPathLabelVerasonics.setTextInteractionFlags(Qt.NoTextInteraction)
         self.choosePhantomFileButton = QPushButton(selectImage)
         self.choosePhantomFileButton.setObjectName(u"choosePhantomFileButton")
         self.choosePhantomFileButton.setGeometry(QRect(792, 390, 131, 41))
@@ -68,16 +68,16 @@ class Ui_selectImage(object):
 "	background: rgb(90, 37, 255);\n"
 "	border-radius: 15px;\n"
 "}")
-        self.imagePathLabel = QLabel(selectImage)
-        self.imagePathLabel.setObjectName(u"imagePathLabel")
-        self.imagePathLabel.setGeometry(QRect(440, 290, 271, 51))
-        self.imagePathLabel.setStyleSheet(u"QLabel {\n"
+        self.imagePathLabelVerasonics = QLabel(selectImage)
+        self.imagePathLabelVerasonics.setObjectName(u"imagePathLabelVerasonics")
+        self.imagePathLabelVerasonics.setGeometry(QRect(440, 290, 271, 51))
+        self.imagePathLabelVerasonics.setStyleSheet(u"QLabel {\n"
 "	background-color: rgba(255, 255, 255, 0);\n"
 "	color: white;\n"
 "	font-size: 17px;\n"
 "}")
-        self.imagePathLabel.setAlignment(Qt.AlignCenter)
-        self.imagePathLabel.setTextInteractionFlags(Qt.NoTextInteraction)
+        self.imagePathLabelVerasonics.setAlignment(Qt.AlignCenter)
+        self.imagePathLabelVerasonics.setTextInteractionFlags(Qt.NoTextInteraction)
         self.chooseImageFileButton = QPushButton(selectImage)
         self.chooseImageFileButton.setObjectName(u"chooseImageFileButton")
         self.chooseImageFileButton.setGeometry(QRect(442, 390, 131, 41))
@@ -121,26 +121,6 @@ class Ui_selectImage(object):
 "	background-color: rgba(255, 255, 255, 0);\n"
 "}")
         self.selectImageErrorMsg.setAlignment(Qt.AlignCenter)
-        self.imagePathFolderLabel = QLabel(selectImage)
-        self.imagePathFolderLabel.setObjectName(u"imagePathFolderLabel")
-        self.imagePathFolderLabel.setGeometry(QRect(440, 290, 271, 51))
-        self.imagePathFolderLabel.setStyleSheet(u"QLabel {\n"
-"	background-color: rgba(255, 255, 255, 0);\n"
-"	color: white;\n"
-"	font-size: 17px;\n"
-"}")
-        self.imagePathFolderLabel.setAlignment(Qt.AlignCenter)
-        self.imagePathFolderLabel.setTextInteractionFlags(Qt.NoTextInteraction)
-        self.phantomPathFolderLabel = QLabel(selectImage)
-        self.phantomPathFolderLabel.setObjectName(u"phantomPathFolderLabel")
-        self.phantomPathFolderLabel.setGeometry(QRect(790, 290, 271, 51))
-        self.phantomPathFolderLabel.setStyleSheet(u"QLabel {\n"
-"	background-color: rgba(255, 255, 255, 0);\n"
-"	color: white;\n"
-"	font-size: 17px;\n"
-"}")
-        self.phantomPathFolderLabel.setAlignment(Qt.AlignCenter)
-        self.phantomPathFolderLabel.setTextInteractionFlags(Qt.NoTextInteraction)
         self.choosePhantomFolderButton = QPushButton(selectImage)
         self.choosePhantomFolderButton.setObjectName(u"choosePhantomFolderButton")
         self.choosePhantomFolderButton.setGeometry(QRect(790, 390, 131, 41))
@@ -171,10 +151,10 @@ class Ui_selectImage(object):
         self.selectImageMethodLabel.setScaledContents(False)
         self.selectImageMethodLabel.setAlignment(Qt.AlignCenter)
         self.selectImageMethodLabel.setWordWrap(True)
-        self.selectIndFilesButton = QPushButton(selectImage)
-        self.selectIndFilesButton.setObjectName(u"selectIndFilesButton")
-        self.selectIndFilesButton.setGeometry(QRect(590, 370, 301, 51))
-        self.selectIndFilesButton.setStyleSheet(u"QPushButton {\n"
+        self.canonButton = QPushButton(selectImage)
+        self.canonButton.setObjectName(u"canonButton")
+        self.canonButton.setGeometry(QRect(590, 340, 301, 51))
+        self.canonButton.setStyleSheet(u"QPushButton {\n"
 "	color: white;\n"
 "	font-size: 16px;\n"
 "	background: rgb(90, 37, 255);\n"
@@ -337,6 +317,35 @@ class Ui_selectImage(object):
 "	font-weight:bold;\n"
 "}")
         self.analysisParamsLabel.setAlignment(Qt.AlignCenter)
+        self.verasonicsButton = QPushButton(selectImage)
+        self.verasonicsButton.setObjectName(u"verasonicsButton")
+        self.verasonicsButton.setGeometry(QRect(590, 460, 301, 51))
+        self.verasonicsButton.setStyleSheet(u"QPushButton {\n"
+"	color: white;\n"
+"	font-size: 16px;\n"
+"	background: rgb(90, 37, 255);\n"
+"	border-radius: 15px;\n"
+"}")
+        self.imagePathLabelCanon = QLabel(selectImage)
+        self.imagePathLabelCanon.setObjectName(u"imagePathLabelCanon")
+        self.imagePathLabelCanon.setGeometry(QRect(440, 290, 271, 51))
+        self.imagePathLabelCanon.setStyleSheet(u"QLabel {\n"
+"	background-color: rgba(255, 255, 255, 0);\n"
+"	color: white;\n"
+"	font-size: 17px;\n"
+"}")
+        self.imagePathLabelCanon.setAlignment(Qt.AlignCenter)
+        self.imagePathLabelCanon.setTextInteractionFlags(Qt.NoTextInteraction)
+        self.phantomPathLabelCanon = QLabel(selectImage)
+        self.phantomPathLabelCanon.setObjectName(u"phantomPathLabelCanon")
+        self.phantomPathLabelCanon.setGeometry(QRect(790, 290, 271, 51))
+        self.phantomPathLabelCanon.setStyleSheet(u"QLabel {\n"
+"	background-color: rgba(255, 255, 255, 0);\n"
+"	color: white;\n"
+"	font-size: 17px;\n"
+"}")
+        self.phantomPathLabelCanon.setAlignment(Qt.AlignCenter)
+        self.phantomPathLabelCanon.setTextInteractionFlags(Qt.NoTextInteraction)
 
         self.retranslateUi(selectImage)
 
@@ -346,25 +355,23 @@ class Ui_selectImage(object):
     def retranslateUi(self, selectImage):
         selectImage.setWindowTitle(QCoreApplication.translate("selectImage", u"Select Ultrasound Image", None))
         self.selectDataLabel.setText(QCoreApplication.translate("selectImage", u"Select Data and Phantom Files to Generate Ultrasound Image:", None))
-        self.phantomPathLabel.setText(QCoreApplication.translate("selectImage", u"Input Path to Phantom file (.mat)", None))
+        self.phantomPathLabelVerasonics.setText(QCoreApplication.translate("selectImage", u"Input Path to Phantom file (.mat)", None))
         self.choosePhantomFileButton.setText(QCoreApplication.translate("selectImage", u"Choose File", None))
         self.clearPhantomPathButton.setText(QCoreApplication.translate("selectImage", u"Clear Path", None))
-        self.imagePathLabel.setText(QCoreApplication.translate("selectImage", u"Input Path to Image file (.mat)", None))
+        self.imagePathLabelVerasonics.setText(QCoreApplication.translate("selectImage", u"Input Path to Image file (.mat)", None))
         self.chooseImageFileButton.setText(QCoreApplication.translate("selectImage", u"Choose File", None))
         self.clearImagePathButton.setText(QCoreApplication.translate("selectImage", u"Clear Path", None))
         self.generateImageButton.setText(QCoreApplication.translate("selectImage", u"Generate Image", None))
         self.selectImageErrorMsg.setText(QCoreApplication.translate("selectImage", u"ERROR: At least one dimension of phantom data\n"
 "smaller than corresponding dimension\n"
 "of image data", None))
-        self.imagePathFolderLabel.setText(QCoreApplication.translate("selectImage", u"Input Path to Image Folder", None))
-        self.phantomPathFolderLabel.setText(QCoreApplication.translate("selectImage", u"Input Path to Phantom Folder", None))
         self.choosePhantomFolderButton.setText(QCoreApplication.translate("selectImage", u"Choose Folder", None))
         self.chooseImageFolderButton.setText(QCoreApplication.translate("selectImage", u"Choose Folder", None))
-        self.selectImageMethodLabel.setText(QCoreApplication.translate("selectImage", u"Select Method of Image Lookup:", None))
+        self.selectImageMethodLabel.setText(QCoreApplication.translate("selectImage", u"Select Transducer Brand:", None))
 #if QT_CONFIG(tooltip)
-        self.selectIndFilesButton.setToolTip(QCoreApplication.translate("selectImage", u"<html><head/><body><p><br/></p></body></html>", None))
+        self.canonButton.setToolTip(QCoreApplication.translate("selectImage", u"<html><head/><body><p><br/></p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
-        self.selectIndFilesButton.setText(QCoreApplication.translate("selectImage", u"Select Individual Files", None))
+        self.canonButton.setText(QCoreApplication.translate("selectImage", u"Canon", None))
 #if QT_CONFIG(tooltip)
         self.sidebar.setToolTip(QCoreApplication.translate("selectImage", u"<html><head/><body><p><br/></p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
@@ -378,5 +385,11 @@ class Ui_selectImage(object):
         self.exportResultsLabel.setText(QCoreApplication.translate("selectImage", u"Export Results", None))
         self.backButton.setText(QCoreApplication.translate("selectImage", u"Back", None))
         self.analysisParamsLabel.setText(QCoreApplication.translate("selectImage", u"Analysis Parameter Selection", None))
+#if QT_CONFIG(tooltip)
+        self.verasonicsButton.setToolTip(QCoreApplication.translate("selectImage", u"<html><head/><body><p><br/></p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.verasonicsButton.setText(QCoreApplication.translate("selectImage", u"Verasonics", None))
+        self.imagePathLabelCanon.setText(QCoreApplication.translate("selectImage", u"Input Path to Image file (.bin)", None))
+        self.phantomPathLabelCanon.setText(QCoreApplication.translate("selectImage", u"Input Path to Phantom file (.bin)", None))
     # retranslateUi
 

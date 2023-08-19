@@ -272,8 +272,8 @@ class RfAnalysisGUI(QWidget, Ui_rfAnalysis):
             self.roiWindowSplinesStruct, self.roiWindowSplinesStructPreSC = roiWindowsGenerator(self.splineX, self.splineY, self.imgDataStruct.scBmode.shape[0], self.imgDataStruct.scBmode.shape[1], self.axialWinSize, self.lateralWinSize, self.imgInfoStruct.axialRes, self.imgInfoStruct.lateralRes, self.axialOverlap, self.lateralOverlap, self.threshold, self.imgDataStruct.scRF.xmap, self.imgDataStruct.scRF.ymap)
             self.cleanStructs()
         else:
-            xScale = self.cvIm.width/self.imgDataStruct.bMode.shape[2] 
-            yScale = self.cvIm.height/self.imgDataStruct.bMode.shape[1]
+            xScale = self.cvIm.width/(self.imgDataStruct.bMode.shape[2])
+            yScale = self.cvIm.height/(self.imgDataStruct.bMode.shape[1])
             x = self.splineX/xScale
             y = self.splineY/yScale
             self.roiWindowSplinesStruct = roiWindowsGenerator(x, y, self.imgDataStruct.bMode.shape[1], self.imgDataStruct.bMode.shape[2], self.axialWinSize, self.lateralWinSize, self.imgInfoStruct.axialRes, self.imgInfoStruct.lateralRes, self.axialOverlap, self.lateralOverlap, self.threshold)

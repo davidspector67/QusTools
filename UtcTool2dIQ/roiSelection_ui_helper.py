@@ -1,4 +1,5 @@
-from Parsers.iqMatParser import getImage
+import Parsers.verasonicsMatParser as vera
+import Parsers.canonBinParser as canon
 from UtcTool2dIQ.roiSelection_ui import *
 from UtcTool2dIQ.editImageDisplay_ui_helper import *
 from UtcTool2dIQ.analysisParamsSelection_ui_helper import *
@@ -132,10 +133,7 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
         self.canvas.draw() # Refresh canvas
 
 
-    def openImage(self, imageFilePath, phantomFilePath): # Open initial image given data and phantom files previously inputted
-        # Assume inputted files are correct 
-        # TODO: implement this in image selection page
-        # For now, Canon .bin files are not supported
+    def openImageVerasonics(self, imageFilePath, phantomFilePath): # Open initial image given data and phantom files previously inputted
         tmpLocation = imageFilePath.split("/")
         dataFileName = tmpLocation[-1]
         dataFileLocation = imageFilePath[:len(imageFilePath)-len(dataFileName)]
@@ -143,36 +141,81 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
         phantFileName = tmpPhantLocation[-1]
         phantFileLocation = phantomFilePath[:len(phantomFilePath)-len(phantFileName)]
 
-        if dataFileName[-4:] == ".mat" and phantFileName[-4:] == ".mat": # Display Philips image and assign relevant default analysis params
-            imArray, self.imgDataStruct, self.imgInfoStruct, self.refDataStruct, self.refInfoStruct = getImage(dataFileName, dataFileLocation, phantFileName, phantFileLocation)
-            self.arHeight = imArray.shape[0]
-            self.arWidth = imArray.shape[1]
-            self.imData = np.array(imArray).reshape(self.arHeight, self.arWidth)
-            self.imData = np.flipud(self.imData) #flipud
-            self.imData = np.require(self.imData,np.uint8,'C')
-            self.bytesLine = self.imData.strides[0]
-            self.qIm = QImage(self.imData, self.arWidth, self.arHeight, self.bytesLine, QImage.Format_Grayscale8).scaled(721, 501)
+        imArray, self.imgDataStruct, self.imgInfoStruct, self.refDataStruct, self.refInfoStruct = vera.getImage(dataFileName, dataFileLocation, phantFileName, phantFileLocation)
+        self.arHeight = imArray.shape[0]
+        self.arWidth = imArray.shape[1]
+        self.imData = np.array(imArray).reshape(self.arHeight, self.arWidth)
+        self.imData = np.flipud(self.imData) #flipud
+        self.imData = np.require(self.imData,np.uint8,'C')
+        self.bytesLine = self.imData.strides[0]
+        self.qIm = QImage(self.imData, self.arWidth, self.arHeight, self.bytesLine, QImage.Format_Grayscale8).scaled(721, 501)
 
-            self.qIm.mirrored().save(os.path.join("Junk", "bModeImRaw.png")) # Save as .png file
+        self.qIm.mirrored().save(os.path.join("Junk", "bModeImRaw.png")) # Save as .png file
 
-            self.pixSizeAx = self.imgDataStruct.bMode.shape[0] #were both scBmode
-            self.pixSizeLat = self.imgDataStruct.bMode.shape[1]
+        self.pixSizeAx = self.imgDataStruct.bMode.shape[0] #were both scBmode
+        self.pixSizeLat = self.imgDataStruct.bMode.shape[1]
 
-            self.editImageDisplayGUI.contrastVal.setValue(1)
-            self.editImageDisplayGUI.brightnessVal.setValue(1)
-            self.editImageDisplayGUI.sharpnessVal.setValue(1)
+        self.editImageDisplayGUI.contrastVal.setValue(1)
+        self.editImageDisplayGUI.brightnessVal.setValue(1)
+        self.editImageDisplayGUI.sharpnessVal.setValue(1)
 
-            self.analysisParamsGUI.axWinSizeVal.setValue(10)#7#1#1480/20000000*10000 # must be at least 10 times wavelength
-            self.analysisParamsGUI.latWinSizeVal.setValue(10)#7#1#1480/20000000*10000 # must be at least 10 times wavelength
-            self.analysisParamsGUI.axOverlapVal.setValue(50)
-            self.analysisParamsGUI.latOverlapVal.setValue(50)
-            self.analysisParamsGUI.minFreqVal.setValue(3)
-            self.analysisParamsGUI.maxFreqVal.setValue(4.5)
-            self.analysisParamsGUI.clipFactorVal.setValue(95)
-            self.analysisParamsGUI.samplingFreqVal.setValue(20)
+        self.analysisParamsGUI.axWinSizeVal.setValue(10)#7#1#1480/20000000*10000 # must be at least 10 times wavelength
+        self.analysisParamsGUI.latWinSizeVal.setValue(10)#7#1#1480/20000000*10000 # must be at least 10 times wavelength
+        self.analysisParamsGUI.axOverlapVal.setValue(50)
+        self.analysisParamsGUI.latOverlapVal.setValue(50)
+        self.analysisParamsGUI.minFreqVal.setValue(3)
+        self.analysisParamsGUI.maxFreqVal.setValue(4.5)
+        self.analysisParamsGUI.clipFactorVal.setValue(95)
+        self.analysisParamsGUI.samplingFreqVal.setValue(20)
 
-        else:
-            return
+        # Implement correct previously assigned image display settings
+
+        self.cvIm = Image.open(os.path.join("Junk", "bModeImRaw.png"))
+        enhancer = ImageEnhance.Contrast(self.cvIm)
+
+        imOutput = enhancer.enhance(self.editImageDisplayGUI.contrastVal.value())
+        bright = ImageEnhance.Brightness(imOutput)
+        imOutput = bright.enhance(self.editImageDisplayGUI.brightnessVal.value())
+        sharp = ImageEnhance.Sharpness(imOutput)
+        imOutput = sharp.enhance(self.editImageDisplayGUI.sharpnessVal.value())
+        imOutput.save(os.path.join("Junk", "bModeIm.png"))
+
+        self.plotOnCanvas()
+
+    def openImageCanon(self, imageFilePath, phantomFilePath): # Open initial image given data and phantom files previously inputted
+        tmpLocation = imageFilePath.split("/")
+        dataFileName = tmpLocation[-1]
+        dataFileLocation = imageFilePath[:len(imageFilePath)-len(dataFileName)]
+        tmpPhantLocation = phantomFilePath.split("/")
+        phantFileName = tmpPhantLocation[-1]
+        phantFileLocation = phantomFilePath[:len(phantomFilePath)-len(phantFileName)]
+
+        imArray, self.imgDataStruct, self.imgInfoStruct, self.refDataStruct, self.refInfoStruct = canon.getImage(dataFileName, dataFileLocation, phantFileName, phantFileLocation)
+        self.arHeight = imArray.shape[0]
+        self.arWidth = imArray.shape[1]
+        self.imData = np.array(imArray).reshape(self.arHeight, self.arWidth)
+        self.imData = np.flipud(self.imData) #flipud
+        self.imData = np.require(self.imData,np.uint8,'C')
+        self.bytesLine = self.imData.strides[0]
+        self.qIm = QImage(self.imData, self.arWidth, self.arHeight, self.bytesLine, QImage.Format_Grayscale8).scaled(721, 501)
+
+        self.qIm.mirrored().save(os.path.join("Junk", "bModeImRaw.png")) # Save as .png file
+
+        self.pixSizeAx = self.imgDataStruct.bMode.shape[0] #were both scBmode
+        self.pixSizeLat = self.imgDataStruct.bMode.shape[1]
+
+        self.editImageDisplayGUI.contrastVal.setValue(1)
+        self.editImageDisplayGUI.brightnessVal.setValue(1)
+        self.editImageDisplayGUI.sharpnessVal.setValue(1)
+
+        self.analysisParamsGUI.axWinSizeVal.setValue(10)#7#1#1480/20000000*10000 # must be at least 10 times wavelength
+        self.analysisParamsGUI.latWinSizeVal.setValue(10)#7#1#1480/20000000*10000 # must be at least 10 times wavelength
+        self.analysisParamsGUI.axOverlapVal.setValue(50)
+        self.analysisParamsGUI.latOverlapVal.setValue(50)
+        self.analysisParamsGUI.minFreqVal.setValue(1.8)
+        self.analysisParamsGUI.maxFreqVal.setValue(6.2)
+        self.analysisParamsGUI.clipFactorVal.setValue(95)
+        self.analysisParamsGUI.samplingFreqVal.setValue(20)
 
         # Implement correct previously assigned image display settings
 
