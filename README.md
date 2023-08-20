@@ -16,7 +16,7 @@ cd QusTools
 pip install virtualenv
 python -m venv venv
 source venv/bin/activate
-pip install -r pyPackages.txt
+pip install -r requirements.txt
 deactivate
 cd Parsers
 gcc -c -Wall -Wpedantic philips_rf_parser.c
@@ -32,7 +32,7 @@ cd QusTools
 pip install virtualenv
 python -m venv venv
 call \venv\scripts\activate.bat
-pip install -r pyPackages.txt
+pip install -r requirements.txt
 deactivate
 ```
 
