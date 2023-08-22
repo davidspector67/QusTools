@@ -1,7 +1,7 @@
 import struct
 import numpy as np
 from Utils.parserTools import scanConvert, iqToRf
-from scipy.signal import hilbert
+# from scipy.signal import hilbert
 
 
 def readIQ(filename):
@@ -26,7 +26,7 @@ def readIQ(filename):
     rbfDecimationFactor = hdr[1]
     rbfBeMixerFrequency = hdr[2]
     propagationVelCmPerSec = hdr[3]
-    digitizingRateHz = hdr[4]
+    digitizingRateHz = hdr[4] 
 
     # read IQ data
     file_obj.seek(0)
@@ -58,7 +58,7 @@ def readIQ(filename):
     iq = dataA[np.arange(0, numSamplesDrOut*2, 2)] + 1j*dataA[np.arange(1,numSamplesDrOut*2,2)]
     bmode = 20*np.log10(abs(iq))
 
-    return bmode, iq
+    return bmode, iq, digitizingRateHz
 
 class FileStruct():
     def __init__(self, filedirectory, filename):
@@ -74,6 +74,18 @@ class DataOutputStruct():
 
 class InfoStruct():
     def __init__(self):
+        # US System Configuration
+        # US system: Canon Aplio i800 (V4.6SP0008)
+        # Transducer: PVI-475BX (i8CX1)
+        self.minFrequency = 1800000 #Hz
+        self.maxFrequency = 6200000 #Hz
+        self.lowBandFreq = 1000000 #Hz
+        self.upBandFreq = 6000000 #Hz
+        # Preset 1
+        self.depth = 150 #mm
+        # Preset 2
+        # self.depth = 200
+
         self.studyMode = None
         self.filename = None
         self.filepath = None
@@ -81,49 +93,18 @@ class InfoStruct():
         self.system = None
         self.studyID = None
         self.studyEXT = None
-        self.samples = None
-        self.lines = None
-        self.depthOffset = None
-        self.depth = None
         self.width = None
         self.rxFrequency = None
         self.samplingFrequency = None
-        self.txFrequency = None
-        self.centerFrequency = None
-        self.targetFOV = None
-        self.numFocalZones = None
-        self.numFrames = None
-        self.frameSize = None
-        self.depthAxis = None
-        self.widthAxis = None
-        self.lineDensity = None
-        self.height = None
-        self.pitch = None
-        self.dynRange = None
-        self.yOffset = None
-        self.xOffset = None
-        self.lowBandFreq = None
-        self.upBandFreq = None
-        self.gain = None
-        self.rxGain = None
-        self.userGain = None
-        self.txPower = None
-        self.power = None
-        self.PRF = None
-        self.width = None
         self.lateralRes = None
         self.axialRes = None
         self.maxval = None
 
-        # Philips Specific - may repeat and need clean up
+        # Scan Conversion Params
         self.tilt1 = None
         self.width1 = None
         self.startDepth1 = None
         self.endDepth1 = None
-        self.endHeight = None
-        self.clip_fact = None
-        self.dyn_range = None
-        self.numSonoCTAngles = None
 
         # One if preSC, the other is postSC resolutions
         self.yResRF = None 
@@ -167,66 +148,36 @@ def readFileInfo(filename, filepath):
     Info.system = "EPIQ7"
     Info.studyID = studyID
     Info.studyEXT = studyEXT
-    # Info.samples = input["pt"][0][0]
-    # Info.lines = np.array(input["rf_data_all_fund"]).shape[0]
-    Info.depthOffset = 0.04 # probeStruct.transmitoffset
-    Info.depth = 0.16 #?
-    Info.width = 70 #?
-    Info.rxFrequency = 20000000
-    Info.samplingFrequency = 20000000
-    Info.txFrequency = 3200000
-    Info.centerFrequency = 3200000
-    Info.targetFOV = 0
-    Info.numFocalZones = 1
-    # Info.numFrames = input["NumFrame"][0][0]
-    Info.frameSize = np.nan
-    Info.depthAxis = np.nan
-    Info.widthAxis = np.nan
-    # Info.lineDensity = input["multilinefactor"][0][0]
-    Info.height = 500
-    Info.pitch = 0
-    Info.dynRange = 55
-    Info.yOffset = 0
-    Info.xOffset = 0
-    Info.lowBandFreq = 1000000
-    Info.upBandFreq = 6000000
-    Info.gain = 0
-    Info.rxGain = 0
-    Info.userGain = 0
-    Info.txPower = 0
-    Info.power = 0
-    Info.PRF = 0
+    Info.rxFrequency = None #20000000
+    Info.samplingFrequency = None #20000000
 
-    # Philips Specific
+    # Scan Convert Settings
     Info.tilt1 = 0
-    Info.width1 = 70
-    Info.startDepth1 = 0.04
-    Info.endDepth1 = 0.16
-    Info.endHeight = 500
-    Info.clip_fact = 0.95
-    # Info.numSonoCTAngles = input["NumSonoCTAngles"][0][0]
-    
-    Info.yResRF = 1
-    Info.xResRF = 1
-    Info.yRes = 1
-    Info.xRes = 1
-    Info.quad2x = 1
+    Info.width1 = 70 #degrees
 
     return Info
 
 def readFileImg(Info, filePath):
-    bmode, iqData = readIQ(filePath)
+    bmode, iqData, Info.rxFrequency = readIQ(filePath)
+    Info.samplingFrequency = Info.rxFrequency
     rfData = iqToRf(iqData, Info.rxFrequency)
     ModeIM = rfData
 
-    [scBmode, hCm1, wCm1, _] = scanConvert(bmode, Info.width1, Info.tilt1, Info.startDepth1, Info.endDepth1, Info.endHeight)
-    # TODO: Left off here (line 23, philips_read_PhilipsImg.m). Was not able to check final outim, inIm_ind(x/y). If something's off, look here
-    [_, hCm1, wCm1, scModeIM] = scanConvert(ModeIM, Info.width1, Info.tilt1, Info.startDepth1, Info.endDepth1, Info.endHeight)
+    Info.endDepth1 = Info.depth/1000 #m
+    Info.startDepth1 = Info.endDepth1/4 #m
 
-    Info.height = hCm1
-    Info.width = wCm1
-    Info.lateralRes = wCm1*10/scBmode.shape[1]
-    Info.axialRes = hCm1*10/scBmode.shape[0]
+    [scBmode, hCm1, wCm1, _] = scanConvert(bmode, Info.width1, Info.tilt1, Info.startDepth1, Info.endDepth1)
+    # TODO: Left off here (line 23, philips_read_PhilipsImg.m). Was not able to check final outim, inIm_ind(x/y). If something's off, look here
+    [_, hCm1, wCm1, scModeIM] = scanConvert(ModeIM, Info.width1, Info.tilt1, Info.startDepth1, Info.endDepth1)
+
+    # import matplotlib.pyplot as plt
+    # plt.imshow(scBmode, cmap="Greys_r")
+    # plt.show()
+
+    Info.depth = hCm1*10 #mm
+    Info.width = wCm1*10 #mm
+    Info.lateralRes = Info.width/scBmode.shape[1]
+    Info.axialRes = Info.depth/scBmode.shape[0]
     Info.maxval = np.amax(scBmode)
 
     Data = DataOutputStruct()
@@ -239,15 +190,15 @@ def readFileImg(Info, filePath):
     # Data.scBmode = bmode
     # Info.maxval = np.amax(bmode)
 
-    Info.height = 126.8344
-    Info.width = Info.height*bmode.shape[0]/bmode.shape[1]
-    Info.lateralRes = Info.width/bmode.shape[0]
-    Info.axialRes = Info.height/bmode.shape[1]
+    # Info.height = 126.8344
+    # Info.width = Info.height*bmode.shape[0]/bmode.shape[1]
+    # Info.lateralRes = Info.width/bmode.shape[0]
+    # Info.axialRes = Info.height/bmode.shape[1]
 
     return Data, Info
 
 
 if __name__ == "__main__":
-    readIQ("/Users/davidspector/Home/Stanford/Project_Data/Misc Data/20220110145409_IQ.bin")
+    getImage("20220112112155_IQ.bin","/Users/davidspector/Home/Stanford/Project_Data/Misc Data/","20220112112155_IQ.bin","/Users/davidspector/Home/Stanford/Project_Data/Misc Data/")
 
 

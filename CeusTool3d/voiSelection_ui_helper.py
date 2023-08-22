@@ -166,10 +166,9 @@ class VoiSelectionGUI(Ui_constructVoi, QWidget):
         self.pointsPlotted = [*set(self.pointsPlotted)]
         print("Voxel volume:", self.voxelScale)
         self.voxelScale *= len(self.pointsPlotted)
-        self.voxelScale = 1
         print("Num voxels:", len(self.pointsPlotted))
         simplifiedMask = self.maskCoverImg[:,:,:,2]
-        TIC = ut.generate_TIC(self.OGData4dImg, simplifiedMask, times, 24.09,  self.voxelScale)
+        TIC = ut.generate_TIC(self.OGData4dImg, simplifiedMask, times, 24.09,  self.voxelScale) # hard-coded for now
 
         # Bunch of checks
         if np.isnan(np.sum(TIC[:,1])):
@@ -741,6 +740,8 @@ class VoiSelectionGUI(Ui_constructVoi, QWidget):
             if len(self.planesDrawn):
                 if len(self.planesDrawn) >= 3:
                     points = calculateSpline3D(list(chain.from_iterable(self.pointsPlotted)))
+                elif len(self.planesDrawn) == 2:
+                    return
                 else:
                     points = set()
                     for group in np.array(self.pointsPlotted):

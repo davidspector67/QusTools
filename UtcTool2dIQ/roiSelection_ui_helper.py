@@ -163,10 +163,10 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
         self.analysisParamsGUI.latWinSizeVal.setValue(10)#7#1#1480/20000000*10000 # must be at least 10 times wavelength
         self.analysisParamsGUI.axOverlapVal.setValue(50)
         self.analysisParamsGUI.latOverlapVal.setValue(50)
-        self.analysisParamsGUI.minFreqVal.setValue(3)
-        self.analysisParamsGUI.maxFreqVal.setValue(4.5)
-        self.analysisParamsGUI.clipFactorVal.setValue(95)
-        self.analysisParamsGUI.samplingFreqVal.setValue(20)
+        # self.analysisParamsGUI.minFreqVal.setValue(3)
+        # self.analysisParamsGUI.maxFreqVal.setValue(4.5)
+        # self.analysisParamsGUI.clipFactorVal.setValue(95)
+        # self.analysisParamsGUI.samplingFreqVal.setValue(20)
 
         # Implement correct previously assigned image display settings
 
@@ -208,14 +208,13 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
         self.editImageDisplayGUI.brightnessVal.setValue(1)
         self.editImageDisplayGUI.sharpnessVal.setValue(1)
 
-        self.analysisParamsGUI.axWinSizeVal.setValue(10)#7#1#1480/20000000*10000 # must be at least 10 times wavelength
-        self.analysisParamsGUI.latWinSizeVal.setValue(10)#7#1#1480/20000000*10000 # must be at least 10 times wavelength
+        self.analysisParamsGUI.axWinSizeVal.setValue(self.imgInfoStruct.depth/100)#7#1#1480/20000000*10000 # must be at least 10 times wavelength
+        self.analysisParamsGUI.latWinSizeVal.setValue(self.imgInfoStruct.width/100)#7#1#1480/20000000*10000 # must be at least 10 times wavelength
         self.analysisParamsGUI.axOverlapVal.setValue(50)
         self.analysisParamsGUI.latOverlapVal.setValue(50)
-        self.analysisParamsGUI.minFreqVal.setValue(1.8)
-        self.analysisParamsGUI.maxFreqVal.setValue(6.2)
-        self.analysisParamsGUI.clipFactorVal.setValue(95)
-        self.analysisParamsGUI.samplingFreqVal.setValue(20)
+        self.analysisParamsGUI.windowThresholdVal.setValue(95)
+        self.analysisParamsGUI.imageDepthVal.setText(str(np.round(self.imgInfoStruct.depth, decimals=1)))
+        self.analysisParamsGUI.imageWidthVal.setText(str(np.round(self.imgInfoStruct.width, decimals=1)))
 
         # Implement correct previously assigned image display settings
 

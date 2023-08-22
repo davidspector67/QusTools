@@ -161,7 +161,6 @@ class RfAnalysisGUI(QWidget, Ui_rfAnalysis):
         self.phantomPathInput.setText(phantomName)
         global rfd
         rfd = (self.imagePathInput.text()[-4:] == '.rfd')
-        rfd = True
 
     def cleanStructs(self): # Discard windows outside of scan-converted ultrasound image
         splineList = [self.roiWindowSplinesStruct.top, self.roiWindowSplinesStruct.bottom, self.roiWindowSplinesStruct.left, self.roiWindowSplinesStruct.right]
@@ -283,6 +282,9 @@ class RfAnalysisGUI(QWidget, Ui_rfAnalysis):
         # self.ax.plot(self.splineX, self.splineY, color = "cyan", linewidth=0.75) # re-plot drawn ROI
 
     def displayROIWindows(self):
+        self.minFrequency = self.imgInfoStruct.minFrequency #Hz
+        self.maxFrequency = self.imgInfoStruct.maxFrequency #Hz
+        self.samplingFreq = self.imgInfoStruct.samplingFrequency #Hz
         self.computeROIWindows()
         if len(self.roiWindowSplinesStruct.left) > 0:
             global roisLeft, roisRight, roisTop, roisBottom

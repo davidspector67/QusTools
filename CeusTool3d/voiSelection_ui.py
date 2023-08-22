@@ -556,7 +556,7 @@ class Ui_constructVoi(object):
         self.voiVolumeLabel.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
         self.voiVolumeVal = QLabel(constructVoi)
         self.voiVolumeVal.setObjectName(u"voiVolumeVal")
-        self.voiVolumeVal.setGeometry(QRect(790, 700, 51, 51))
+        self.voiVolumeVal.setGeometry(QRect(790, 700, 181, 51))
         self.voiVolumeVal.setFont(font1)
         self.voiVolumeVal.setStyleSheet(u"QLabel {\n"
 "	color: white;\n"

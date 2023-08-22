@@ -1,4 +1,4 @@
-# from mat73 import loadmat
+from mat73 import loadmat as loadmat73
 from scipy.io import loadmat
 from scipy.signal import hilbert
 import numpy as np
@@ -111,11 +111,17 @@ def getImage(filename, filedirectory, refname, refdirectory):
 
 
 def getData(Files, RefFiles, AnalysisParams):
-    input = loadmat(str(Files.directory + Files.name))
+    try:
+        input = loadmat(str(Files.directory + Files.name))
+    except:
+        input = loadmat73(str(Files.directory + Files.name))
     ImgInfo = readFileInfo(Files.name, Files.directory, input)
     [ImgData, ImgInfo] = readFileImg(ImgInfo, input)
 
-    input = loadmat(str(RefFiles.directory + RefFiles.name))
+    try:
+        input = loadmat(str(RefFiles.directory + RefFiles.name))
+    except:
+        input = loadmat73(str(RefFiles.directory + RefFiles.name))
     RefInfo = readFileInfo(RefFiles.name, RefFiles.directory, input)
     [RefData, RefInfo] = readFileImg(RefInfo, input)
 
@@ -188,7 +194,7 @@ def readFileImg(Info, input):
 
     # Do Hilbert Transform on each column
     for i in range(iqData.shape[1]):
-        bmode[:,i] = 20*np.log10(abs(hilbert(rfData[:,i])))
+        bmode[:,i] = 20*np.log10(abs(iqData[:,i]))
 
     bmode = np.clip(bmode, (0.95*np.amax(bmode)-55), 0.95*np.amax(bmode)).astype(np.float)
     # bmode -= np.amin(bmode)

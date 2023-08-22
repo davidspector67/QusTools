@@ -21,10 +21,12 @@ def paramap(img, xmask, ymask, zmask, res, time, tf, compressfactor, windSize_x,
     global windSize, voxelscale, compression, imgshape, timeconst, times, xlist, ylist, zlist, windows, typefit;
     windSize = (windSize_x, windSize_y, windSize_z);
     voxelscale = res[0]*res[1]*res[2];
-    compression = compressfactor; # 24.9
+    compression = compressfactor; 
     imgshape = img.shape;
     typefit = tf;
     #img = img - np.mean(img[:,0:4,:,:,:,:],axis=1);img[img < 1]=0;
+
+    # Make expected calculation time
 
     #1b. Creat time point and position lists
     timeconst = time;#time/(img.shape[1]+1);
@@ -35,6 +37,7 @@ def paramap(img, xmask, ymask, zmask, res, time, tf, compressfactor, windSize_x,
     ylist = np.arange(min(ymask), max(ymask)+windSize[1], windSize[1])
     zlist = np.arange(min(zmask), max(zmask)+windSize[2], windSize[2])
     final_map = np.empty([img.shape[0], img.shape[1], img.shape[2]], dtype=list)
+    first_loop = True
     for x_base in range(len(xlist)):
         for y_base in range(len(ylist)):
             for z_base in range(len(zlist)):
@@ -52,16 +55,13 @@ def paramap(img, xmask, ymask, zmask, res, time, tf, compressfactor, windSize_x,
                         cur_index.pop()
                     cur_index.pop()
                 sig_indices = False
-                numVoxels = 0
                 for i in indices:
                     if max(img[i[0],i[1],i[2]]) != 0:
                         cur_mask[i[0],i[1],i[2]] = 1
                         sig_indices = True
-                        numVoxels += 1
-                temp_voxelScale = voxelscale * numVoxels
                 if not sig_indices:
                     continue
-                cur_TIC = generate_TIC(img, cur_mask, times, compression,  temp_voxelScale)
+                cur_TIC = generate_TIC(img, cur_mask, times, 24.9,  voxelscale)
                 normalizer = np.max(cur_TIC[:,1]);
                 cur_TIC[:,1] = cur_TIC[:,1]/normalizer;
 
@@ -84,7 +84,16 @@ def paramap(img, xmask, ymask, zmask, res, time, tf, compressfactor, windSize_x,
                 for i in indices:
                     final_map[i[0], i[1],i[2]] = [popt[0], params[0], params[2], params[3]]
 
-    print('Paraloop ended:')
+                # if first_loop:
+                #     # first_loop_end_time = datetime.now()
+                #     # print("Estimated time till completion:")
+                #     # estimate = (first_loop_end_time.second-start_time.second)
+                #     # estimate = estimate*len(xlist)*len(ylist)*len(zlist)
+                #     # minutes = estimate/60
+                #     # print(str(str(int(minutes))+" minutes, " + str(estimate-(int(minutes)*60))+" seconds"))
+                #     first_loop = False
+
+    print('Paraloop ended:')#;print(str(datetime.now()));
     return final_map;
 
 def generate_TIC(window, mask, times, compression, voxelscale):
@@ -93,7 +102,7 @@ def generate_TIC(window, mask, times, compression, voxelscale):
     for t in range(0,window.shape[3]):
         tmpwin = window[:,:,:,t];      
         TIC.append(np.exp(tmpwin[bool_mask]/compression).mean()*voxelscale);
-        # TIC.append(np.around((tmpwin[bool_mask]/compression).mean()voxelscale, decimals=1)); 
+        # TIC.append(np.around((tmpwin[bool_mask]/compression).mean()*voxelscale, decimals=1)); 
     TICz = np.array([TICtime,TIC]).astype('float64'); TICz = TICz.transpose();
     TICz[:,1]=TICz[:,1]-np.mean(TICz[0:2,1]);#Substract noise in TIC before contrast.
     if TICz[np.nan_to_num(TICz)<0].any():#make the smallest number in the TIC 0.
@@ -113,7 +122,7 @@ def data_fit(TIC,model,normalizer, timeconst):
         auc = popt[0]; rauc=normalizer*popt[0]; mu=popt[1]; sigma=popt[2]; t0=popt[3]; mtt=timeconst*np.exp(mu+sigma*sigma/2);
         tp = timeconst*exp(mu-sigma*sigma); wholecurve = bolus_lognormal(TIC[0], popt[0], popt[1], popt[2], popt[3]); pe = normalizer*np.max(wholecurve);
         rt0 = timeconst*t0;# + tp;
-        
+
         # Filters to block any absurb numbers based on really bad fits. 
         if tp > 220: tp = 220; #pe = 0.1; rauc = 0.1; rt0 = 0.1; mtt = 0.1;
         if rt0 > 160: rt0 = 160; #pe = 0.1; rauc = 0.1; tp = 0.1; mtt = 0.1;
@@ -178,12 +187,12 @@ def read_xmlraw_image_func(filename):
               P=int(regionLocationMaxz1.text)+1
           except:
               continue
-          
+
         if root[i].tag=='AcquisitionDateTime':
           tval=root[i].text;
           dateStr=tval[0:4]+'-'+tval[4:6]+'-'+tval[6:8]+' '+tval[8:10]+':'+tval[10:12]+':'+tval[12:len(tval)];
           time=float(tval[12:len(tval)])+float(tval[10:12])*60+float(tval[8:10])*3600;
-    
+
     x = np.fromfile(fff,dtype=np.uint8)
 
     try:
@@ -201,7 +210,7 @@ def read3D(data, newres, cut):#=[[-1,-1,5,5],[-1,-1,25,5],[-1,-1,5,5]]):
     # cut=[[10,15,5,5],[50,5,20,4],[15,15,5,5]] #Size reduce with user selected caps
     # cut=[[-1,-1,5,5],[-1,-1,5,5],[-1,-1,5,5]] #Automatic size reduce
     # cut=[[0,0,5,5],[0,0,20,4],[0,0,5,5]] # Keep original size      
- 
+
     N_lines_z_axis_cut=cut[0][0:2] #10,10   
     N_lines_z_axis_cut_limit=cut[0][2:4]#5,5
     N_lines_y_axis_cut=cut[1][0:2]#50,5  
@@ -220,7 +229,7 @@ def read3D(data, newres, cut):#=[[-1,-1,5,5],[-1,-1,25,5],[-1,-1,5,5]]):
         print("No XML files found in folder")
         return
 
-        
+
     imarray = []#np.zeros((len(xmlnamedir),shapes[2],shapes[1],shapes[0]),dtype='uint8')
     timeinitial = -1000; ix=-1;
     imi_mid, res, timelast, shapes, dateStr = read_xmlraw_image_func(xmlnamedir[np.uint16(len(xmlnamedir)/2)]); 
@@ -228,10 +237,9 @@ def read3D(data, newres, cut):#=[[-1,-1,5,5],[-1,-1,25,5],[-1,-1,5,5]]):
     imi_mid, res, timelast, shapes, dateStr = read_xmlraw_image_func(xmlnamedir[1]);
 
     finalRes = res
-    
+
     finalImi = []
-    shapesFound = []
-    imArrays = []
+    prevX = -1
     for xmlname in xmlnamedir:
         #imarray[0,xmlnamedir.index(xmlname),0,:,:,:], res, timelast, shapes, dateStr = read_xmlraw_image_func(xmlname)
         imi, res, timelast, shapes, dateStr = read_xmlraw_image_func(xmlname); 
@@ -280,32 +288,26 @@ def read3D(data, newres, cut):#=[[-1,-1,5,5],[-1,-1,25,5],[-1,-1,5,5]]):
 
         if np.sum(cut) == 0:
             print('Orginal image volume size - no change',imi.shape);
-        
+
         else:
             # reduce matrix size      
             imi=imi[N_lines_z_axis_cut[0]:sz[0]-N_lines_z_axis_cut[1],N_lines_y_axis_cut[0]:sz[1]- N_lines_y_axis_cut[1],N_lines_x_axis_cut[0]:sz[2]-N_lines_x_axis_cut[1]]
 
-        if not (tuple(imi.shape) in shapesFound):
-            shapesFound.append(tuple(imi.shape))
-            imArrays.append([imi])
-        else:
-            shape_index = -1
-            for i in range(len(shapesFound)):
-                if shapesFound[i] == tuple(imi.shape):
-                    shape_index = i
-            imArrays[shape_index].append(imi)
-
+        if prevX != -1 and prevX != imi.shape[0]:
+            print(imi.shape)
+            continue
+        prevX = imi.shape[0]
+        imarray.append(imi)
         finalImi = imi
-        
-    for array in imArrays:
-        if len(array[0].shape) != 3:
-            print("Inputted image uses 2d data. Cannot parse into 3d data")
-            exit(1)
+
+    if not len(finalImi) or not finalImi.shape[0] or not finalImi.shape[1] or not finalImi.shape[2]:
+        print("Inputted image uses 2d data. Cannot parse into 3d data")
+        exit(1)
 
     time = timelast - timeinitial; #total time of cine in seconds.
     if newres!=0:
         print('voxel size is changed from ', res, 'to voxel size of ', newres)
-    
+
     print('Reduced image volume size',np.array(finalImi).shape)
 
     sh1_og=np.shape(imi_mid);sh1_og=(sh1_og[0]*sh1_og[1]*sh1_og[2])/(1024**2)

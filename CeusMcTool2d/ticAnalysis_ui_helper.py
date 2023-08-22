@@ -204,11 +204,10 @@ class TicAnalysisGUI(Ui_ticEditor, QWidget):
         ticArray = self.ticArray[:,:,self.t0Index:,:]
         ticParamap = mc.generateParamap(ticArray)
         aucParamap = convertArToCmap('viridis', ticParamap[:,:,0])
-        aucCmap = plt.get_cmap('viridis')
-        peCmap = plt.get_cmap('plasma')
-        mttCmap = plt.get_cmap('autumn')
-        tpCmap = plt.get_cmap('winter')
-        tmppvCmap = plt.get_cmap('autumn')
+        peParamap = convertArToCmap('plasma', ticParamap[:,:,1])
+        mttParamap = convertArToCmap('autumn', ticParamap[:,:,2])
+        tpParamap = convertArToCmap('winter', ticParamap[:,:,3])
+        tmppvParamap = convertArToCmap('autumn', ticParamap[:,:,4])
         del self.ceusAnalysisGui
         self.ceusAnalysisGui = CeusAnalysisGUI()
         self.ceusAnalysisGui.show()
@@ -225,6 +224,11 @@ class TicAnalysisGUI(Ui_ticEditor, QWidget):
         self.ceusAnalysisGui.mttVal.setText(str(np.around(avMtt, decimals=2)))
         self.ceusAnalysisGui.tmppvVal.setText(str(np.around(avTmppv, decimals=1)))
         self.ceusAnalysisGui.voiVolumeVal.setText(str(np.around(self.pixelScale*(ticParamap.shape[0]+ticParamap.shape[1]), decimals=1)))
+        self.ceusAnalysisGui.aucParamap = aucParamap
+        self.ceusAnalysisGui.peParamap = peParamap
+        self.ceusAnalysisGui.tpParamap = tpParamap
+        self.ceusAnalysisGui.mttParamap = mttParamap
+        self.ceusAnalysisGui.tmppvParamap = tmppvParamap
         self.ceusAnalysisGui.auc = avAuc
         self.ceusAnalysisGui.pe = avPe
         self.ceusAnalysisGui.tp = avTp

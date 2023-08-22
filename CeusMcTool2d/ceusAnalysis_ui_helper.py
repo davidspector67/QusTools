@@ -35,7 +35,11 @@ class CeusAnalysisGUI(Ui_ceusAnalysis, QWidget):
         self.tmppv = None
         self.roiArea = None
         self.newData = None
-        self.ticParamap = None
+        self.aucParamap = None
+        self.peParamap = None
+        self.tpParamap = None
+        self.mttParamap = None
+        self.tmppvParamap = None
 
         self.bmodeCoverPixmap = QPixmap(381, 351)
         self.bmodeCoverPixmap.fill(Qt.transparent)

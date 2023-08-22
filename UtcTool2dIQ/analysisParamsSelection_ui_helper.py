@@ -57,10 +57,7 @@ class AnalysisParamsGUI(Ui_analysisParams, QWidget):
         self.rfAnalysisGUI.lateralWinSize = self.latWinSizeVal.value()
         self.rfAnalysisGUI.axialOverlap = self.axOverlapVal.value()/100
         self.rfAnalysisGUI.lateralOverlap = self.latOverlapVal.value()/100
-        self.rfAnalysisGUI.threshold = self.clipFactorVal.value()
-        self.rfAnalysisGUI.minFrequency = self.minFreqVal.value()*1000000 # MHz -> Hz
-        self.rfAnalysisGUI.maxFrequency = self.maxFreqVal.value()*1000000 # MHz -> Hz
-        self.rfAnalysisGUI.samplingFreq = self.samplingFreqVal.value()*1000000 # MHz -> Hz
+        self.rfAnalysisGUI.threshold = self.windowThresholdVal.value()
         self.rfAnalysisGUI.editImageDisplayGUI.contrastVal.setValue(self.lastGui.editImageDisplayGUI.contrastVal.value())
         self.rfAnalysisGUI.editImageDisplayGUI.brightnessVal.setValue(self.lastGui.editImageDisplayGUI.brightnessVal.value())
         self.rfAnalysisGUI.editImageDisplayGUI.sharpnessVal.setValue(self.lastGui.editImageDisplayGUI.sharpnessVal.value())
