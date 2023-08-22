@@ -390,16 +390,6 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
             savedIm.mirrored().save(os.path.join("Junk", "bModeImRaw.png"))
             savedIm.mirrored().save(os.path.join("Junk", "bModeIm.png"))
             self.analysisParamsGUI = AnalysisParamsGUI()
-            self.analysisParamsGUI.axWinSizeVal.setValue(self.axWinSizeVal)
-            self.analysisParamsGUI.latWinSizeVal.setValue(self.latWinSizeVal)
-            self.analysisParamsGUI.axOverlapVal.setValue(self.axOverlapVal)
-            self.analysisParamsGUI.latOverlapVal.setValue(self.latOverlapVal)
-            self.analysisParamsGUI.minFreqVal.setValue(self.minFreqVal)
-            self.analysisParamsGUI.maxFreqVal.setValue(self.maxFreqVal)
-            # self.analysisParamsGUI.startDepthVal.setValue(self.startDepthVal)
-            # self.analysisParamsGUI.endDepthVal.setValue(self.endDepthVal)
-            self.analysisParamsGUI.clipFactorVal.setValue(self.clipFactorVal)
-            self.analysisParamsGUI.samplingFreqVal.setValue(self.samplingFreqVal)
             self.analysisParamsGUI.finalSplineX = self.ySpline
             self.analysisParamsGUI.finalSplineY = self.xSpline
             self.analysisParamsGUI.curPointsPlottedX = self.curPointsPlottedX
@@ -407,6 +397,13 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
             self.analysisParamsGUI.frame = self.frame
             self.analysisParamsGUI.imArray = self.imArray
             self.analysisParamsGUI.dataFrame = self.dataFrame
+            self.analysisParamsGUI.imageDepthVal.setText(str(np.round(self.imgInfoStruct.depth, decimals=1)))
+            self.analysisParamsGUI.imageWidthVal.setText(str(np.round(self.imgInfoStruct.width, decimals=1)))
+            self.analysisParamsGUI.axWinSizeVal.setValue(self.imgInfoStruct.depth/100)
+            self.analysisParamsGUI.latWinSizeVal.setValue(self.imgInfoStruct.width/100)
+            self.analysisParamsGUI.axOverlapVal.setValue(self.axOverlapVal)
+            self.analysisParamsGUI.latOverlapVal.setValue(self.latOverlapVal)
+            self.analysisParamsGUI.windowThresholdVal.setValue(95)
             self.analysisParamsGUI.setFilenameDisplays(self.imagePathInput.text().split('/')[-1], self.phantomPathInput.text().split('/')[-1])
             self.analysisParamsGUI.show()
             self.analysisParamsGUI.lastGui = self

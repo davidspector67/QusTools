@@ -58,10 +58,10 @@ class AnalysisParamsGUI(Ui_analysisParams, QWidget):
         self.rfAnalysisGUI.lateralWinSize = self.latWinSizeVal.value()
         self.rfAnalysisGUI.axialOverlap = self.axOverlapVal.value()/100
         self.rfAnalysisGUI.lateralOverlap = self.latOverlapVal.value()/100
-        self.rfAnalysisGUI.threshold = self.clipFactorVal.value()
-        self.rfAnalysisGUI.minFrequency = self.minFreqVal.value()*1000000 # MHz -> Hz
-        self.rfAnalysisGUI.maxFrequency = self.maxFreqVal.value()*1000000 # MHz -> Hz
-        self.rfAnalysisGUI.samplingFreq = self.samplingFreqVal.value()*1000000 # MHz -> Hz
+        self.rfAnalysisGUI.windowThreshold = self.windowThresholdVal.value()
+        self.rfAnalysisGUI.minFrequency = self.lastGui.imgInfoStruct.minFrequency #Hz
+        self.rfAnalysisGUI.maxFrequency = self.lastGui.imgInfoStruct.maxFrequency #Hz
+        self.rfAnalysisGUI.samplingFreq = self.lastGui.imgInfoStruct.samplingFrequency # Hz
         self.rfAnalysisGUI.setFilenameDisplays(self.imagePathInput.text().split('/')[-1], self.phantomPathInput.text().split('/')[-1])
         self.rfAnalysisGUI.displayROIWindows()
         self.rfAnalysisGUI.show()

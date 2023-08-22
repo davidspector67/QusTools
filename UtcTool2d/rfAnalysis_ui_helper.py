@@ -59,7 +59,7 @@ class RfAnalysisGUI(QWidget, Ui_rfAnalysis):
         self.lateralWinSize = None
         self.axialOverlap = None
         self.lateralOverlap = None
-        self.threshold = None
+        self.windowThreshold = None
         self.minFrequency = None
         self.maxFrequency = None
         self.samplingFreq = None
@@ -269,14 +269,14 @@ class RfAnalysisGUI(QWidget, Ui_rfAnalysis):
     def computeROIWindows(self): 
         # Compute ROI windows
         if not rfd:
-            self.roiWindowSplinesStruct, self.roiWindowSplinesStructPreSC = roiWindowsGenerator(self.splineX, self.splineY, self.imgDataStruct.scBmode.shape[0], self.imgDataStruct.scBmode.shape[1], self.axialWinSize, self.lateralWinSize, self.imgInfoStruct.axialRes, self.imgInfoStruct.lateralRes, self.axialOverlap, self.lateralOverlap, self.threshold, self.imgDataStruct.scRF.xmap, self.imgDataStruct.scRF.ymap)
+            self.roiWindowSplinesStruct, self.roiWindowSplinesStructPreSC = roiWindowsGenerator(self.splineX, self.splineY, self.imgDataStruct.scBmode.shape[0], self.imgDataStruct.scBmode.shape[1], self.axialWinSize, self.lateralWinSize, self.imgInfoStruct.axialRes, self.imgInfoStruct.lateralRes, self.axialOverlap, self.lateralOverlap, self.windowThreshold, self.imgDataStruct.scRF.xmap, self.imgDataStruct.scRF.ymap)
             self.cleanStructs()
         else:
             xScale = self.cvIm.width/(self.imgDataStruct.bMode.shape[2])
             yScale = self.cvIm.height/(self.imgDataStruct.bMode.shape[1])
             x = self.splineX/xScale
             y = self.splineY/yScale
-            self.roiWindowSplinesStruct = roiWindowsGenerator(x, y, self.imgDataStruct.bMode.shape[1], self.imgDataStruct.bMode.shape[2], self.axialWinSize, self.lateralWinSize, self.imgInfoStruct.axialRes, self.imgInfoStruct.lateralRes, self.axialOverlap, self.lateralOverlap, self.threshold)
+            self.roiWindowSplinesStruct = roiWindowsGenerator(x, y, self.imgDataStruct.bMode.shape[1], self.imgDataStruct.bMode.shape[2], self.axialWinSize, self.lateralWinSize, self.imgInfoStruct.axialRes, self.imgInfoStruct.lateralRes, self.axialOverlap, self.lateralOverlap, self.windowThreshold)
             self.roiWindowSplinesStructPreSC = self.roiWindowSplinesStruct
         # self.cleanStructs()
         # self.ax.plot(self.splineX, self.splineY, color = "cyan", linewidth=0.75) # re-plot drawn ROI
