@@ -1,6 +1,6 @@
 import sys
 import pandas as pd
-from PySide2.QtWidgets import QApplication
+from PyQt5.QtWidgets import QApplication
 from CeusTool3d.selectImage_ui_helper import *
 from UtcTool2d.selectImage_ui_helper import *
 from CeusMcTool2d.selectImage_ui_helper import *
@@ -59,4 +59,4 @@ if __name__ == "__main__":
     welcomeApp = QApplication(sys.argv)
     welcomeUI = QusGui()
     welcomeUI.show()
-    sys.exit(welcomeApp.exec_())
+    sys.exit(welcomeApp.exec())

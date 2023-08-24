@@ -15,6 +15,10 @@ import pyvista as pv
 import Utils.utils as ut
 import Utils.lognormalFunctions as lf
 
+from PyQt5.QtWidgets import QWidget, QApplication
+from PyQt5.QtGui import QPixmap, QPainter, QImage
+from PyQt5.QtCore import QLine, Qt
+
 
 class VoiSelectionGUI(Ui_constructVoi, QWidget):
     def __init__(self):

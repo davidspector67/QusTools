@@ -5,6 +5,10 @@ from matplotlib.widgets import RectangleSelector
 import numpy as np
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 
+from PyQt5.QtWidgets import QWidget, QApplication, QHBoxLayout
+from PyQt5.QtGui import QPixmap, QPainter, QImage
+from PyQt5.QtCore import QLine, Qt
+
 
 class TicAnalysisGUI(Ui_ticEditor, QWidget):
     def __init__(self):

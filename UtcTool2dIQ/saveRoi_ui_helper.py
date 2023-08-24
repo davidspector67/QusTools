@@ -3,6 +3,8 @@ import os
 import re
 import csv
 
+from PyQt5.QtWidgets import QWidget, QFileDialog, QApplication
+
 class SaveRoiGUI(Ui_saveRoi, QWidget):
     def __init__(self):
         super().__init__()

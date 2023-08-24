@@ -6,6 +6,8 @@ from pathlib import Path
 import Utils.utils as ut
 import pandas as pd
 
+from PyQt5.QtWidgets import QWidget, QApplication, QHeaderView, QTableWidgetItem
+
 def selectImageHelper(pathInput):
     if not os.path.exists(pathInput.text()): # check if file path is manually typed
         # NOTE: .bin is currently not supported

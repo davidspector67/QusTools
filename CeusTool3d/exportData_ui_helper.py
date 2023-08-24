@@ -4,6 +4,8 @@ from openpyxl.utils.dataframe import dataframe_to_rows
 import os
 import re
 
+from PyQt5.QtWidgets import QWidget, QApplication, QFileDialog
+
 class ExportDataGUI(Ui_exportData, QWidget):
     def __init__(self):
         super().__init__()

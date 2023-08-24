@@ -9,6 +9,8 @@ import Utils.lognormalFunctions as lf
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 import matplotlib.pyplot as plt
 
+from PyQt5.QtWidgets import QWidget, QApplication, QHBoxLayout
+
 class TicAnalysisGUI(Ui_ticEditor, QWidget):
     def __init__(self):
         # self.selectImage = QWidget()

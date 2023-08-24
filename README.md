@@ -19,7 +19,7 @@ Additionally, it supports 2D and 3D contrast-enhanced ultrasound (CEUS) analysis
 git clone https://github.com/davidspector67/QusTools.git
 cd QusTools
 python3.9 -m pip install virtualenv
-python3.9 -m venv venv
+virtualenv --python="python3.9" venv
 source venv/bin/activate
 pip install -r requirements.txt
 deactivate

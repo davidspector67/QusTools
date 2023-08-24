@@ -13,6 +13,8 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 import matplotlib
 import scipy.interpolate as interpolate
 
+from PyQt5.QtWidgets import QWidget, QHBoxLayout
+
 
 class RfAnalysisGUI(QWidget, Ui_rfAnalysis):
     def __init__(self, splineX, splineY):

@@ -5,6 +5,8 @@ import os
 import shutil
 import Utils.utils as ut
 
+from PyQt5.QtWidgets import QWidget, QApplication
+
 def selectImageHelper(pathInput):
     if not os.path.exists(pathInput.text()): # check if file path is manually typed
         # NOTE: .bin is currently not supported

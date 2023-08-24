@@ -5,6 +5,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 
+from PyQt5.QtWidgets import QWidget, QApplication
+from PyQt5.QtGui import QPixmap, QPainter, QImage
+from PyQt5.QtCore import QLine, Qt
+
 class CeusAnalysisGUI(Ui_ceusAnalysis, QWidget):
     def __init__(self):
         super().__init__()

@@ -14,6 +14,9 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 import matplotlib
 import scipy.interpolate as interpolate
 
+from PyQt5.QtWidgets import QWidget
+from PyQt5.QtGui import QImage
+
 
 class RoiSelectionGUI(QWidget, Ui_constructRoi):
     def __init__(self):

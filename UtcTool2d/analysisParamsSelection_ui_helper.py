@@ -3,14 +3,7 @@ from UtcTool2d.rfAnalysis_ui_helper import *
 import os
 from Utils.roiFuncs import *
 
-def selectImageHelper(pathInput):
-    if not os.path.exists(pathInput.text()): # check if file path is manually typed
-        # NOTE: .bin is currently not supported
-        fileName, _ = QFileDialog.getOpenFileName(None, 'Open File', filter = '*.rf *.mat')
-        if fileName != '': # If valid file is chosen
-            pathInput.setText(fileName)
-        else:
-            return
+from PyQt5.QtWidgets import QWidget, QApplication
 
 
 class AnalysisParamsGUI(Ui_analysisParams, QWidget):

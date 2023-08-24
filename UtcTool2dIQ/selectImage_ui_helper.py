@@ -3,6 +3,8 @@ from UtcTool2dIQ.roiSelection_ui_helper import *
 import os
 import shutil
 
+from PyQt5.QtWidgets import QWidget, QApplication
+
 def selectImageHelper(pathInput, fileExts):
     if not os.path.exists(pathInput.text()): # check if file path is manually typed
         # NOTE: .bin is currently not supported

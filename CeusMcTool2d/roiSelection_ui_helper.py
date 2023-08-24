@@ -16,6 +16,10 @@ import pyvista as pv
 import Utils.motionCorrection as mc
 import cv2
 
+from PyQt5.QtWidgets import QWidget, QApplication
+from PyQt5.QtGui import QPixmap, QPainter, QImage
+from PyQt5.QtCore import QLine, Qt
+
 
 class RoiSelectionGUI(Ui_constructRoi, QWidget):
     def __init__(self):

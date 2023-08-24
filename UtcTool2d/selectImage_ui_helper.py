@@ -2,6 +2,7 @@ from UtcTool2d.selectImage_ui import *
 from UtcTool2d.roiSelection_ui_helper import *
 import os
 import shutil
+from PyQt5.QtWidgets import QWidget, QApplication, QFileDialog
 
 
 class SelectImageGUI_UtcTool2d(Ui_selectImage, QWidget):

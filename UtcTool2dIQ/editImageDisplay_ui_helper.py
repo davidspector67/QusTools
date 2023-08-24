@@ -1,5 +1,7 @@
 from UtcTool2dIQ.editImageDisplay_ui import *
 
+from PyQt5.QtWidgets import QWidget
+
 class EditImageDisplayGUI(Ui_editBmode, QWidget):
     def __init__(self):
         super().__init__()
