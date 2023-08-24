@@ -2,7 +2,6 @@ from UtcTool2d.roiSelection_ui import *
 from UtcTool2d.editImageDisplay_ui_helper import *
 from UtcTool2d.analysisParamsSelection_ui_helper import *
 from UtcTool2d.loadRoi_ui_helper import *
-from UtcTool2d.rfAnalysis_ui_helper import *
 import Parsers.philipsMatParser as matParser
 import Parsers.siemensRfdParser as rfdParser
 import Parsers.terasonRfParser as tera

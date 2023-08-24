@@ -314,8 +314,10 @@ class DataStruct():
 class InfoStruct():
     def __init__(self):
         # Designed fro RF analysis using Siemens 18L6 US Transducer
-        self.minFrequency = 7000000
-        self.maxFrequency = 17000000
+        # self.minFrequency = 7000000
+        # self.maxFrequency = 17000000
+        self.minFrequency = 0
+        self.maxFrequency = 20000000
         self.lowBandFreq = 5500000
         self.upBandFreq = 18000000
         self.depth = 50 # mm. Hard-coded value for Thyroid study
