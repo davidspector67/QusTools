@@ -26,7 +26,7 @@ pyuic5 UtcTool2dIQ/selectImage.ui -o UtcTool2dIQ/selectImage_ui.py
 pyuic5 UtcTool2dIQ/saveRoi.ui -o UtcTool2dIQ/saveRoi_ui.py
 pyuic5 UtcTool2dIQ/roiSelection.ui -o UtcTool2dIQ/roiSelection_ui.py
 pyuic5 UtcTool2dIQ/rfAnalysis.ui -o UtcTool2dIQ/rfAnalysis_ui.py
-pyuic5 UtcTool2dIQ/loadRoi.ui -o UtcTool2dIQ/loadRoi.ui
+pyuic5 UtcTool2dIQ/loadRoi.ui -o UtcTool2dIQ/loadRoi_ui.py
 pyuic5 UtcTool2dIQ/exportData.ui -o UtcTool2dIQ/exportData_ui.py
 pyuic5 UtcTool2dIQ/editImageDisplay.ui -o UtcTool2dIQ/editImageDisplay_ui.py
 pyuic5 UtcTool2dIQ/analysisParamsSelection.ui -o UtcTool2dIQ/analysisParamsSelection_ui.py

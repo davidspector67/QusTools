@@ -207,9 +207,9 @@ def computeSpecWindowsIQ(
         # [f, ps] = eng.computePowerSpec(matlab.double(np.ascontiguousarray(imgWindow)), matlab.double(f0), matlab.double(f1), matlab.double(fs), 0, nargout=2)
         # [f, rPS] = eng.computePowerSpec(matlab.double(np.ascontiguousarray(refWindow)), matlab.double(f0), matlab.double(f1), matlab.double(fs), 0, nargout=2)
         nps = np.asarray(ps)-np.asarray(rPS) # SUBTRACTION method: log data
-        # import matplotlib.pyplot as plt
-        # plt.scatter(f,ps)
-        # plt.show()
+        import matplotlib.pyplot as plt
+        plt.scatter(f,ps)
+        plt.show()
 
         # Get ready to send output
         for j in range(fRange):

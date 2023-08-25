@@ -182,8 +182,7 @@ def iqToRf(iqData, rxFrequency):
     rfData = np.zeros(iqData.shape)
     t = [i*(1/rxFrequency) for i in range(iqData.shape[0])]
     for i in range(iqData.shape[1]):
-        rfData[:,i] = np.real(np.multiply(iqData[:,i], np.exp(1j*(2*np.pi*rxFrequency*np.transpose(t)))))
-
+        rfData[:,i] = np.real(np.multiply(iqData[:,i], np.exp(1j*(0.5*np.pi*rxFrequency*np.transpose(t)))))
     return rfData
 
 def readIQ(filename):
