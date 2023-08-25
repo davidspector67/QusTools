@@ -3,21 +3,11 @@ from UtcTool2dIQ.rfAnalysis_ui_helper import *
 import os
 from Utils.roiFuncs import *
 
-from PyQt5.QtWidgets import QWidget, QApplication, QFileDialog
-
-def selectImageHelper(pathInput):
-    if not os.path.exists(pathInput.text()): # check if file path is manually typed
-        # NOTE: .bin is currently not supported
-        fileName, _ = QFileDialog.getOpenFileName(None, 'Open File', filter = '*.rf *.mat')
-        if fileName != '': # If valid file is chosen
-            pathInput.setText(fileName)
-        else:
-            return
+from PyQt5.QtWidgets import QWidget, QApplication
 
 
 class AnalysisParamsGUI(Ui_analysisParams, QWidget):
     def __init__(self):
-        # self.selectImage = QWidget()
         super().__init__()
         self.setupUi(self)
 
@@ -60,6 +50,11 @@ class AnalysisParamsGUI(Ui_analysisParams, QWidget):
         self.rfAnalysisGUI.axialOverlap = self.axOverlapVal.value()/100
         self.rfAnalysisGUI.lateralOverlap = self.latOverlapVal.value()/100
         self.rfAnalysisGUI.threshold = self.windowThresholdVal.value()
+        self.rfAnalysisGUI.minFrequency = self.minFreqVal.value()*1000000 #Hz
+        self.rfAnalysisGUI.maxFrequency = self.maxFreqVal.value()*1000000 #Hz
+        self.rfAnalysisGUI.samplingFreq = self.samplingFreqVal.value()*1000000 #Hz
+        self.rfAnalysisGUI.lowBandFreq = self.lowBandFreqVal.value()*1000000 #Hz
+        self.rfAnalysisGUI.upBandFreq = self.upBandFreqVal.value()*1000000 #Hz
         self.rfAnalysisGUI.editImageDisplayGUI.contrastVal.setValue(self.lastGui.editImageDisplayGUI.contrastVal.value())
         self.rfAnalysisGUI.editImageDisplayGUI.brightnessVal.setValue(self.lastGui.editImageDisplayGUI.brightnessVal.value())
         self.rfAnalysisGUI.editImageDisplayGUI.sharpnessVal.setValue(self.lastGui.editImageDisplayGUI.sharpnessVal.value())

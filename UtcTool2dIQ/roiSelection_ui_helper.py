@@ -216,6 +216,11 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
         self.analysisParamsGUI.axOverlapVal.setValue(50)
         self.analysisParamsGUI.latOverlapVal.setValue(50)
         self.analysisParamsGUI.windowThresholdVal.setValue(95)
+        self.analysisParamsGUI.minFreqVal.setValue(np.round(self.imgInfoStruct.minFrequency/1000000, decimals=2))
+        self.analysisParamsGUI.maxFreqVal.setValue(np.round(self.imgInfoStruct.maxFrequency/1000000, decimals=2))
+        self.analysisParamsGUI.lowBandFreqVal.setValue(np.round(self.imgInfoStruct.lowBandFreq/1000000, decimals=2))
+        self.analysisParamsGUI.upBandFreqVal.setValue(np.round(self.imgInfoStruct.upBandFreq/1000000, decimals=2))
+        self.analysisParamsGUI.samplingFreqVal.setValue(np.round(self.imgInfoStruct.samplingFrequency/1000000, decimals=2))
         self.analysisParamsGUI.imageDepthVal.setText(str(np.round(self.imgInfoStruct.depth, decimals=1)))
         self.analysisParamsGUI.imageWidthVal.setText(str(np.round(self.imgInfoStruct.width, decimals=1)))
 

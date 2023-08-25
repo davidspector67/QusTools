@@ -64,6 +64,8 @@ class RfAnalysisGUI(QWidget, Ui_rfAnalysis):
         self.minFrequency = None
         self.maxFrequency = None
         self.samplingFreq = None
+        self.lowBandFreq = None
+        self.upBandFreq = None
         self.lastGui = None
         self.saveRoiGUI = SaveRoiGUI()
 
@@ -324,9 +326,9 @@ class RfAnalysisGUI(QWidget, Ui_rfAnalysis):
     def computeWindowSpec(self):
         global mbf, ss, si, minMBF, maxMBF, minSS, maxSS, minSI, maxSI
         if not rfd:
-            self.winTopBottomDepth, self.winLeftRightWidth, mbf, ss, si = computeSpecWindows(self.imgDataStruct.rf,self.refDataStruct.rf, self.roiWindowSplinesStructPreSC.top, self.roiWindowSplinesStructPreSC.bottom, self.roiWindowSplinesStructPreSC.left, self.roiWindowSplinesStructPreSC.right, self.minFrequency, self.maxFrequency, self.imgInfoStruct.lowBandFreq, self.imgInfoStruct.upBandFreq, self.samplingFreq, None)
+            self.winTopBottomDepth, self.winLeftRightWidth, mbf, ss, si = computeSpecWindows(self.imgDataStruct.rf,self.refDataStruct.rf, self.roiWindowSplinesStructPreSC.top, self.roiWindowSplinesStructPreSC.bottom, self.roiWindowSplinesStructPreSC.left, self.roiWindowSplinesStructPreSC.right, self.minFrequency, self.maxFrequency, self.lowBandFreq, self.upBandFreq, self.samplingFreq, None)
         else:
-            self.winTopBottomDepth, self.winLeftRightWidth, mbf, ss, si = computeSpecWindows(self.imgDataStruct.rf,self.refDataStruct.rf, self.roiWindowSplinesStructPreSC.top, self.roiWindowSplinesStructPreSC.bottom, self.roiWindowSplinesStructPreSC.left, self.roiWindowSplinesStructPreSC.right, self.minFrequency, self.maxFrequency, self.imgInfoStruct.lowBandFreq, self.imgInfoStruct.upBandFreq, self.samplingFreq, self.frame)
+            self.winTopBottomDepth, self.winLeftRightWidth, mbf, ss, si = computeSpecWindows(self.imgDataStruct.rf,self.refDataStruct.rf, self.roiWindowSplinesStructPreSC.top, self.roiWindowSplinesStructPreSC.bottom, self.roiWindowSplinesStructPreSC.left, self.roiWindowSplinesStructPreSC.right, self.minFrequency, self.maxFrequency, self.lowBandFreq, self.upBandFreq, self.samplingFreq, self.frame)
         minMBF = min(mbf)
         maxMBF = max(mbf)
         minSS = min(ss)
