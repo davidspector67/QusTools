@@ -261,7 +261,7 @@ class InfoStruct():
         # Transducer: PVI-475BX (i8CX1)
         # self.minFrequency = 1800000 #Hz
         # self.maxFrequency = 6200000 #Hz
-        self.minFrequency = 1000000
+        self.minFrequency = 0
         self.maxFrequency = 10000000
         self.lowBandFreq = 1000000 #Hz
         self.upBandFreq = 6000000 #Hz

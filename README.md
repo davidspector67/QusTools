@@ -13,7 +13,7 @@ Additionally, it supports 2D and 3D contrast-enhanced ultrasound (CEUS) analysis
 
 ## Building
 
-### Mac/Linux
+### Mac
 
 ```shell
 git clone https://github.com/davidspector67/QusTools.git
@@ -21,12 +21,21 @@ cd QusTools
 python3.9 -m pip install virtualenv
 virtualenv --python="python3.9" venv
 source venv/bin/activate
+pip install --upgrade pip
 pip install -r requirements.txt
 deactivate
-cd Parsers
-gcc -c -Wall -Wpedantic philips_rf_parser.c
-gcc -o philips_rf_parser philips_rf_parser.o
-cd ..
+```
+
+#### Troubleshooting
+
+If you encounter an error after running `pip install -r requirements.txt`, try the following code and then run the command again:
+
+```shell
+brew install qt5
+
+brew link qt5 --force
+
+pip install wheel setuptools pip --upgrade
 ```
 
 ### Windows
