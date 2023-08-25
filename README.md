@@ -23,6 +23,8 @@ virtualenv --python="python3.9" venv
 source venv/bin/activate
 pip install --upgrade pip
 pip install -r requirements.txt
+chmod +x saveQt.sh
+./saveQt.sh
 deactivate
 ```
 
