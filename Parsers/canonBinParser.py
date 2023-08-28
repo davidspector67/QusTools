@@ -1,7 +1,7 @@
 import struct
 import numpy as np
 # from Utils.parserTools import scanConvert, iqToRf
-# from scipy.signal import hilbert
+from scipy.signal import hilbert
 
 import numpy as np
 from numpy.matlib import repmat
@@ -182,7 +182,7 @@ def iqToRf(iqData, rxFrequency):
     rfData = np.zeros(iqData.shape)
     t = [i*(1/rxFrequency) for i in range(iqData.shape[0])]
     for i in range(iqData.shape[1]):
-        rfData[:,i] = np.real(np.multiply(iqData[:,i], np.exp(1j*(0.5*np.pi*rxFrequency*np.transpose(t)))))
+        rfData[:,i] = np.real(np.multiply(iqData[:,i], np.exp(1j*(np.pi*rxFrequency*np.transpose(t)))))
     return rfData
 
 def readIQ(filename):
@@ -239,7 +239,7 @@ def readIQ(filename):
     iq = dataA[np.arange(0, numSamplesDrOut*2, 2)] + 1j*dataA[np.arange(1,numSamplesDrOut*2,2)]
     bmode = 20*np.log10(abs(iq))
 
-    return bmode, iq, (digitizingRateHz/rbfDecimationFactor)
+    return bmode, iq, (digitizingRateHz*rbfDecimationFactor), numSamplesDrOut
 
 class FileStruct():
     def __init__(self, filedirectory, filename):
@@ -261,13 +261,9 @@ class InfoStruct():
         # self.minFrequency = 1800000 #Hz
         # self.maxFrequency = 6200000 #Hz
         self.minFrequency = 0
-        self.maxFrequency = 10000000
-        self.lowBandFreq = 1000000 #Hz
-        self.upBandFreq = 6000000 #Hz
-        # Preset 1
-        self.depth = 150 #mm
-        # Preset 2
-        # self.depth = 200
+        self.maxFrequency = 20000000
+        self.lowBandFreq = 4680000 #Hz
+        self.upBandFreq = 10560000 #Hz
 
         self.studyMode = None
         self.filename = None
@@ -341,9 +337,20 @@ def readFileInfo(filename, filepath):
     return Info
 
 def readFileImg(Info, filePath):
-    bmode, iqData, Info.rxFrequency = readIQ(filePath)
+    bmode, iqData, Info.rxFrequency, numSamplesDrOut = readIQ(filePath)
+    if numSamplesDrOut == 1400: #Preset 1
+        Info.depth = 150 #mm
+        print("Preset 1 found!")
+    elif numSamplesDrOut == 1496: #Preset 2
+        Info.depth = 200 #mm
+        print("Preset 2 found!")
+    else:
+        print("ERROR: No preset found!")
+        exit()
     Info.samplingFrequency = Info.rxFrequency
     rfData = iqToRf(iqData, Info.rxFrequency)
+    # for i in range(rfData.shape[1]):
+    #     bmode[:,i] = 20*np.log10(abs(hilbert(rfData[:,i])))           
     ModeIM = rfData
 
     Info.endDepth1 = Info.depth/1000 #m

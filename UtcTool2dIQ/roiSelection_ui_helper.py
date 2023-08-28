@@ -194,15 +194,23 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
         phantFileLocation = phantomFilePath[:len(phantomFilePath)-len(phantFileName)]
 
         imArray, self.imgDataStruct, self.imgInfoStruct, self.refDataStruct, self.refInfoStruct = canon.getImage(dataFileName, dataFileLocation, phantFileName, phantFileLocation)
+        if self.imgInfoStruct.depth != self.refInfoStruct.depth:
+            print("Presets don't match! Analysis not possible")
+            exit()
         self.arHeight = imArray.shape[0]
         self.arWidth = imArray.shape[1]
         self.imData = np.array(imArray).reshape(self.arHeight, self.arWidth)
         self.imData = np.flipud(self.imData) #flipud
         self.imData = np.require(self.imData,np.uint8,'C')
+        refData = np.array(self.refDataStruct.scBmode)
+        refData = np.flipud(refData)
+        refData = np.require(refData, np.uint8, 'C')
         self.bytesLine = self.imData.strides[0]
         self.qIm = QImage(self.imData, self.arWidth, self.arHeight, self.bytesLine, QImage.Format_Grayscale8).scaled(721, 501)
+        self.qImPhant = QImage(refData, refData.shape[1], refData.shape[0], refData.strides[0], QImage.Format_Grayscale8).scaled(721, 501)
 
         self.qIm.mirrored().save(os.path.join("Junk", "bModeImRaw.png")) # Save as .png file
+        self.qImPhant.mirrored().save(os.path.join("Junk", "phantImRaw.png"))
 
         self.pixSizeAx = self.imgDataStruct.bMode.shape[0] #were both scBmode
         self.pixSizeLat = self.imgDataStruct.bMode.shape[1]
@@ -223,6 +231,16 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
         self.analysisParamsGUI.samplingFreqVal.setValue(np.round(self.imgInfoStruct.samplingFrequency/1000000, decimals=2))
         self.analysisParamsGUI.imageDepthVal.setText(str(np.round(self.imgInfoStruct.depth, decimals=1)))
         self.analysisParamsGUI.imageWidthVal.setText(str(np.round(self.imgInfoStruct.width, decimals=1)))
+
+        # Hough transform
+        # import cv2
+        # image = Image.open(os.path.join("Junk", "phantIm.png"))
+        # filtered = cv2.blur(image, (7,7))
+        # filtered = cv2.filter2D(src=gray_arr, ddepth=-1, kernel=filter)
+        # thresh1 = 35
+        # thresh2 = 60
+        # cv2.Canny(filtered, thresh1, thresh2)
+        # cv2.HoughLines(edges, 1, np.pi/180, threshold, min_theta=angle1, max_theta=angle2)
 
         # Implement correct previously assigned image display settings
 

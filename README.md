@@ -71,3 +71,15 @@ call venv\scripts\activate.bat
 python main.py
 deactivate
 ```
+
+## Downloading Phantom Collection
+
+### Mac/Linux
+
+```shell
+source venv/bin/activate
+pip install gdown
+gdown --no-check-certificate --folder \
+https://drive.google.com/drive/folders/1IQeHYJNu6G7WO2XwlPPmc_ZsfUpzYQgM
+deactivate
+```

@@ -305,8 +305,10 @@ class RfAnalysisGUI(QWidget, Ui_rfAnalysis):
                     roisRight.append(self.roiWindowSplinesStruct.right[i]*xScale)#4.2969)
                     roisTop.append(self.roiWindowSplinesStruct.top[i]*yScale)#/2.79)
                     roisBottom.append(self.roiWindowSplinesStruct.bottom[i]*yScale)#/2.79)
+            
+            # computeSpecWindowsIQ(self.imgDataStruct.rf,self.refDataStruct.rf, self.roiWindowSplinesStructPreSC.top, self.roiWindowSplinesStructPreSC.bottom, self.roiWindowSplinesStructPreSC.left, self.roiWindowSplinesStructPreSC.right, self.minFrequency, self.maxFrequency, self.lowBandFreq, self.upBandFreq, self.samplingFreq)
+            # return
             self.computeWindowSpec()
-
             # Populate parameters in av. spectral parameter textbox
             imMBF = str(int(np.average(mbf)*10)/10)
             imSS = str(int(np.average(ss)*100000000)/100)
@@ -326,7 +328,7 @@ class RfAnalysisGUI(QWidget, Ui_rfAnalysis):
 
     def computeWindowSpec(self):
         global mbf, ss, si, minMBF, maxMBF, minSS, maxSS, minSI, maxSI
-        self.winTopBottomDepth, self.winLeftRightWidth, mbf, ss, si = computeSpecWindowsIQ(self.imgDataStruct.rf,self.refDataStruct.rf, self.roiWindowSplinesStructPreSC.top, self.roiWindowSplinesStructPreSC.bottom, self.roiWindowSplinesStructPreSC.left, self.roiWindowSplinesStructPreSC.right, self.minFrequency, self.maxFrequency, self.imgInfoStruct.lowBandFreq, self.imgInfoStruct.upBandFreq, self.samplingFreq)
+        self.winTopBottomDepth, self.winLeftRightWidth, mbf, ss, si = computeSpecWindowsIQ(self.imgDataStruct.rf,self.refDataStruct.rf, self.roiWindowSplinesStructPreSC.top, self.roiWindowSplinesStructPreSC.bottom, self.roiWindowSplinesStructPreSC.left, self.roiWindowSplinesStructPreSC.right, self.minFrequency, self.maxFrequency, self.lowBandFreq, self.upBandFreq, self.samplingFreq)
         minMBF = min(mbf)
         maxMBF = max(mbf)
         minSS = min(ss)

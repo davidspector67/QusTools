@@ -5,7 +5,6 @@ pyuic5 UtcTool2d/saveRoi.ui -o UtcTool2d/saveRoi_ui.py
 pyuic5 UtcTool2d/roiSelection.ui -o UtcTool2d/roiSelection_ui.py
 pyuic5 UtcTool2d/rfAnalysis.ui -o UtcTool2d/rfAnalysis_ui.py
 pyuic5 UtcTool2d/psGraphDisplay.ui -o UtcTool2d/psGraphDisplay_ui.py
-pyuic5 UtcTool2d/nameROI.ui -o UtcTool2d/nameROI_ui.py
 pyuic5 UtcTool2d/loadRoi.ui -o UtcTool2d/loadRoi_ui.py
 pyuic5 UtcTool2d/exportData.ui -o UtcTool2d/exportData_ui.py
 pyuic5 UtcTool2d/editImageDisplay.ui -o UtcTool2d/editImageDisplay_ui.py

@@ -79,7 +79,8 @@ class SelectImageGUI_UtcTool2dIQ(Ui_selectImage, QWidget):
                     self.selectImageErrorMsg.setHidden(False)
                     return
 
-    
+            if self.roiSelectionGUI != None:
+                plt.close(self.roiSelectionGUI.figure)
             del self.roiSelectionGUI
             self.roiSelectionGUI = RoiSelectionGUI()
             self.roiSelectionGUI.setFilenameDisplays(self.imagePathInput.text().split('/')[-1], self.phantomPathInput.text().split('/')[-1])

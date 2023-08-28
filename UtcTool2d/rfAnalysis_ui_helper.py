@@ -285,6 +285,8 @@ class RfAnalysisGUI(QWidget, Ui_rfAnalysis):
         # self.ax.plot(self.splineX, self.splineY, color = "cyan", linewidth=0.75) # re-plot drawn ROI
 
     def displayROIWindows(self):
+        self.splineX = np.clip(self.splineX, a_min=0, a_max=self.cvIm.width)
+        self.splineY = np.clip(self.splineY, a_min=0, a_max=self.cvIm.height)
         self.computeROIWindows()
         if len(self.roiWindowSplinesStruct.left) > 0:
             global roisLeft, roisRight, roisTop, roisBottom

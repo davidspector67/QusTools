@@ -102,14 +102,15 @@ def computePowerSpec(RFData, startFrequency, endFrequency, samplingFrequency):
     windFunc = matlib.repmat(windFuncComputations.reshape((RFData.shape[0],1)),1,RFData.shape[1])
 
     # Frequency Range
-    frequency = np.linspace(0, samplingFrequency, 4096)
-    fLow = round(startFrequency*(4096/samplingFrequency))
-    fHigh = round(endFrequency*(4096/samplingFrequency))
+    frequency = np.linspace(0, samplingFrequency, 8192)
+    fLow = round(startFrequency*(8192/samplingFrequency))
+    fHigh = round(endFrequency*(8192/samplingFrequency))
     freqChop = frequency[fLow:fHigh]
 
     # Get PS
-    fft = np.square(abs(np.fft.fft(np.transpose(np.multiply(RFData,windFunc)),4096)*RFData.size))
-    fullPS = 10*np.log10(np.mean(fft, axis=0))
+    windFunc = np.ones(windFunc.shape)
+    fft = np.square(abs(np.fft.fft(np.transpose(np.multiply(RFData,windFunc)),8192)*RFData.size))
+    fullPS = 20*np.log10(np.mean(fft, axis=0))
 
     ps = fullPS[fLow:fHigh]
 
@@ -173,7 +174,7 @@ def computeSpecWindowsIQ(
     """Look into this"""
     f0 = minFrequency  
     f1 = maxFrequency
-    fRange = round((f1-f0)*(4096/fs))
+    fRange = round((f1-f0)*(8192/fs))
 
     # Output pre-allocation
     if len(top) >= 1:
@@ -208,8 +209,11 @@ def computeSpecWindowsIQ(
         # [f, rPS] = eng.computePowerSpec(matlab.double(np.ascontiguousarray(refWindow)), matlab.double(f0), matlab.double(f1), matlab.double(fs), 0, nargout=2)
         nps = np.asarray(ps)-np.asarray(rPS) # SUBTRACTION method: log data
         # import matplotlib.pyplot as plt
-        # plt.scatter(f,ps)
+        # fig, ax = plt.subplots()
+        # ax.scatter(f,ps)
+        # # plt.vlines([imgLowBandFreq, imgUpBandFreq], ymin=min(ps), ymax=max(ps), colors="green")
         # plt.show()
+        # return
 
         # Get ready to send output
         for j in range(fRange):
@@ -255,7 +259,7 @@ def computeSpecWindows(
     """Look into this"""
     f0 = minFrequency  
     f1 = maxFrequency
-    fRange = round((f1-f0)*(4096/fs))
+    fRange = round((f1-f0)*(8192/fs))
 
     # Output pre-allocation
     if len(top) >= 1:
