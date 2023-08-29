@@ -307,6 +307,17 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
             self.pointsPlottedX.append(self.pointsPlottedX[0])
             self.pointsPlottedY.append(self.pointsPlottedY[0])
             self.finalSplineX, self.finalSplineY = calculateSpline(self.pointsPlottedX, self.pointsPlottedY)
+
+            if self.imgInfoStruct.numSamplesDrOut == 1400:
+                self.finalSplineX = np.clip(self.finalSplineX, a_min=148, a_max=573)
+                self.finalSplineY = np.clip(self.finalSplineY, a_min=0.5, a_max=387)
+            elif self.imgInfoStruct.numSamplesDrOut == 1496:
+                self.finalSplineX = np.clip(self.finalSplineX, a_min=120, a_max=615)
+                self.finalSplineY = np.clip(self.finalSplineY, a_min=0.5, a_max=645)
+            else:
+                print("Preset not found!")
+                return
+            
             self.ax.plot(self.finalSplineX, self.finalSplineY, color = "cyan", linewidth=0.75)
             try:
                 image, =self.ax.plot([], [], marker="o",markersize=3, markerfacecolor="red")
@@ -365,6 +376,39 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
         self.plotOnCanvas()
     
     def interpolatePoints(self, event): # Update ROI being drawn using spline using 2D interpolation
+        if self.imgInfoStruct.numSamplesDrOut == 1400:
+            # Preset 1 boundaries for 20220831121844_IQ.bin
+            leftSlope = (500 - 0)/(154.22 - 148.76)
+            pointSlopeLeft = (event.ydata - 0) / (event.xdata - 148.76)
+            if pointSlopeLeft <= 0 or leftSlope < pointSlopeLeft:
+                return
+            
+            bottomSlope = (386.78 - 358.38) / (716 - 0)
+            pointSlopeBottom = (event.ydata - 358.38) / (event.xdata - 0)
+            rightSlope = (500 - 0) / (509.967 - 572.47)
+            pointSlopeRight = (event.ydata - 0) / (event.xdata - 572.47)
+
+        elif self.imgInfoStruct.numSamplesDrOut == 1496:
+            # Preset 2 boundaries for 20220831121752_IQ.bin
+            leftSlope = (500 - 0) / (120.79 - 146.9)
+            pointSlopeLeft = (event.ydata - 0) / (event.xdata - 146.9)
+            if pointSlopeLeft > leftSlope and pointSlopeLeft <= 0:
+                return
+            
+            bottomSlope = (500 - 462.41) / (644.76 - 0)
+            pointSlopeBottom = (event.ydata - 462.41) / (event.xdata - 0)
+            rightSlope = (500 - 0) / (595.84 - 614.48)
+            pointSlopeRight = (event.ydata - 0) / (event.xdata - 614.48)
+        
+        else:
+            print("Preset not found!")
+            return
+
+        if pointSlopeBottom > bottomSlope:
+                return
+        if pointSlopeRight >= 0 or pointSlopeRight < rightSlope:
+            return
+
         self.pointsPlottedX.append(int(event.xdata))
         self.pointsPlottedY.append(int(event.ydata))
         plottedPoints = len(self.pointsPlottedX)
