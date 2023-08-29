@@ -306,6 +306,8 @@ class RfAnalysisGUI(QWidget, Ui_rfAnalysis):
                     roisRight.append(self.roiWindowSplinesStruct.right[i]*xScale)#4.2969)
                     roisTop.append(self.roiWindowSplinesStruct.top[i]*yScale)#/2.79)
                     roisBottom.append(self.roiWindowSplinesStruct.bottom[i]*yScale)#/2.79)
+            # computeSpecWindows(self.imgDataStruct.rf,self.refDataStruct.rf, self.roiWindowSplinesStructPreSC.top, self.roiWindowSplinesStructPreSC.bottom, self.roiWindowSplinesStructPreSC.left, self.roiWindowSplinesStructPreSC.right, self.minFrequency, self.maxFrequency, self.lowBandFreq, self.upBandFreq, self.samplingFreq, self.frame)
+            # return
             self.computeWindowSpec()
 
             # Populate parameters in av. spectral parameter textbox

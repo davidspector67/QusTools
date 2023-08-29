@@ -129,6 +129,22 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
             if len(self.pointsPlottedX) > 1:
                 xSpline, ySpline = calculateSpline(self.pointsPlottedX, self.pointsPlottedY)
                 self.spline = self.ax.plot(xSpline, ySpline, color = "cyan", zorder=1, linewidth=0.75)
+        
+        if self.imgInfoStruct.numSamplesDrOut == 1400:
+            # Preset 1 boundaries for 20220831121844_IQ.bin
+            self.ax.plot([148.76, 154.22], [0, 500], c="purple") # left boundary
+            self.ax.plot([0, 716], [358.38, 386.78], c="purple") # bottom boundary
+            self.ax.plot([572.47, 509.967], [0, 500], c="purple") # right boundary
+
+        elif self.imgInfoStruct.numSamplesDrOut == 1496:
+            # Preset 2 boundaries for 20220831121752_IQ.bin
+            self.ax.plot([146.9, 120.79], [0, 500], c="purple") # left boundary
+            self.ax.plot([0, 644.76], [462.41, 500], c="purple") # bottom boundary
+            self.ax.plot([614.48, 595.84], [0, 500], c="purple") # right boundary
+        
+        else:
+            print("No preset found!")
+
         self.figure.subplots_adjust(left=0,right=1, bottom=0,top=1, hspace=0.2,wspace=0.2)
         self.cursor = matplotlib.widgets.Cursor(self.ax, color="gold", linewidth=0.4, useblit=True)
         self.cursor.set_active(False)
@@ -297,6 +313,22 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
                 image.figure.canvas.mpl_disconnect(self.cid)
             except:
                 image = 0 # do nothing. Means we're loading ROI
+
+            if self.imgInfoStruct.numSamplesDrOut == 1400:
+                # Preset 1 boundaries for 20220831121844_IQ.bin
+                self.ax.plot([148.76, 154.22], [0, 500], c="purple") # left boundary
+                self.ax.plot([0, 716], [358.38, 386.78], c="purple") # bottom boundary
+                self.ax.plot([572.47, 509.967], [0, 500], c="purple") # right boundary
+
+            elif self.imgInfoStruct.numSamplesDrOut == 1496:
+                # Preset 2 boundaries for 20220831121752_IQ.bin
+                self.ax.plot([146.9, 120.79], [0, 500], c="purple") # left boundary
+                self.ax.plot([0, 644.76], [462.41, 500], c="purple") # bottom boundary
+                self.ax.plot([614.48, 595.84], [0, 500], c="purple") # right boundary
+            
+            else:
+                print("No preset found!")
+
             self.figure.subplots_adjust(left=0,right=1, bottom=0,top=1, hspace=0.2,wspace=0.2)
             plt.tick_params(bottom=False, left=False)
             self.canvas.draw()

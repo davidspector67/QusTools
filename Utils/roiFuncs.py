@@ -211,7 +211,7 @@ def computeSpecWindowsIQ(
         # import matplotlib.pyplot as plt
         # fig, ax = plt.subplots()
         # ax.scatter(f,ps)
-        # # plt.vlines([imgLowBandFreq, imgUpBandFreq], ymin=min(ps), ymax=max(ps), colors="green")
+        # plt.vlines([imgLowBandFreq, imgUpBandFreq], ymin=min(ps), ymax=max(ps), colors="green")
         # plt.show()
         # return
 
@@ -296,8 +296,11 @@ def computeSpecWindows(
         [f, rPS] = computePowerSpec(refWindow, f0, f1, fs) # Same as above, except for round(ref_gain)
         nps = np.asarray(ps)-np.asarray(rPS) # SUBTRACTION method: log data
         # import matplotlib.pyplot as plt
-        # plt.scatter(f,ps)
+        # fig, ax = plt.subplots()
+        # ax.scatter(f,ps)
+        # # plt.vlines([imgLowBandFreq, imgUpBandFreq], ymin=min(ps), ymax=max(ps), colors="green")
         # plt.show()
+        # return
 
         # Get ready to send output
         for j in range(fRange):

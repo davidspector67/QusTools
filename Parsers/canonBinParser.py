@@ -260,10 +260,10 @@ class InfoStruct():
         # Transducer: PVI-475BX (i8CX1)
         # self.minFrequency = 1800000 #Hz
         # self.maxFrequency = 6200000 #Hz
-        self.minFrequency = 0
-        self.maxFrequency = 20000000
-        self.lowBandFreq = 4680000 #Hz
-        self.upBandFreq = 10560000 #Hz
+        self.minFrequency = 2000000
+        self.maxFrequency = 9000000
+        self.lowBandFreq = 4400000 #Hz
+        self.upBandFreq = 6600000 #Hz
 
         self.studyMode = None
         self.filename = None
@@ -278,6 +278,7 @@ class InfoStruct():
         self.lateralRes = None
         self.axialRes = None
         self.maxval = None
+        self.numSamplesDrOut = None
 
         # Scan Conversion Params
         self.tilt1 = None
@@ -337,11 +338,11 @@ def readFileInfo(filename, filepath):
     return Info
 
 def readFileImg(Info, filePath):
-    bmode, iqData, Info.rxFrequency, numSamplesDrOut = readIQ(filePath)
-    if numSamplesDrOut == 1400: #Preset 1
+    bmode, iqData, Info.rxFrequency, Info.numSamplesDrOut = readIQ(filePath)
+    if Info.numSamplesDrOut == 1400: #Preset 1
         Info.depth = 150 #mm
         print("Preset 1 found!")
-    elif numSamplesDrOut == 1496: #Preset 2
+    elif Info.numSamplesDrOut == 1496: #Preset 2
         Info.depth = 200 #mm
         print("Preset 2 found!")
     else:
