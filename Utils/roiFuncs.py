@@ -211,7 +211,7 @@ def computeSpecWindowsIQ(
         # import matplotlib.pyplot as plt
         # fig, ax = plt.subplots()
         # ax.scatter(f,ps)
-        # plt.vlines([imgLowBandFreq, imgUpBandFreq], ymin=min(ps), ymax=max(ps), colors="green")
+        # # plt.vlines([imgLowBandFreq, imgUpBandFreq], ymin=min(ps), ymax=max(ps), colors="green")
         # plt.show()
         # return
 

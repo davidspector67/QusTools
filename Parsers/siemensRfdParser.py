@@ -310,16 +310,18 @@ class DataStruct():
         self.bMode = None
         self.scRf = None
         self.scBmode = None
+        self.widthPixels = None
+        self.depthPixels = None
 
 class InfoStruct():
     def __init__(self):
         # Designed fro RF analysis using Siemens 18L6 US Transducer
         # self.minFrequency = 7000000
         # self.maxFrequency = 17000000
-        self.minFrequency = 0
-        self.maxFrequency = 20000000
-        self.lowBandFreq = 5500000
-        self.upBandFreq = 18000000
+        self.minFrequency = 2000000
+        self.maxFrequency = 13000000
+        self.lowBandFreq = 4500000
+        self.upBandFreq = 9500000
         self.depth = 50 # mm. Hard-coded value for Thyroid study
 
         # For B-Mode image rendering
@@ -344,7 +346,6 @@ class InfoStruct():
         self.numFocalZones = None
         self.numFrames = None
         self.frameSize = None
-        self.widthAxis = None
         self.lineDensity = None
         self.lateralRes = None
         self.axialRes = None
@@ -401,6 +402,8 @@ def readFileImg(Info, focus):
     Data = DataStruct()
     Data.rf = modeIM
     Data.bMode = bmode
+    Data.widthPixels = bmode.shape[2]
+    Data.depthPixels = bmode.shape[1]
     # For scan conversion functions, see philipsMatParser.py
     return Data, Info
 

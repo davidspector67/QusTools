@@ -294,7 +294,7 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
         self.plotOnCanvas()
 
     def openTerasonImage(self, imageFilePath, phantomFilePath):
-        self.imArray, rfData = tera.getImage(imageFilePath, phantomFilePath)
+        self.imArray, self.imgDataStruct, self.imgInfoStruct, self.refDataStruct, self.refInfoStruct = tera.getImage(imageFilePath, phantomFilePath)
         self.arHeight = self.imArray.shape[0]
         self.arWidth = self.imArray.shape[1]
         self.imData = np.array(self.imArray)

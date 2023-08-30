@@ -20,7 +20,7 @@ class RfAnalysisGUI(QWidget, Ui_rfAnalysis):
         super().__init__()
         self.setupUi(self)
         global roisLeft, roisRight, roisTop, roisBottom, mbf, ss, si, minMBF, minSS, minSI, \
-        maxMBF, maxSS, maxSI, curDisp, cmap, tempROISelected, selectedROI, indMBF, indSI, indSS, rfd
+        maxMBF, maxSS, maxSI, curDisp, cmap, tempROISelected, selectedROI, indMBF, indSI, indSS, scanConverted
         roisLeft = []
         roisRight = []
         roisTop = []
@@ -41,7 +41,7 @@ class RfAnalysisGUI(QWidget, Ui_rfAnalysis):
         indMBF = None
         indSI = None
         indSS = None
-        rfd = False
+        scanConverted = False
 
         self.splineX = splineX
         self.splineY = splineY
@@ -163,12 +163,10 @@ class RfAnalysisGUI(QWidget, Ui_rfAnalysis):
         self.phantomPathInput.setHidden(False)
         self.imagePathInput.setText(imageName)
         self.phantomPathInput.setText(phantomName)
-        global rfd
-        rfd = (self.imagePathInput.text()[-4:] == '.rfd')
 
     def cleanStructs(self): # Discard windows outside of scan-converted ultrasound image
         splineList = [self.roiWindowSplinesStruct.top, self.roiWindowSplinesStruct.bottom, self.roiWindowSplinesStruct.left, self.roiWindowSplinesStruct.right]
-        if not rfd:
+        if not scanConverted:
             splineListPreSC = [self.roiWindowSplinesStructPreSC.top, self.roiWindowSplinesStructPreSC.bottom, self.roiWindowSplinesStructPreSC.left, self.roiWindowSplinesStructPreSC.right]
         else: 
             splineListPreSC = splineList
@@ -189,7 +187,7 @@ class RfAnalysisGUI(QWidget, Ui_rfAnalysis):
         self.roiWindowSplinesStruct.left = splineList[2]
         self.roiWindowSplinesStruct.right = splineList[3]
         
-        if not rfd:
+        if not scanConverted:
             self.roiWindowSplinesStructPreSC.top = splineListPreSC[0]
             self.roiWindowSplinesStructPreSC.bottom = splineListPreSC[1]
             self.roiWindowSplinesStructPreSC.left = splineListPreSC[2]
@@ -271,16 +269,19 @@ class RfAnalysisGUI(QWidget, Ui_rfAnalysis):
 
     def computeROIWindows(self): 
         # Compute ROI windows
-        if not rfd:
+        global scanConverted
+        try:
             self.roiWindowSplinesStruct, self.roiWindowSplinesStructPreSC = roiWindowsGenerator(self.splineX, self.splineY, self.imgDataStruct.scBmode.shape[0], self.imgDataStruct.scBmode.shape[1], self.axialWinSize, self.lateralWinSize, self.imgInfoStruct.axialRes, self.imgInfoStruct.lateralRes, self.axialOverlap, self.lateralOverlap, self.windowThreshold, self.imgDataStruct.scRF.xmap, self.imgDataStruct.scRF.ymap)
+            scanConverted = False
             self.cleanStructs()
-        else:
-            xScale = self.cvIm.width/(self.imgDataStruct.bMode.shape[2])
-            yScale = self.cvIm.height/(self.imgDataStruct.bMode.shape[1])
+        except:
+            xScale = self.cvIm.width/(self.imgDataStruct.widthPixels)
+            yScale = self.cvIm.height/(self.imgDataStruct.depthPixels)
             x = self.splineX/xScale
             y = self.splineY/yScale
-            self.roiWindowSplinesStruct = roiWindowsGenerator(x, y, self.imgDataStruct.bMode.shape[1], self.imgDataStruct.bMode.shape[2], self.axialWinSize, self.lateralWinSize, self.imgInfoStruct.axialRes, self.imgInfoStruct.lateralRes, self.axialOverlap, self.lateralOverlap, self.windowThreshold)
+            self.roiWindowSplinesStruct = roiWindowsGenerator(x, y, self.imgDataStruct.depthPixels, self.imgDataStruct.widthPixels, self.axialWinSize, self.lateralWinSize, self.imgInfoStruct.axialRes, self.imgInfoStruct.lateralRes, self.axialOverlap, self.lateralOverlap, self.windowThreshold)
             self.roiWindowSplinesStructPreSC = self.roiWindowSplinesStruct
+            scanConverted = True
         # self.cleanStructs()
         # self.ax.plot(self.splineX, self.splineY, color = "cyan", linewidth=0.75) # re-plot drawn ROI
 
@@ -293,19 +294,20 @@ class RfAnalysisGUI(QWidget, Ui_rfAnalysis):
             # Prepare ROI window coordinate arrays for graphing
             # Global variables important for matplotlib functions
 
-            if not rfd:
+            if not scanConverted:
                 roisLeft = self.roiWindowSplinesStruct.left 
                 roisRight = self.roiWindowSplinesStruct.right
                 roisTop = self.roiWindowSplinesStruct.top
                 roisBottom = self.roiWindowSplinesStruct.bottom
             else:
-                xScale = self.cvIm.width/self.imgDataStruct.bMode.shape[2]
-                yScale = self.cvIm.height/self.imgDataStruct.bMode.shape[1]
+                xScale = self.cvIm.width/self.imgDataStruct.widthPixels
+                yScale = self.cvIm.height/self.imgDataStruct.depthPixels
                 for i in range(len(self.roiWindowSplinesStruct.left)):
                     roisLeft.append(self.roiWindowSplinesStruct.left[i]*xScale)#4.2969)
                     roisRight.append(self.roiWindowSplinesStruct.right[i]*xScale)#4.2969)
                     roisTop.append(self.roiWindowSplinesStruct.top[i]*yScale)#/2.79)
                     roisBottom.append(self.roiWindowSplinesStruct.bottom[i]*yScale)#/2.79)
+            # self.frame = None
             # computeSpecWindows(self.imgDataStruct.rf,self.refDataStruct.rf, self.roiWindowSplinesStructPreSC.top, self.roiWindowSplinesStructPreSC.bottom, self.roiWindowSplinesStructPreSC.left, self.roiWindowSplinesStructPreSC.right, self.minFrequency, self.maxFrequency, self.lowBandFreq, self.upBandFreq, self.samplingFreq, self.frame)
             # return
             self.computeWindowSpec()
@@ -329,10 +331,13 @@ class RfAnalysisGUI(QWidget, Ui_rfAnalysis):
 
     def computeWindowSpec(self):
         global mbf, ss, si, minMBF, maxMBF, minSS, maxSS, minSI, maxSI
-        if not rfd:
+        if not scanConverted:
             self.winTopBottomDepth, self.winLeftRightWidth, mbf, ss, si = computeSpecWindows(self.imgDataStruct.rf,self.refDataStruct.rf, self.roiWindowSplinesStructPreSC.top, self.roiWindowSplinesStructPreSC.bottom, self.roiWindowSplinesStructPreSC.left, self.roiWindowSplinesStructPreSC.right, self.minFrequency, self.maxFrequency, self.lowBandFreq, self.upBandFreq, self.samplingFreq, None)
         else:
-            self.winTopBottomDepth, self.winLeftRightWidth, mbf, ss, si = computeSpecWindows(self.imgDataStruct.rf,self.refDataStruct.rf, self.roiWindowSplinesStructPreSC.top, self.roiWindowSplinesStructPreSC.bottom, self.roiWindowSplinesStructPreSC.left, self.roiWindowSplinesStructPreSC.right, self.minFrequency, self.maxFrequency, self.lowBandFreq, self.upBandFreq, self.samplingFreq, self.frame)
+            if self.imagePathInput.text().endswith('.rfd'):
+                self.winTopBottomDepth, self.winLeftRightWidth, mbf, ss, si = computeSpecWindows(self.imgDataStruct.rf,self.refDataStruct.rf, self.roiWindowSplinesStructPreSC.top, self.roiWindowSplinesStructPreSC.bottom, self.roiWindowSplinesStructPreSC.left, self.roiWindowSplinesStructPreSC.right, self.minFrequency, self.maxFrequency, self.lowBandFreq, self.upBandFreq, self.samplingFreq, self.frame)
+            else:
+                self.winTopBottomDepth, self.winLeftRightWidth, mbf, ss, si = computeSpecWindows(self.imgDataStruct.rf,self.refDataStruct.rf, self.roiWindowSplinesStructPreSC.top, self.roiWindowSplinesStructPreSC.bottom, self.roiWindowSplinesStructPreSC.left, self.roiWindowSplinesStructPreSC.right, self.minFrequency, self.maxFrequency, self.lowBandFreq, self.upBandFreq, self.samplingFreq, None)
         minMBF = min(mbf)
         maxMBF = max(mbf)
         minSS = min(ss)
