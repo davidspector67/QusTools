@@ -737,35 +737,37 @@ class RoiSelectionGUI(Ui_constructRoi, QWidget):
     def computeTic(self):
         times = np.array([i*(1/self.cineRate) for i in range(self.numSlices)])
         self.pixelScale = (self.df.loc[self.index, "height"]/self.h_CE)*(self.df.loc[self.index, "width"]/self.w_CE)
-        # TIC, self.ticAnalysisGui.roiArea = mc.generate_TIC(self.mcResultsCE, self.bboxes, times, 24.09, self.pixelScale, self.ref_frames[0])
-        # Compute TICs
+        TIC, self.ticAnalysisGui.roiArea = mc.generate_TIC(self.mcResultsCE, self.bboxes, times, 24.09, self.pixelScale, self.ref_frames[0])
+        # # Compute TICs
 
-        # resize all MC bboxes to same size
-        self.bboxes = mc.resize_mc_bboxes(self.bboxes)
+        # # resize all MC bboxes to same size
+        # self.bboxes = mc.resize_mc_bboxes(self.bboxes)
 
-        # remove outlier bboxes
-        self.bboxes = mc.remove_outlier_bboxes(self.bboxes)
+        # # remove outlier bboxes
+        # self.bboxes = mc.remove_outlier_bboxes(self.bboxes)
 
-        self.ceMcBboxes = mc.create_ce_mc_bboxes(self.bboxes, self.x0_bmode, self.x0_CE, self.CE_side)
+        # self.ceMcBboxes = mc.create_ce_mc_bboxes(self.bboxes, self.x0_bmode, self.x0_CE, self.CE_side)
 
-        self.ceMcRoi = mc.cut_ROI200(self.full_array, self.ceMcBboxes, (self.x0_CE, self.y0_CE, self.w_CE, self.h_CE))
+        # self.ceMcRoi = mc.cut_ROI200(self.full_array, self.ceMcBboxes, (self.x0_CE, self.y0_CE, self.w_CE, self.h_CE))
 
-        self.ticArray = mc.getAllTICs(self.ceMcRoi, self.pixelScale, times)
+        # self.ticArray = mc.getAllTICs(self.ceMcRoi, self.pixelScale, times)
         
 
         # Bunch of checks
-        if np.isnan(np.sum(self.ticArray[:,:,1])):
-            print("STOPPED: NaNs in the VOI")
+        if np.isnan(np.sum(TIC[:,1])):
+            print("STOPPED: NaNs in the ROI")
             return
-        if np.isinf(np.sum(self.ticArray[:,:,1])):
-            print("STOPPED: Infs in the VOI")
+        if np.isinf(np.sum(TIC[:,1])):
+            print("STOPPED: Infs in the ROI")
             return
         
-        self.meanTIC = np.mean(self.ticArray.reshape((self.ticArray.shape[0]*self.ticArray.shape[1], \
-                                                      self.ticArray.shape[2], self.ticArray.shape[3])), axis=0)
+        # self.meanTIC = np.mean(self.ticArray.reshape((self.ticArray.shape[0]*self.ticArray.shape[1], \
+        #                                               self.ticArray.shape[2], self.ticArray.shape[3])), axis=0)
 
-        self.ticX = np.array([[self.meanTIC[i,0],i] for i in range(len(self.meanTIC[:,0]))])
-        self.ticY = self.meanTIC[:,1]
+        # self.ticX = np.array([[self.meanTIC[i,0],i] for i in range(len(self.meanTIC[:,0]))])
+        # self.ticY = self.meanTIC[:,1]
+        self.ticX = np.array([[TIC[i,0],i] for i in range(len(TIC[:,0]))])
+        self.ticY = TIC[:,1]
         self.ticAnalysisGui.ax.clear()
         self.ticAnalysisGui.ticX = []
         self.ticAnalysisGui.ticY = []
@@ -775,7 +777,7 @@ class RoiSelectionGUI(Ui_constructRoi, QWidget):
         self.ticAnalysisGui.selectedPoints = []
         self.ticAnalysisGui.t0Index = -1
         self.ticAnalysisGui.graph(self.ticX, self.ticY)
-        self.ticAnalysisGui.ticArray = self.ticArray
+        self.ticAnalysisGui.ticArray = TIC
 
     def moveToTic(self):
         self.ticAnalysisGui.timeLine = None

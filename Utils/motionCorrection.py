@@ -11,6 +11,7 @@ import numpy as np
 import pickle
 from scipy.optimize import curve_fit
 import nibabel as nib
+from scipy.ndimage import binary_fill_holes
 
 
 def load_pickle(pickle_path):
@@ -265,32 +266,32 @@ def cut_ROI200(full_array, bboxes, window_loc):
     return ROI
     
     
-# def generate_TIC(window, bboxes, times, compression, pixelScale, refFrame):
-#     TICtime = []
-#     TIC = []
-#     areas = []
-#     for t in range(0, window.shape[0]):
-#         if bboxes[t] != None:
-#             tmpwin = window[t]
-#             bool_mask = np.zeros(tmpwin.shape, dtype=bool)
-#             x0, y0, x_len, y_len = bboxes[t]
-#             for x in range(x_len):
-#                 bool_mask[x,y0] = True
-#                 bool_mask[x,y0+y_len] = True
-#             for y in range(y_len):
-#                 bool_mask[x0,y] = True
-#                 bool_mask[x0+x_len-1,y] = True
-#             bool_mask = binary_fill_holes(bool_mask)
-#             numPoints = len(np.where(bool_mask == True)[0])
-#             TIC.append(np.exp(tmpwin[bool_mask]/compression).mean()*pixelScale)
-#             TICtime.append(times[t])
-#             areas.append(pixelScale*numPoints)
+def generate_TIC(window, bboxes, times, compression, pixelScale, refFrame):
+    TICtime = []
+    TIC = []
+    areas = []
+    for t in range(0, window.shape[0]):
+        if bboxes[t] != None:
+            tmpwin = window[t]
+            bool_mask = np.zeros(tmpwin.shape, dtype=bool)
+            x0, y0, x_len, y_len = bboxes[t]
+            for x in range(x_len):
+                bool_mask[x,y0] = True
+                bool_mask[x,y0+y_len] = True
+            for y in range(y_len):
+                bool_mask[x0,y] = True
+                bool_mask[x0+x_len-1,y] = True
+            bool_mask = binary_fill_holes(bool_mask)
+            numPoints = len(np.where(bool_mask == True)[0])
+            TIC.append(np.exp(tmpwin[bool_mask]/compression).mean()*pixelScale)
+            TICtime.append(times[t])
+            areas.append(pixelScale*numPoints)
 
-#     TICz = np.array([TICtime, TIC]).astype('float64')
-#     TICz = TICz.transpose()
-#     TICz[:,1]=TICz[:,1]-np.mean(TICz[0:2,1])#Subtract noise in TIC before contrast
-#     if TICz[np.nan_to_num(TICz)<0].any():#make the smallest number in TIC 0
-#         TICz[:,1]=TICz[:,1]+np.abs(np.min(TICz[:,1]))
-#     else:
-#         TICz[:,1]=TICz[:,1]-np.min(TICz[:,1])
-#     return TICz, np.round(np.mean(areas), decimals=2)
+    TICz = np.array([TICtime, TIC]).astype('float64')
+    TICz = TICz.transpose()
+    TICz[:,1]=TICz[:,1]-np.mean(TICz[0:2,1])#Subtract noise in TIC before contrast
+    if TICz[np.nan_to_num(TICz)<0].any():#make the smallest number in TIC 0
+        TICz[:,1]=TICz[:,1]+np.abs(np.min(TICz[:,1]))
+    else:
+        TICz[:,1]=TICz[:,1]-np.min(TICz[:,1])
+    return TICz, np.round(np.mean(areas), decimals=2)

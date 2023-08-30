@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 
-from PyQt5.QtWidgets import QWidget, QApplication
+from PyQt5.QtWidgets import QWidget, QApplication, QHBoxLayout
 from PyQt5.QtGui import QPixmap, QPainter, QImage
 from PyQt5.QtCore import QLine, Qt
 
@@ -39,11 +39,23 @@ class CeusAnalysisGUI(Ui_ceusAnalysis, QWidget):
         self.tmppv = None
         self.roiArea = None
         self.newData = None
-        self.aucParamap = None
-        self.peParamap = None
-        self.tpParamap = None
-        self.mttParamap = None
-        self.tmppvParamap = None
+        self.fig = plt.figure()
+        self.canvas = FigureCanvas(self.fig)
+        self.horizLayout = QHBoxLayout(self.ticDisplay)
+        self.horizLayout.addWidget(self.canvas)
+        self.canvas.draw()
+        self.ax = self.fig.add_subplot(111)
+        self.ax.set_xlabel("Time (s)", fontsize=4, labelpad=0.5)
+        self.ax.set_ylabel("Signal Amplitude", fontsize=4, labelpad=0.5)
+        self.ax.set_title("Time Intensity Curve (TIC)", fontsize=5, pad=1.5)
+        self.ax.tick_params('both', pad=0.3, labelsize=3.6)
+        plt.xticks(fontsize=3)
+        plt.yticks(fontsize=3)
+        # self.aucParamap = None
+        # self.peParamap = None
+        # self.tpParamap = None
+        # self.mttParamap = None
+        # self.tmppvParamap = None
 
         self.bmodeCoverPixmap = QPixmap(381, 351)
         self.bmodeCoverPixmap.fill(Qt.transparent)
