@@ -9,8 +9,8 @@ class InfoStruct():
         # self.maxFrequency = 17000000
         self.minFrequency = 0
         self.maxFrequency = 20000000
-        self.lowBandFreq = 5500000
-        self.upBandFreq = 18000000
+        self.lowBandFreq = 5000000
+        self.upBandFreq = 13000000
         self.depth = None
 
         # For B-Mode image rendering
@@ -107,8 +107,6 @@ def readFileImg(b_data_Zone1, b_data_Zone2, focalDepthZone0, OmniOn, Info):
     Info.lateralRes = Info.width/bmode.shape[1]
     
     return Data, Info
-
-
 
 
 def getImage(filePath, phantomPath, OmniOn=1):
