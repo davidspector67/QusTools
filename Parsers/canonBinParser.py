@@ -373,9 +373,9 @@ def readFileImg(Info, filePath):
 
     Data = DataOutputStruct()
     Data.scRF = scModeIM
-    Data.scBmode = scBmode * (255/Info.maxval)
+    Data.scBmode = scBmode 
     Data.rf = ModeIM
-    Data.bMode = bmode * (255/np.amax(bmode))
+    Data.bMode = bmode 
     
     # Data.scRF = ModeIM
     # Data.scBmode = bmode

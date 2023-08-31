@@ -231,9 +231,9 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
         self.pixSizeAx = self.imgDataStruct.bMode.shape[0] #were both scBmode
         self.pixSizeLat = self.imgDataStruct.bMode.shape[1]
 
-        self.editImageDisplayGUI.contrastVal.setValue(1)
-        self.editImageDisplayGUI.brightnessVal.setValue(1)
-        self.editImageDisplayGUI.sharpnessVal.setValue(1)
+        self.editImageDisplayGUI.contrastVal.setValue(4)
+        self.editImageDisplayGUI.brightnessVal.setValue(0.75)
+        self.editImageDisplayGUI.sharpnessVal.setValue(3)
 
         self.analysisParamsGUI.axWinSizeVal.setValue(self.imgInfoStruct.depth/100)#7#1#1480/20000000*10000 # must be at least 10 times wavelength
         self.analysisParamsGUI.latWinSizeVal.setValue(self.imgInfoStruct.width/100)#7#1#1480/20000000*10000 # must be at least 10 times wavelength
