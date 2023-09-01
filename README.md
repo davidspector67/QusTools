@@ -18,10 +18,10 @@ Additionally, it supports 2D and 3D contrast-enhanced ultrasound (CEUS) analysis
 ```shell
 git clone https://github.com/davidspector67/QusTools.git
 cd QusTools
+pip install --upgrade pip
 python3.9 -m pip install virtualenv
 virtualenv --python="python3.9" venv
 source venv/bin/activate
-pip install --upgrade pip
 pip install -r requirements.txt
 chmod +x saveQt.sh
 ./saveQt.sh
@@ -45,10 +45,13 @@ pip install wheel setuptools pip --upgrade
 ```shell
 git clone https://github.com/davidspector67/QusTools.git
 cd QusTools
+pip install --upgrade pip
 python3.9 -m pip install virtualenv
-python3.9 -m venv venv
-call \venv\scripts\activate.bat
+virtualenv --python="python3.9" venv
+call venv\scripts\activate.bat
 pip install -r requirements.txt
+ren saveQt.sh saveQt.bat
+.\saveQt.bat
 deactivate
 ```
 

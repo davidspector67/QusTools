@@ -174,7 +174,7 @@ def computeSpecWindowsIQ(
     """Look into this"""
     f0 = minFrequency  
     f1 = maxFrequency
-    fRange = round((f1-f0)*(8192/fs))
+    fRange = round(f1*(8192/fs)) - round(f0*(8192/fs))
 
     # Output pre-allocation
     if len(top) >= 1:
@@ -256,10 +256,9 @@ def computeSpecWindows(
     # Frequency params
     # fs = imgSamplingFreq*2 # Not sure why multiply by two here, but it's the only way it works ~ Ahmed?
     fs = imgSamplingFreq
-    """Look into this"""
     f0 = minFrequency  
     f1 = maxFrequency
-    fRange = round((f1-f0)*(8192/fs))
+    fRange = round(f1*(8192/fs)) - round(f0*(8192/fs))
 
     # Output pre-allocation
     if len(top) >= 1:

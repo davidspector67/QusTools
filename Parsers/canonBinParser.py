@@ -178,11 +178,13 @@ def scanConvert(inIm, width, tilt, startDepth, endDepth, desiredHeight=500):
     OutIm.xmap = inIm_indx
     return outIm, hCm, wCm, OutIm
 
-def iqToRf(iqData, rxFrequency):
+def iqToRf(iqData, rxFrequency, decimationFactor):
+    import scipy.signal as ssg    
+    iqData = ssg.resample_poly(iqData, decimationFactor, 1)
     rfData = np.zeros(iqData.shape)
     t = [i*(1/rxFrequency) for i in range(iqData.shape[0])]
     for i in range(iqData.shape[1]):
-        rfData[:,i] = np.real(np.multiply(iqData[:,i], np.exp(1j*(np.pi*rxFrequency*np.transpose(t)))))
+        rfData[:,i] = np.real(np.multiply(iqData[:,i], np.exp(1j*(2*np.pi*rxFrequency*np.transpose(t)))))
     return rfData
 
 def readIQ(filename):
@@ -239,7 +241,7 @@ def readIQ(filename):
     iq = dataA[np.arange(0, numSamplesDrOut*2, 2)] + 1j*dataA[np.arange(1,numSamplesDrOut*2,2)]
     bmode = 20*np.log10(abs(iq))
 
-    return bmode, iq, (digitizingRateHz*rbfDecimationFactor), numSamplesDrOut
+    return bmode, iq, digitizingRateHz, numSamplesDrOut, decimationFactor
 
 class FileStruct():
     def __init__(self, filedirectory, filename):
@@ -338,7 +340,7 @@ def readFileInfo(filename, filepath):
     return Info
 
 def readFileImg(Info, filePath):
-    bmode, iqData, Info.rxFrequency, Info.numSamplesDrOut = readIQ(filePath)
+    bmode, iqData, Info.rxFrequency, Info.numSamplesDrOut, decimationFactor = readIQ(filePath)
     if Info.numSamplesDrOut == 1400: #Preset 1
         Info.depth = 150 #mm
         print("Preset 1 found!")
@@ -349,21 +351,17 @@ def readFileImg(Info, filePath):
         print("ERROR: No preset found!")
         exit()
     Info.samplingFrequency = Info.rxFrequency
-    rfData = iqToRf(iqData, Info.rxFrequency)
-    # for i in range(rfData.shape[1]):
-    #     bmode[:,i] = 20*np.log10(abs(hilbert(rfData[:,i])))           
+    rfData = iqToRf(iqData, Info.rxFrequency, decimationFactor)
+    bmode = np.zeros(rfData.shape)
+    for i in range(rfData.shape[1]):
+        bmode[:,i] = 20*np.log10(abs(hilbert(rfData[:,i])))           
     ModeIM = rfData
 
     Info.endDepth1 = Info.depth/1000 #m
     Info.startDepth1 = Info.endDepth1/4 #m
 
     [scBmode, hCm1, wCm1, _] = scanConvert(bmode, Info.width1, Info.tilt1, Info.startDepth1, Info.endDepth1)
-    # TODO: Left off here (line 23, philips_read_PhilipsImg.m). Was not able to check final outim, inIm_ind(x/y). If something's off, look here
     [_, hCm1, wCm1, scModeIM] = scanConvert(ModeIM, Info.width1, Info.tilt1, Info.startDepth1, Info.endDepth1)
-
-    # import matplotlib.pyplot as plt
-    # plt.imshow(scBmode, cmap="Greys_r")
-    # plt.show()
 
     Info.depth = hCm1*10 #mm
     Info.width = wCm1*10 #mm
@@ -371,11 +369,16 @@ def readFileImg(Info, filePath):
     Info.axialRes = Info.depth/scBmode.shape[0]
     Info.maxval = np.amax(scBmode)
 
+    # Info.width = Info.depth*1.5
+    # Info.lateralRes = Info.width/bmode.shape[1]
+    # Info.axialRes = Info.depth/bmode.shape[0]
+    # Info.maxval = np.amax(bmode)
+
     Data = DataOutputStruct()
     Data.scRF = scModeIM
-    Data.scBmode = scBmode 
+    Data.scBmode = scBmode * (255/Info.maxval)
     Data.rf = ModeIM
-    Data.bMode = bmode 
+    Data.bMode = bmode * (255/np.amax(bmode))
     
     # Data.scRF = ModeIM
     # Data.scBmode = bmode
