@@ -18,7 +18,7 @@ from PyQt5.QtWidgets import QWidget
 from PyQt5.QtGui import QImage
 
 import platform
-system = platform.sysetm()
+system = platform.system()
 
 
 class RoiSelectionGUI(QWidget, Ui_constructRoi):
@@ -89,7 +89,7 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
                 font-weight:bold;
             }""")
 
-            
+
         self.imagePathInput.setHidden(True)
         self.phantomPathInput.setHidden(True)
         self.drawRoiButton.setHidden(True)
