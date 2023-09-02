@@ -55,13 +55,13 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
                 border: 0px;
                 font-weight: bold;
             }""")
-            self.imageFilenameDisplay.setStyleSheet("""QLabel {
+            self.imagePathInput.setStyleSheet("""QLabel {
                 font-size: 11px;
                 color: rgb(255, 255, 255);
                 background-color: rgba(255, 255, 255, 0);
                 border: 0px;
             }""")
-            self.phantomFilenameDisplay.setStyleSheet("""QLabel {
+            self.phantomPathInput.setStyleSheet("""QLabel {
                 font-size: 11px;
                 color: rgb(255, 255, 255);
                 background-color: rgba(255, 255, 255, 0);
