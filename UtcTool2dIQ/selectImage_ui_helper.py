@@ -24,7 +24,13 @@ class SelectImageGUI_UtcTool2dIQ(Ui_selectImage, QWidget):
         self.setupUi(self)
 
         if system == 'Windows':
-            self.roiSidebarLabel.font().setPointSize(18)
+            self.roiSidebarLabel.setStyleSheet("""QLabel { 
+                font-size: 21px; 
+                color: rgb(255, 255, 255); 
+                background-color: rgba(255, 255, 255, 0); 
+                border: 0px; 
+                font-weight: bold; 
+            }""")
             self.imageSelectionLabelSidebar.font().setPointSize(18)
             self.imageLabel.font().setPointSize(13)
             self.phantomLabel.font().setPointSize(13)
