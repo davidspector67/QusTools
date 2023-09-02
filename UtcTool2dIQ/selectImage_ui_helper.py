@@ -4,6 +4,9 @@ import os
 import shutil
 
 from PyQt5.QtWidgets import QWidget, QApplication
+import platform
+
+system = platform.system()
 
 def selectImageHelper(pathInput, fileExts):
     if not os.path.exists(pathInput.text()): # check if file path is manually typed
@@ -19,6 +22,21 @@ class SelectImageGUI_UtcTool2dIQ(Ui_selectImage, QWidget):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
+
+        if system == 'Windows':
+            self.roiSidebarLabel.font().setPointSize(18)
+            self.imageSelectionLabelSidebar.font().setPointSize(18)
+            self.imageLabel.font().setPointSize(13)
+            self.phantomLabel.font().setPointSize(13)
+            self.imageFilenameDisplay.font().setPointSize(11)
+            self.phantomFilenameDisplay.font().setPointSize(11)
+            self.analysisParamsLabel.font().setPointSize(18)
+            self.rfAnalysisLabel.font().setPointSize(18)
+            self.exportResultsLabel.font().setPointSize(18)
+
+            
+
+
         self.chooseImageFileButton.setHidden(True)
         self.choosePhantomFileButton.setHidden(True)
         self.chooseImageFolderButton.setHidden(True)
