@@ -7,6 +7,9 @@ import Utils.utils as ut
 
 from PyQt5.QtWidgets import QWidget, QApplication
 
+import platform
+system = platform.system()
+
 def selectImageHelper(pathInput):
     if not os.path.exists(pathInput.text()): # check if file path is manually typed
         # NOTE: .bin is currently not supported
@@ -22,6 +25,56 @@ class SelectImageGUI_CeusTool3d(Ui_selectImage, QWidget):
         # self.selectImage = QWidget()
         super().__init__()
         self.setupUi(self)
+
+        if system == 'Windows':
+            self.imageSelectionLabelSidebar.setStyleSheet("""QLabel {
+                font-size: 18px;
+                color: rgb(255, 255, 255);
+                background-color: rgba(255, 255, 255, 0);
+                border: 0px;
+                font-weight: bold;
+            }""")
+            self.imageLabel.setStyleSheet("""QLabel {
+                font-size: 13px;
+                color: rgb(255, 255, 255);
+                background-color: rgba(255, 255, 255, 0);
+                border: 0px;
+                font-weight: bold;
+            }""")
+            self.imageFilenameDisplay.setStyleSheet("""QLabel {
+                font-size: 11px;
+                color: rgb(255, 255, 255);
+                background-color: rgba(255, 255, 255, 0);
+                border: 0px;
+            }""")
+            self.roiSidebarLabel.setStyleSheet("""QLabel {
+                font-size: 11px;
+                color: rgb(255, 255, 255);
+                background-color: rgba(255, 255, 255, 0);
+                border: 0px;
+            }""")
+            self.analysisParamsLabel.setStyleSheet("""QLabel {
+                font-size: 18px;
+                color: rgb(255, 255, 255);
+                background-color: rgba(255, 255, 255, 0);
+                border: 0px;
+                font-weight:bold;
+            }""")
+            self.ticAnalysisLabel.setStyleSheet("""QLabel {
+                font-size: 18px;
+                color: rgb(255, 255, 255);
+                background-color: rgba(255, 255, 255, 0);
+                border: 0px;
+                font-weight: bold;
+            }""")
+            self.rfAnalysisLabel.setStyleSheet("""QLabel {
+                font-size: 18px;
+                color: rgb(255, 255, 255);
+                background-color: rgba(255, 255, 255, 0);
+                border: 0px;
+                font-weight: bold;
+            }""")
+
         self.xmlImagePathInput.setHidden(True)
         self.imageFilenameDisplay.setHidden(True)
         self.niftiImagePathInput.setHidden(True)
