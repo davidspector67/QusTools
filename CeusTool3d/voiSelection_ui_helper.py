@@ -51,7 +51,7 @@ class VoiSelectionGUI(Ui_constructVoi, QWidget):
                 border: 0px;
             }""")
             self.roiSidebarLabel.setStyleSheet("""QLabel {
-                font-size: 11px;
+                font-size: 18px;
                 color: rgb(255, 255, 255);
                 background-color: rgba(255, 255, 255, 0);
                 border: 0px;

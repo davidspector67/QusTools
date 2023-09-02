@@ -41,7 +41,7 @@ class TicAnalysisGUI(Ui_ticEditor, QWidget):
                 border: 0px;
             }""")
             self.roiSidebarLabel.setStyleSheet("""QLabel {
-                font-size: 11px;
+                font-size: 18px;
                 color: rgb(255, 255, 255);
                 background-color: rgba(255, 255, 255, 0);
                 border: 0px;
@@ -67,7 +67,7 @@ class TicAnalysisGUI(Ui_ticEditor, QWidget):
                 border: 0px;
                 font-weight: bold;
             }""")
-            
+
         self.deSelectLastPointButton.setHidden(True)
         self.removeSelectedPointsButton.setHidden(True)
         self.restoreLastPointsButton.setHidden(True)
