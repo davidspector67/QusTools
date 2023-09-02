@@ -293,7 +293,7 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
         self.qIm.mirrored().save(os.path.join("Junk", "bModeImRaw.png")) # Save as .png file
         self.qImPhant.mirrored().save(os.path.join("Junk", "phantImRaw.png"))
 
-        self.editImageDisplayGUI.contrastVal.setValue(4)
+        self.editImageDisplayGUI.contrastVal.setValue(1)
         self.editImageDisplayGUI.brightnessVal.setValue(0.75)
         self.editImageDisplayGUI.sharpnessVal.setValue(3)
 
