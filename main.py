@@ -58,5 +58,6 @@ class QusGui(Ui_qusPage, QWidget):
 if __name__ == "__main__":
     welcomeApp = QApplication(sys.argv)
     welcomeUI = QusGui()
+    welcomeApp.setStyle('fusion')
     welcomeUI.show()
     sys.exit(welcomeApp.exec())
