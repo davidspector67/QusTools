@@ -243,8 +243,8 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
         self.editImageDisplayGUI.brightnessVal.setValue(1)
         self.editImageDisplayGUI.sharpnessVal.setValue(1)
 
-        self.analysisParamsGUI.axWinSizeVal.setValue(10)#7#1#1480/20000000*10000 # must be at least 10 times wavelength
-        self.analysisParamsGUI.latWinSizeVal.setValue(10)#7#1#1480/20000000*10000 # must be at least 10 times wavelength
+        self.analysisParamsGUI.axWinSizeVal.setValue(10)
+        self.analysisParamsGUI.latWinSizeVal.setValue(10)
         self.analysisParamsGUI.axOverlapVal.setValue(50)
         self.analysisParamsGUI.latOverlapVal.setValue(50)
         # self.analysisParamsGUI.minFreqVal.setValue(3)
@@ -299,6 +299,12 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
 
         self.analysisParamsGUI.axWinSizeVal.setValue(self.imgInfoStruct.depth/100)#7#1#1480/20000000*10000 # must be at least 10 times wavelength
         self.analysisParamsGUI.latWinSizeVal.setValue(self.imgInfoStruct.width/100)#7#1#1480/20000000*10000 # must be at least 10 times wavelength
+
+        speedOfSoundInTissue = 1540 #m/s
+        waveLength = (speedOfSoundInTissue/self.imgInfoStruct.centerFrequency)*1000 #mm
+        self.analysisParamsGUI.axWinSizeVal.setMinimum(10*waveLength) # must be at least 10 times wavelength
+        self.analysisParamsGUI.latWinSizeVal.setMinimum(10*waveLength) # must be at least 10 times wavelength
+
         self.analysisParamsGUI.axOverlapVal.setValue(50)
         self.analysisParamsGUI.latOverlapVal.setValue(50)
         self.analysisParamsGUI.windowThresholdVal.setValue(95)

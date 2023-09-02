@@ -12,6 +12,7 @@ class InfoStruct():
         self.lowBandFreq = 5000000
         self.upBandFreq = 13000000
         self.depth = None
+        self.centerFrequency = 9000000 #Hz
 
         # For B-Mode image rendering
         self.clipFact = 0.95 
@@ -30,7 +31,6 @@ class InfoStruct():
         self.rxFrequency = None
         self.samplingFrequency = None
         self.txFrequency = None
-        self.centerFrequency = None
         self.targetFOV = None
         self.numFocalZones = None
         self.numFrames = None
