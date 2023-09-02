@@ -533,6 +533,11 @@ QPushButton:checked {
      <height>41</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">QSlider {
+	color: white;
+}</string>
+   </property>
    <property name="orientation">
     <enum>Qt::Horizontal</enum>
    </property>

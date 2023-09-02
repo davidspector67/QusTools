@@ -77,6 +77,70 @@ class VoiSelectionGUI(Ui_constructVoi, QWidget):
                 border: 0px;
                 font-weight: bold;
             }""")
+            self.voiAlphaSpinBox.setStyleSheet("""QSpinBox{
+                background-color: white;
+                font-size: 13px;
+            }""")
+            self.aucLabel.setStyleSheet("""QLabel {
+                color: white;
+                background-color: rgba(0,0,0,0);
+                font-size: 13px;
+            }""")
+            self.aucVal.setStyleSheet("""QLabel {
+                color: white;
+                background-color: rgba(0,0,0,0);
+                font-size: 13px;
+            }""")
+            self.peLabel.setStyleSheet("""QLabel {
+                color: white;
+                background-color: rgba(0,0,0,0);
+                font-size: 13px;
+            }""")
+            self.peVal.setStyleSheet("""QLabel {
+                color: white;
+                background-color: rgba(0,0,0,0);
+                font-size: 13px;
+            }""")
+            self.mttLabel.setStyleSheet("""QLabel {
+                color: white;
+                background-color: rgba(0,0,0,0);
+                font-size: 13px;
+            }""")
+            self.mttVal.setStyleSheet("""QLabel {
+                color: white;
+                background-color: rgba(0,0,0,0);
+                font-size: 13px;
+            }""")
+            self.tpLabel.setStyleSheet("""QLabel {
+                color: white;
+                background-color: rgba(0,0,0,0);
+                font-size: 13px;
+            }""")
+            self.tpVal.setStyleSheet("""QLabel {
+                color: white;
+                background-color: rgba(0,0,0,0);
+                font-size: 13px;
+            }""")
+            self.tmppvLabel.setStyleSheet("""QLabel {
+                color: white;
+                background-color: rgba(0,0,0,0);
+                font-size: 13px;
+            }""")
+            self.tmppvVal.setStyleSheet("""QLabel {
+                color: white;
+                background-color: rgba(0,0,0,0);
+                font-size: 13px;
+            }""")
+            self.voiVolumeLabel.setStyleSheet("""QLabel {
+                color: white;
+                background-color: rgba(0,0,0,0);
+                font-size: 13px;
+            }""")
+            self.voiVolumeVal.setStyleSheet("""QLabel {
+                color: white;
+                background-color: rgba(0,0,0,0);
+                font-size: 13px;
+            }""")
 
         self.redrawRoiButton.setHidden(True)
         self.continueButton.setHidden(True)
