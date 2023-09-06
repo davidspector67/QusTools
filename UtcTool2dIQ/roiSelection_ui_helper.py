@@ -198,20 +198,23 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
                 xSpline, ySpline = calculateSpline(self.pointsPlottedX, self.pointsPlottedY)
                 self.spline = self.ax.plot(xSpline, ySpline, color = "cyan", zorder=1, linewidth=0.75)
         
-        if self.imgInfoStruct.numSamplesDrOut == 1400:
-            # Preset 1 boundaries for 20220831121844_IQ.bin
-            self.ax.plot([148.76, 154.22], [0, 500], c="purple") # left boundary
-            self.ax.plot([0, 716], [358.38, 386.78], c="purple") # bottom boundary
-            self.ax.plot([572.47, 509.967], [0, 500], c="purple") # right boundary
+        try:
+            if self.imgInfoStruct.numSamplesDrOut == 1400:
+                # Preset 1 boundaries for 20220831121844_IQ.bin
+                self.ax.plot([148.76, 154.22], [0, 500], c="purple") # left boundary
+                self.ax.plot([0, 716], [358.38, 386.78], c="purple") # bottom boundary
+                self.ax.plot([572.47, 509.967], [0, 500], c="purple") # right boundary
 
-        elif self.imgInfoStruct.numSamplesDrOut == 1496:
-            # Preset 2 boundaries for 20220831121752_IQ.bin
-            self.ax.plot([146.9, 120.79], [0, 500], c="purple") # left boundary
-            self.ax.plot([0, 644.76], [462.41, 500], c="purple") # bottom boundary
-            self.ax.plot([614.48, 595.84], [0, 500], c="purple") # right boundary
-        
-        else:
-            print("No preset found!")
+            elif self.imgInfoStruct.numSamplesDrOut == 1496:
+                # Preset 2 boundaries for 20220831121752_IQ.bin
+                self.ax.plot([146.9, 120.79], [0, 500], c="purple") # left boundary
+                self.ax.plot([0, 644.76], [462.41, 500], c="purple") # bottom boundary
+                self.ax.plot([614.48, 595.84], [0, 500], c="purple") # right boundary
+            
+            else:
+                print("No preset found!")
+        except:
+            pass
 
         self.figure.subplots_adjust(left=0,right=1, bottom=0,top=1, hspace=0.2,wspace=0.2)
         self.cursor = matplotlib.widgets.Cursor(self.ax, color="gold", linewidth=0.4, useblit=True)
@@ -376,15 +379,18 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
             self.pointsPlottedY.append(self.pointsPlottedY[0])
             self.finalSplineX, self.finalSplineY = calculateSpline(self.pointsPlottedX, self.pointsPlottedY)
 
-            if self.imgInfoStruct.numSamplesDrOut == 1400:
-                self.finalSplineX = np.clip(self.finalSplineX, a_min=148, a_max=573)
-                self.finalSplineY = np.clip(self.finalSplineY, a_min=0.5, a_max=387)
-            elif self.imgInfoStruct.numSamplesDrOut == 1496:
-                self.finalSplineX = np.clip(self.finalSplineX, a_min=120, a_max=615)
-                self.finalSplineY = np.clip(self.finalSplineY, a_min=0.5, a_max=645)
-            else:
-                print("Preset not found!")
-                return
+            try:
+                if self.imgInfoStruct.numSamplesDrOut == 1400:
+                    self.finalSplineX = np.clip(self.finalSplineX, a_min=148, a_max=573)
+                    self.finalSplineY = np.clip(self.finalSplineY, a_min=0.5, a_max=387)
+                elif self.imgInfoStruct.numSamplesDrOut == 1496:
+                    self.finalSplineX = np.clip(self.finalSplineX, a_min=120, a_max=615)
+                    self.finalSplineY = np.clip(self.finalSplineY, a_min=0.5, a_max=645)
+                else:
+                    print("Preset not found!")
+                    return
+            except:
+                pass
             
             self.ax.plot(self.finalSplineX, self.finalSplineY, color = "cyan", linewidth=0.75)
             try:
@@ -393,20 +399,24 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
             except:
                 image = 0 # do nothing. Means we're loading ROI
 
-            if self.imgInfoStruct.numSamplesDrOut == 1400:
-                # Preset 1 boundaries for 20220831121844_IQ.bin
-                self.ax.plot([148.76, 154.22], [0, 500], c="purple") # left boundary
-                self.ax.plot([0, 716], [358.38, 386.78], c="purple") # bottom boundary
-                self.ax.plot([572.47, 509.967], [0, 500], c="purple") # right boundary
-
-            elif self.imgInfoStruct.numSamplesDrOut == 1496:
-                # Preset 2 boundaries for 20220831121752_IQ.bin
-                self.ax.plot([146.9, 120.79], [0, 500], c="purple") # left boundary
-                self.ax.plot([0, 644.76], [462.41, 500], c="purple") # bottom boundary
-                self.ax.plot([614.48, 595.84], [0, 500], c="purple") # right boundary
             
-            else:
-                print("No preset found!")
+            try:
+                if self.imgInfoStruct.numSamplesDrOut == 1400:
+                    # Preset 1 boundaries for 20220831121844_IQ.bin
+                    self.ax.plot([148.76, 154.22], [0, 500], c="purple") # left boundary
+                    self.ax.plot([0, 716], [358.38, 386.78], c="purple") # bottom boundary
+                    self.ax.plot([572.47, 509.967], [0, 500], c="purple") # right boundary
+
+                elif self.imgInfoStruct.numSamplesDrOut == 1496:
+                    # Preset 2 boundaries for 20220831121752_IQ.bin
+                    self.ax.plot([146.9, 120.79], [0, 500], c="purple") # left boundary
+                    self.ax.plot([0, 644.76], [462.41, 500], c="purple") # bottom boundary
+                    self.ax.plot([614.48, 595.84], [0, 500], c="purple") # right boundary
+                
+                else:
+                    print("No preset found!")
+            except:
+                pass
 
             self.figure.subplots_adjust(left=0,right=1, bottom=0,top=1, hspace=0.2,wspace=0.2)
             plt.tick_params(bottom=False, left=False)
@@ -444,38 +454,41 @@ class RoiSelectionGUI(QWidget, Ui_constructRoi):
         self.plotOnCanvas()
     
     def interpolatePoints(self, event): # Update ROI being drawn using spline using 2D interpolation
-        if self.imgInfoStruct.numSamplesDrOut == 1400:
-            # Preset 1 boundaries for 20220831121844_IQ.bin
-            leftSlope = (500 - 0)/(154.22 - 148.76)
-            pointSlopeLeft = (event.ydata - 0) / (event.xdata - 148.76)
-            if pointSlopeLeft <= 0 or leftSlope < pointSlopeLeft:
-                return
-            
-            bottomSlope = (386.78 - 358.38) / (716 - 0)
-            pointSlopeBottom = (event.ydata - 358.38) / (event.xdata - 0)
-            rightSlope = (500 - 0) / (509.967 - 572.47)
-            pointSlopeRight = (event.ydata - 0) / (event.xdata - 572.47)
+        try:
+            if self.imgInfoStruct.numSamplesDrOut == 1400:
+                # Preset 1 boundaries for 20220831121844_IQ.bin
+                leftSlope = (500 - 0)/(154.22 - 148.76)
+                pointSlopeLeft = (event.ydata - 0) / (event.xdata - 148.76)
+                if pointSlopeLeft <= 0 or leftSlope < pointSlopeLeft:
+                    return
+                
+                bottomSlope = (386.78 - 358.38) / (716 - 0)
+                pointSlopeBottom = (event.ydata - 358.38) / (event.xdata - 0)
+                rightSlope = (500 - 0) / (509.967 - 572.47)
+                pointSlopeRight = (event.ydata - 0) / (event.xdata - 572.47)
 
-        elif self.imgInfoStruct.numSamplesDrOut == 1496:
-            # Preset 2 boundaries for 20220831121752_IQ.bin
-            leftSlope = (500 - 0) / (120.79 - 146.9)
-            pointSlopeLeft = (event.ydata - 0) / (event.xdata - 146.9)
-            if pointSlopeLeft > leftSlope and pointSlopeLeft <= 0:
-                return
+            elif self.imgInfoStruct.numSamplesDrOut == 1496:
+                # Preset 2 boundaries for 20220831121752_IQ.bin
+                leftSlope = (500 - 0) / (120.79 - 146.9)
+                pointSlopeLeft = (event.ydata - 0) / (event.xdata - 146.9)
+                if pointSlopeLeft > leftSlope and pointSlopeLeft <= 0:
+                    return
+                
+                bottomSlope = (500 - 462.41) / (644.76 - 0)
+                pointSlopeBottom = (event.ydata - 462.41) / (event.xdata - 0)
+                rightSlope = (500 - 0) / (595.84 - 614.48)
+                pointSlopeRight = (event.ydata - 0) / (event.xdata - 614.48)
             
-            bottomSlope = (500 - 462.41) / (644.76 - 0)
-            pointSlopeBottom = (event.ydata - 462.41) / (event.xdata - 0)
-            rightSlope = (500 - 0) / (595.84 - 614.48)
-            pointSlopeRight = (event.ydata - 0) / (event.xdata - 614.48)
-        
-        else:
-            print("Preset not found!")
-            return
-
-        if pointSlopeBottom > bottomSlope:
+            else:
+                print("Preset not found!")
                 return
-        if pointSlopeRight >= 0 or pointSlopeRight < rightSlope:
-            return
+
+            if pointSlopeBottom > bottomSlope:
+                    return
+            if pointSlopeRight >= 0 or pointSlopeRight < rightSlope:
+                return
+        except:
+            pass
 
         self.pointsPlottedX.append(int(event.xdata))
         self.pointsPlottedY.append(int(event.ydata))
