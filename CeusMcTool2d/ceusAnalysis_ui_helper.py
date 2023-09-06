@@ -43,6 +43,7 @@ class CeusAnalysisGUI(Ui_ceusAnalysis, QWidget):
                 color: rgb(255, 255, 255);
                 background-color: rgba(255, 255, 255, 0);
                 border: 0px;
+                font-weight: bold;
             }""")
             self.analysisParamsLabel.setStyleSheet("""QLabel {
                 font-size: 18px;
