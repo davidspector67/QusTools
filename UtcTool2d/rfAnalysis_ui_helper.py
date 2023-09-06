@@ -140,6 +140,11 @@ class RfAnalysisGUI(QWidget, Ui_rfAnalysis):
                 color: white;
 	            background-color: rgba(0,0,0,0);
             }""")
+            self.indSiLabel.setStyleSheet("""QLabel {
+                font-size: 14px;
+                color: white;
+	            background-color: rgba(0,0,0,0);
+            }""")
 
             
         global roisLeft, roisRight, roisTop, roisBottom, mbf, ss, si, minMBF, minSS, minSI, \
