@@ -56,7 +56,7 @@
     <property name="frameShadow">
      <enum>QFrame::Raised</enum>
     </property>
-    <widget class="QLabel" name="label">
+    <widget class="QLabel" name="imageSelectionLabelSidebar">
      <property name="geometry">
       <rect>
        <x>70</x>
@@ -81,7 +81,7 @@
       <set>Qt::AlignCenter</set>
      </property>
     </widget>
-    <widget class="QLabel" name="label_2">
+    <widget class="QLabel" name="imageLabel">
      <property name="geometry">
       <rect>
        <x>-60</x>
@@ -152,7 +152,7 @@
     <property name="frameShadow">
      <enum>QFrame::Raised</enum>
     </property>
-    <widget class="QLabel" name="label_4">
+    <widget class="QLabel" name="roiSidebarLabel">
      <property name="geometry">
       <rect>
        <x>0</x>
@@ -199,7 +199,7 @@
     <property name="frameShadow">
      <enum>QFrame::Raised</enum>
     </property>
-    <widget class="QLabel" name="label_7">
+    <widget class="QLabel" name="ticAnalysisLabel">
      <property name="geometry">
       <rect>
        <x>0</x>
@@ -218,7 +218,8 @@
 }</string>
      </property>
      <property name="text">
-      <string>Radio Frequency Data Analysis</string>
+      <string>Contrast-Enhanced Ultrasound
+(CEUS) Analysis</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
@@ -246,7 +247,7 @@
     <property name="frameShadow">
      <enum>QFrame::Raised</enum>
     </property>
-    <widget class="QLabel" name="label_8">
+    <widget class="QLabel" name="rfAnalysisLabel">
      <property name="geometry">
       <rect>
        <x>20</x>
@@ -294,7 +295,7 @@
    <property name="frameShadow">
     <enum>QFrame::Raised</enum>
    </property>
-   <widget class="QLabel" name="label_6">
+   <widget class="QLabel" name="analysisParamsLabel">
     <property name="geometry">
      <rect>
       <x>0</x>
@@ -313,7 +314,7 @@
 }</string>
     </property>
     <property name="text">
-     <string>Analysis Parameter Selection</string>
+     <string>TIC Modification</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>

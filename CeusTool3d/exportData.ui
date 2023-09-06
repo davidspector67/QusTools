@@ -468,53 +468,6 @@ deleted and overwritten</string>
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
-  <widget class="QFrame" name="analysisParamsSidebar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>240</y>
-     <width>341</width>
-     <height>121</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">QFrame {
-	background-color: rgb(99, 0, 174);
-	border: 1px solid black;
-}</string>
-   </property>
-   <property name="frameShape">
-    <enum>QFrame::StyledPanel</enum>
-   </property>
-   <property name="frameShadow">
-    <enum>QFrame::Raised</enum>
-   </property>
-   <widget class="QLabel" name="analysisParamsLabel">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>30</y>
-      <width>341</width>
-      <height>51</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">QLabel {
-	font-size: 21px;
-	color: rgb(255, 255, 255);
-	background-color: rgba(255, 255, 255, 0);
-	border: 0px;
-	font-weight:bold;
-}</string>
-    </property>
-    <property name="text">
-     <string>TIC Modification</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
-    </property>
-   </widget>
-  </widget>
   <widget class="QWidget" name="sidebar" native="true">
    <property name="geometry">
     <rect>
@@ -770,7 +723,7 @@ deleted and overwritten</string>
      </property>
     </widget>
    </widget>
-   <widget class="QFrame" name="analysisParamsSidebar_2">
+   <widget class="QFrame" name="analysisParamsSidebar">
     <property name="geometry">
      <rect>
       <x>0</x>
@@ -791,7 +744,7 @@ deleted and overwritten</string>
     <property name="frameShadow">
      <enum>QFrame::Raised</enum>
     </property>
-    <widget class="QLabel" name="analysisParamsLabel_2">
+    <widget class="QLabel" name="analysisParamsLabel">
      <property name="geometry">
       <rect>
        <x>0</x>
