@@ -203,6 +203,7 @@ class AnalysisParamsGUI(Ui_analysisParams, QWidget):
         self.rfAnalysisGUI.setFilenameDisplays(self.imagePathInput.text().split('/')[-1], self.phantomPathInput.text().split('/')[-1])
         self.rfAnalysisGUI.displayROIWindows()
         self.rfAnalysisGUI.show()
+        self.rfAnalysisGUI.psPlotGUI.show()
         self.rfAnalysisGUI.lastGui = self
         self.hide()
 

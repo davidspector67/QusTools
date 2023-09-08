@@ -180,11 +180,11 @@ def scanConvert(inIm, width, tilt, startDepth, endDepth, desiredHeight=500):
 
 def iqToRf(iqData, rxFrequency, decimationFactor):
     import scipy.signal as ssg    
-    iqData = ssg.resample_poly(iqData, decimationFactor, 1)
+    iqData = ssg.resample_poly(iqData, decimationFactor, 1) # up-sample by decimation factor
     rfData = np.zeros(iqData.shape)
-    t = [i*(1/rxFrequency) for i in range(iqData.shape[0])]
+    t = [i*(rxFrequency/decimationFactor) for i in range(iqData.shape[0])]
     for i in range(iqData.shape[1]):
-        rfData[:,i] = np.real(np.multiply(iqData[:,i], np.exp(1j*(2*np.pi*rxFrequency*np.transpose(t)))))
+        rfData[:,i] = np.real(np.multiply(iqData[:,i], np.exp(1j*(2*np.pi*(rxFrequency)*np.transpose(t)))))
     return rfData
 
 def readIQ(filename):
