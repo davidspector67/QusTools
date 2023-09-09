@@ -178,13 +178,13 @@ def scanConvert(inIm, width, tilt, startDepth, endDepth, desiredHeight=500):
     OutIm.xmap = inIm_indx
     return outIm, hCm, wCm, OutIm
 
-def iqToRf(iqData, rxFrequency, decimationFactor):
+def iqToRf(iqData, rxFrequency, decimationFactor, carrierFrequency):
     import scipy.signal as ssg    
-    iqData = ssg.resample_poly(iqData, decimationFactor, 1)
+    iqData = ssg.resample_poly(iqData, decimationFactor, 1) # up-sample by decimation factor
     rfData = np.zeros(iqData.shape)
     t = [i*(1/rxFrequency) for i in range(iqData.shape[0])]
     for i in range(iqData.shape[1]):
-        rfData[:,i] = np.real(np.multiply(iqData[:,i], np.exp(1j*(2*np.pi*rxFrequency*np.transpose(t)))))
+        rfData[:,i] = np.real(np.multiply(iqData[:,i], np.exp(1j*(2*np.pi*carrierFrequency*np.transpose(t)))))
     return rfData
 
 def readIQ(filename):
@@ -266,7 +266,7 @@ class InfoStruct():
         self.maxFrequency = 9000000
         self.lowBandFreq = 4400000 #Hz
         self.upBandFreq = 6600000 #Hz
-        self.centerFrequency = 5500000 #Hz
+        self.centerFrequency = 4000000 #Hz
 
         self.studyMode = None
         self.filename = None
@@ -352,7 +352,7 @@ def readFileImg(Info, filePath):
         print("ERROR: No preset found!")
         exit()
     Info.samplingFrequency = Info.rxFrequency
-    rfData = iqToRf(iqData, Info.rxFrequency, decimationFactor)
+    rfData = iqToRf(iqData, Info.rxFrequency, decimationFactor, Info.centerFrequency)
     bmode = np.zeros(rfData.shape)
     for i in range(rfData.shape[1]):
         bmode[:,i] = 20*np.log10(abs(hilbert(rfData[:,i])))           
