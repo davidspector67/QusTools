@@ -170,6 +170,7 @@ class RfAnalysisGUI(QWidget, Ui_rfAnalysis):
         indSI = None
         indSS = None
         scanConverted = False
+        self.psPlotGUI = None
 
         self.splineX = splineX
         self.splineY = splineY
@@ -435,8 +436,8 @@ class RfAnalysisGUI(QWidget, Ui_rfAnalysis):
                     roisRight.append(self.roiWindowSplinesStruct.right[i]*xScale)#4.2969)
                     roisTop.append(self.roiWindowSplinesStruct.top[i]*yScale)#/2.79)
                     roisBottom.append(self.roiWindowSplinesStruct.bottom[i]*yScale)#/2.79)
-            # self.frame = None
-            computeSpecWindows(self.imgDataStruct.rf,self.refDataStruct.rf, self.roiWindowSplinesStructPreSC.top, self.roiWindowSplinesStructPreSC.bottom, self.roiWindowSplinesStructPreSC.left, self.roiWindowSplinesStructPreSC.right, self.minFrequency, self.maxFrequency, self.lowBandFreq, self.upBandFreq, self.samplingFreq, self.frame)
+            self.frame = None
+            self.psPlotGUI = computeSpecWindows(self.imgDataStruct.rf,self.refDataStruct.rf, self.roiWindowSplinesStructPreSC.top, self.roiWindowSplinesStructPreSC.bottom, self.roiWindowSplinesStructPreSC.left, self.roiWindowSplinesStructPreSC.right, self.minFrequency, self.maxFrequency, self.lowBandFreq, self.upBandFreq, self.samplingFreq, self.frame)
             return
             self.computeWindowSpec()
 

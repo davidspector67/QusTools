@@ -298,12 +298,15 @@ def computeSpecWindows(
         [f, ps] = computePowerSpec(imgWindow, f0, f1, fs) # initially had round(img_gain), but since not used in function, we left it out
         [f, rPS] = computePowerSpec(refWindow, f0, f1, fs) # Same as above, except for round(ref_gain)
         nps = np.asarray(ps)-np.asarray(rPS) # SUBTRACTION method: log data
-        import matplotlib.pyplot as plt
-        fig, ax = plt.subplots()
-        ax.scatter(f,ps)
-        # plt.vlines([imgLowBandFreq, imgUpBandFreq], ymin=min(ps), ymax=max(ps), colors="green")
-        plt.show()
-        return
+        # import matplotlib.pyplot as plt
+        # fig, ax = plt.subplots()
+        # ax.scatter(f,ps)
+        # # plt.vlines([imgLowBandFreq, imgUpBandFreq], ymin=min(ps), ymax=max(ps), colors="green")
+        # plt.show()
+        # return
+        PsPlotter = PsPlotterGUI()
+        PsPlotter.ax.scatter(f, ps)
+        return PsPlotter
 
         # Get ready to send output
         for j in range(fRange):
