@@ -755,6 +755,9 @@ class RoiSelectionGUI(Ui_constructRoi, QWidget):
             self.drawRoiButton.setChecked(False)
             self.drawRoiButton.setCheckable(False)
             self.fitToRoiButton.clicked.connect(self.perform_MC)
+            self.updateBmode()
+            self.updateCE()
+            self.updateCrosshair()
 
             
 
