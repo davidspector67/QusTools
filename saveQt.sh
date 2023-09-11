@@ -28,4 +28,5 @@ pyuic5 UtcTool2dIQ/rfAnalysis.ui -o UtcTool2dIQ/rfAnalysis_ui.py
 pyuic5 UtcTool2dIQ/loadRoi.ui -o UtcTool2dIQ/loadRoi_ui.py
 pyuic5 UtcTool2dIQ/exportData.ui -o UtcTool2dIQ/exportData_ui.py
 pyuic5 UtcTool2dIQ/editImageDisplay.ui -o UtcTool2dIQ/editImageDisplay_ui.py
+pyuic5 UtcTool2dIQ/editWindowDisplay.ui -o UtcTool2dIQ/editWindowDisplay_ui.py
 pyuic5 UtcTool2dIQ/analysisParamsSelection.ui -o UtcTool2dIQ/analysisParamsSelection_ui.py

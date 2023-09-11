@@ -1,5 +1,6 @@
 from UtcTool2dIQ.roiSelection_ui import *
 from UtcTool2dIQ.editImageDisplay_ui_helper import *
+from UtcTool2dIQ.editWindowDisplay_ui_helper import *
 from UtcTool2dIQ.rfAnalysis_ui import *
 from Utils.roiFuncs import *
 from UtcTool2dIQ.exportData_ui_helper import *
@@ -21,7 +22,8 @@ class RfAnalysisGUI(QWidget, Ui_rfAnalysis):
         super().__init__()
         self.setupUi(self)
         global roisLeft, roisRight, roisTop, roisBottom, mbf, ss, si, minMBF, minSS, minSI, \
-        maxMBF, maxSS, maxSI, curDisp, cmap, tempROISelected, selectedROI, indMBF, indSI, indSS, rfd
+        maxMBF, maxSS, maxSI, curDisp, cmap, tempROISelected, selectedROI, indMBF, indSI, indSS, rfd, \
+        orLeft, orRight, orTop, orBottom, orMBF, orSS, orSI
         roisLeft = []
         roisRight = []
         roisTop = []
@@ -43,6 +45,11 @@ class RfAnalysisGUI(QWidget, Ui_rfAnalysis):
         indSI = None
         indSS = None
         rfd = False
+        orLeft = []
+        orRight = []
+        orTop = []
+        orBottom = []
+        orMBF, orSS, orSI = [None, None, None]
 
         self.splineX = splineX
         self.splineY = splineY
@@ -102,6 +109,9 @@ class RfAnalysisGUI(QWidget, Ui_rfAnalysis):
         self.editImageDisplayGUI.contrastVal.setValue(1)
         self.editImageDisplayGUI.brightnessVal.setValue(1)
         self.editImageDisplayGUI.sharpnessVal.setValue(1)
+
+        self.editWindowButton.clicked.connect(self.openWindowEditor)
+        self.editWindowDisplayGUI = None
         
         # Prepare heatmap legend plot
         self.horizLayoutLeg = QHBoxLayout(self.legend)
@@ -402,6 +412,52 @@ class RfAnalysisGUI(QWidget, Ui_rfAnalysis):
             tempROISelected = False
             image.figure.canvas.mpl_disconnect(self.cid)
     
+    def openWindowEditor(self):
+        if not self.chooseWindowButton.isChecked():
+            return
+        if self.editWindowDisplayGUI == None:
+            self.editWindowDisplayGUI = EditWindowDisplayGUI()
+            self.editWindowDisplayGUI.p1x.setValue(roisLeft[selectedROI])
+            self.editWindowDisplayGUI.p1y.setValue(roisTop[selectedROI])
+            self.editWindowDisplayGUI.p2x.setValue(roisRight[selectedROI])
+            self.editWindowDisplayGUI.p2y.setValue(roisBottom[selectedROI])
+            self.editWindowDisplayGUI.p1x.valueChanged.connect(self.changeOR)
+            self.editWindowDisplayGUI.p1y.valueChanged.connect(self.changeOR)
+            self.editWindowDisplayGUI.p2x.valueChanged.connect(self.changeOR)
+            self.editWindowDisplayGUI.p2y.valueChanged.connect(self.changeOR)
+            self.editWindowDisplayGUI.show()
+        else:
+            if self.editWindowDisplayGUI.isVisible():
+                self.editWindowDisplayGUI.hide()
+            del self.editWindowDisplayGUI
+            self.editWindowDisplayGUI = None
+
+    def changeOR(self):
+        global orLeft, orTop, orRight, orBottom, mbf, ss, si
+        # here, it keeps re-setting values to 10,0,0,0 even though I set it before?
+        # oh. because it calls changeOR before openWindowEditor
+        # oh wait it's because setting the value called changeOR
+        # okay fixed, but it's still not really updating
+        # max value somehow fixed at 10?
+        # yayy fixed! I just had to change the max value
+        # now … color
+        orLeft = self.editWindowDisplayGUI.p1x.value()
+        orTop = self.editWindowDisplayGUI.p1y.value()
+        orRight = self.editWindowDisplayGUI.p2x.value()
+        orBottom = self.editWindowDisplayGUI.p2y.value()
+        roisLeft[selectedROI] = orLeft
+        roisTop[selectedROI] = orTop
+        roisRight[selectedROI] = orRight
+        roisBottom[selectedROI] = orBottom
+        # compute for these coords and save to global variables
+        # _, _, orMBF, orSS, orSI = computeSpecWindowsIQ(self.imgDataStruct.rf, self.refDataStruct.rf, [orTop], [orBottom], [orLeft], [orRight], self.minFrequency, self.maxFrequency, self.lowBandFreq, self.upBandFreq, self.samplingFreq)
+        # mbf[selectedROI] = orMBF
+        # ss[selectedROI] = orSS
+        # si[selectedROI] = orSI
+        self.computeWindowSpec()
+        updateWindows(self.ax)
+
+    
     
 def onSelect(event): # Update ROI window selected after computation
     global curDisp, coloredROI, tempROISelected, selectedROI, indMBF, indSI, indSS
@@ -456,6 +512,8 @@ def onSelect(event): # Update ROI window selected after computation
                 rect = matplotlib.patches.Rectangle((roisLeft[i], roisBottom[i]), (roisRight[i]-roisLeft[i]), (roisTop[i]-roisBottom[i]), linewidth=1, fill = True, color=cmap[int((255/(maxSI-minSI))*(si[i]-minSI))])
             event.inaxes.add_patch(rect)
     event.inaxes.add_patch(coloredROI)
+    # overrideRect = matplotlib.patches.Rectangle((orLeft, orBottom), (orRight-orLeft), (orTop-orBottom), linewidth=1, fill = True, color=cmap[125])
+    # event.inaxes.add_patch(overrideRect)
     event.inaxes.figure.canvas.draw()
 
 def updateWindows(curAx):
